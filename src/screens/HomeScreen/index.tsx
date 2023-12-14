@@ -60,56 +60,83 @@ const HomeScreen = () => {
   };
   return (
     <>
-    <MenuBar>
-      <div className="Container border">
-        <div className="grid grid-cols-2 grid-flow-col ">
-          <div className="text-center">
-            <p>Upload thiết bị mới</p>
-            {currentMenu === "chooseImg" ? (
-              <FileInput onImageSelected={onImageSelected} />
-            ) : (
-              <div>
-                <div>
-                  <img src={imgAfterCrop} className="cropped-img" />
+      <MenuBar>
+        <div className="Container ">
+          <div className="Container flex grid grid-rows-2 md:grid-rows-2 lg:grid-rows-1 xl:grid-rows-1  grid-flow-col ">
+            <div className="text-center">
+              <p className="titleName">Upload thiết bị mới</p>
+              {currentMenu === "chooseImg" ? (
+                <div className="Container flex justify-center   reviewImg">
+                  <div className="cropped-img NoneImg grid flex grid-rows-5 content-end s" >
+                    <div className="row-span-2 uploadView">
+                      <p>  Camera </p>
+                      <p> OR</p>
+                      <p>Upload an Image </p>
+                    </div>
+                    <div>
+
+                      <button className="btns ">Camera</button>
+                    </div>
+
+                    <div>
+
+                      <FileInput onImageSelected={onImageSelected} />
+                    </div>
+
+                  </div>
+
                 </div>
-                <button
-                  onClick={() => {
-                    setCurrentMenu("cropImg");
-                    openModal();
-                  }}
-                  className="btns"
-                >
-                  Chỉnh sửa
-                </button>
+              ) : (
+                <div className="Container flex justify-center   reviewImg">
+                  <div className="  ">
 
-                <button
-                  onClick={() => {
-                    setCurrentMenu("chooseImg");
-                    setImage("");
-                    closeModal();
-                  }}
-                  className="btns "
-                >
-                  Xóa
-                </button>
-              </div>
-            )}
+                    <img src={imgAfterCrop} className="cropped-img" />
+                  </div>
+                  <div className="grid grid-rows-2">
+                    <button
+                      onClick={() => {
+                        setCurrentMenu("cropImg");
+                        openModal();
+                      }}
+                      className="btn  border "
+                    >
+                      Chỉnh sửa
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setCurrentMenu("chooseImg");
+                        setImage("");
+                        closeModal();
+                      }}
+                      className="btn border "
+                    >
+                      Xóa
+                    </button>
+
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Danh sach */}
+            <div className=""><p className="titleName">Danh sách thiết bị vừa nhập</p>
+
+            </div>
           </div>
-          <div className="border">Danh sách thiết bị vừa nhập</div>
         </div>
-      </div>
 
-      <CustomModal isOpen={modalIsOpen} onClose={closeModal}>
-        <div className="h-full w-full  bg-dark">
-          <ImageCropper
-            image={image}
-            onCropDone={onCropDone}
-            onCropCancel={onCropCancel}
-          />
-        </div>
-      </CustomModal>
-        
-    </MenuBar>
+        <CustomModal isOpen={modalIsOpen} onClose={closeModal}>
+          <div className="h-full w-full  bg-dark">
+            <ImageCropper
+              image={image}
+              onCropDone={onCropDone}
+              onCropCancel={onCropCancel}
+            />
+          </div>
+        </CustomModal>
+
+      </MenuBar>
     </>
   );
 };

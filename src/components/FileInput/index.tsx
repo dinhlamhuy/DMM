@@ -46,7 +46,7 @@ const FileInput: React.FC<FileInputProps> = ({ onImageSelected }) => {
       />
 
       <button className="btns" onClick={onChooseImg}>
-        Chọn Ảnh
+        Choose Image
       </button>
     </div>
   );
