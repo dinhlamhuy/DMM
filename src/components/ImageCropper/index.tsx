@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import Cropper from "react-easy-crop";
-
+import { FaCheck } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
 const ImageCropper = ({ image, onCropDone, onCropCancel }: any) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -39,16 +40,13 @@ const ImageCropper = ({ image, onCropDone, onCropCancel }: any) => {
           }}
         />
       {/* </div> */}
-      <button className="btns btnCancel " onClick={onCropCancel}>
-        Hủy
-      </button>
+      <button className="btns btnCancel " onClick={onCropCancel}><IoClose /></button>
       <button
         className="btns btnDone "
         onClick={() => {
           onCropDone(croppedArea);
         }}
-      >
-       Hoàn tất
+      ><FaCheck />
       </button>
     </div>
   );
