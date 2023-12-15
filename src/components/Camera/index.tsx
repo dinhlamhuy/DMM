@@ -48,9 +48,9 @@ const HandleCancel =()=>{
         imageSmoothing={true}
       />
 <div className="grid">
-      <button className="border btn px-2 text-4xl" onClick={capture}><IoCamera />
+      <button className="border  btnIcon btn px-2 text-4xl" onClick={capture}><IoCamera />
       </button>
-      <button className="border btn px-2 text-4xl" onClick={HandleCancel}><ImCancelCircle />
+      <button className="border btnIcon btn px-2 text-4xl" onClick={HandleCancel}><ImCancelCircle />
       </button>
 </div>
     </div>

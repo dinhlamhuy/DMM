@@ -36,7 +36,7 @@ const FileInput: React.FC<FileInputProps> = ({ onImageSelected }) => {
   };
 
   return (
-    <div>
+    <div >
       <input
         type="file"
         accept="image/*"
@@ -45,7 +45,7 @@ const FileInput: React.FC<FileInputProps> = ({ onImageSelected }) => {
         style={{ display: "none" }}
       />
 
-      <button className="btns" onClick={onChooseImg}>
+      <button className="btn rounded-xl px-4 py-2 bg-purple-600 text-white " onClick={onChooseImg}>
         Upload Image
       </button>
     </div>

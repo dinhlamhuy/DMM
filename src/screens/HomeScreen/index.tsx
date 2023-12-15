@@ -74,8 +74,8 @@ const HomeScreen = () => {
           <div className=" flex grid grid-rows-2 md:grid-rows-2 lg:grid-rows-1 xl:grid-rows-1  grid-flow-col ">
             <div className=" ">
               <p className="titleName ">Upload thiết bị mới</p>
-              <div className="grid container grid-cols-2  flex">
-                <div className="  flex container " >
+              <div className="grid container grid-cols-1 md:grid-cols-1 xl:grid-cols-2 lg:grid-cols-2  flex">
+                <div className="  flex container  justify-center " >
                   {currentMenu === "chooseImg" ? (
                     // <div className=" reviewImg">
                       <div className="  cropped-img NoneImg grid  flex grid-rows-5 content-end ">
@@ -86,16 +86,16 @@ const HomeScreen = () => {
                         </div>
                         <div className="jus">
                           <button
-                            className="btns "
+                            className="btn rounded-xl px-4 py-2 bg-purple-600 text-white "
                             onClick={() => setCurrentMenu("Camera")}
                           >
                            Camera
                           </button>
                         </div>
 
-                        <div className="jus">
+                        {/* <div className="jus"> */}
                           <FileInput onImageSelected={onImageSelected} />
-                        </div>
+                        {/* </div> */}
                       </div>
                     // </div>
                   ) : currentMenu === "Camera" ? (
@@ -114,7 +114,7 @@ const HomeScreen = () => {
                             setCurrentMenu("cropImg");
                             openModal();
                           }}
-                          className="text-green-700 btn  border  items-center flex text-center justify-center  text-4xl px-2"
+                          className="text-green-700 btnIcon btn  border  items-center flex text-center justify-center  text-4xl px-2"
                         >
                           <MdEditSquare />
                         </button>
@@ -125,7 +125,7 @@ const HomeScreen = () => {
                             setImage("");
                             closeModal();
                           }}
-                          className=" text-red-600 btn border items-center flex text-center justify-center   text-4xl px-2"
+                          className=" text-red-600 btnIcon btn border items-center flex text-center justify-center   text-4xl px-2"
                         >
                           <FaRegTrashAlt />
                         </button>
@@ -133,8 +133,8 @@ const HomeScreen = () => {
                     </div>
                   )}
                 </div>
-                <div className=" ">
-                  <input type="text" className="border rounded-full px-4 text-2xl" value={"sdasdsa"} />
+                <div className=" px-1 ">
+                  <input type="text" className="w-100 w-full  border rounded-full px-4 text-2xl" value={"sdasdsa"} />
                 </div>
               </div>
             </div>

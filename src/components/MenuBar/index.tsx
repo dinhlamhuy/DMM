@@ -124,7 +124,7 @@ const MenuBar: React.FC<Props>  = ({children}) => {
 </aside>
 
 <div className="p-4 sm:ml-64 ">
-   <div className="p-4 border-2 bg-white border-gray-200   min-h-screen border-dashed rounded-lg  mt-14 pt-1 pb-12">
+   <div className="p-4 border bg-white border-gray-200   min-h-screen border-dashed rounded-lg  mt-14 pt-1 pb-12">
      
    {children}
     

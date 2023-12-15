@@ -15,6 +15,7 @@ import ErrorScreen from './screens/ErrorScreen'
 import HomeScreen from './screens/HomeScreen';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import LoginScreen from './screens/LoginScreen';
 
 
 
@@ -52,7 +53,7 @@ function App() {
         <Route path={"/*"} element={<ErrorScreen />} />
       </Route>
         <Route path={"/"} element={<HomeScreen />} />
-        {/* <Route path={"/login"} element={<LoginScreen />} /> */}
+        <Route path={"/login"} element={<LoginScreen />} />
       </Routes>
     </section>
 
