@@ -14,8 +14,8 @@ const Camera: React.FC<CameraProps> = ({onCancelCam, onImageSelected}) => {
   const videoConstraints: MediaTrackConstraints = {
     // width: '100%' as ConstrainULong,
     // height: '100%' as ConstrainULong,
-    width:780,
-    height:780,
+    width:300,
+    height:300,
     facingMode: 'user',
     // ForceScreenshotSourceSize:true,
     // screenshotQuality: 1,
@@ -38,8 +38,8 @@ const HandleCancel =()=>{
 }
   return (
     <>
-   <div className=" flex" style={{ width: "300px", height: "300px" }}>
-      <Webcam
+   <div className="" >
+         <Webcam
         audio={false}
         ref={webcamRef as React.RefObject<Webcam>}
         screenshotFormat="image/jpeg"
@@ -47,10 +47,10 @@ const HandleCancel =()=>{
         screenshotQuality={1}
         imageSmoothing={true}
       />
-<div className="grid">
-      <button className="border  btnIcon btn px-2 text-4xl" onClick={capture}><IoCamera />
+<div className="grid grid-cols-2  ">
+      <button className="border justify-center items-center  flex btnIcon btn px-2 text-3xl" onClick={HandleCancel}><ImCancelCircle />
       </button>
-      <button className="border btnIcon btn px-2 text-4xl" onClick={HandleCancel}><ImCancelCircle />
+      <button className="border justify-center items-center   flex btnIcon btn px-2 text-4xl" onClick={capture}><IoCamera />
       </button>
 </div>
     </div>
