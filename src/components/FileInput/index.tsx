@@ -21,7 +21,7 @@ const FileInput: React.FC<FileInputProps> = ({ onImageSelected }) => {
           }
         };
         reader.readAsDataURL(event.target.files[0]);
-        console.log(reader.result)
+        // console.log(reader.result)
       }else{
         console.log("Không phải hình ảnh:", event.target.files[0]);
       }

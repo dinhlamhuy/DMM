@@ -1,26 +1,16 @@
 import Select from "react-select";
+interface SelectProps {
+  label:string;
+  options: Option[];
+}
+interface Option {
+  value: string;
+  label: string;
+}
 
-const options = [
-  { value: "chocolate", label: "Chocolate" },
-  { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla1", label: "Vanilla" },
-  { value: "vanilla2", label: "Vanilla" },
-  { value: "vanilla2", label: "Vanilla" },
-  { value: "vanilla3", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vani圣达菲sflla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanillasdf", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-];
 
-const SelectInput = () => (
+
+const SelectInput: React.FC<SelectProps> = ({label,options}) => (
   <div className="relative w-full">
     <Select className=" selectStyle
     peer  p-0 w-full   text-sm  
@@ -47,8 +37,8 @@ const SelectInput = () => (
       })}
     />
     <label
-      className="absolute  top-5 left-3 bg-white px-2 text-blue-600  h-fit   
-      start-0  
+      className="absolute  top-5 left-3 bg-white px-2   h-fit     border-t-1 border-l-1 border-r-1 rounded-full bg-gray-100 shadow-md shadow-gray-300 
+      start-0  ml-0.5 text-ms
       truncate pointer-events-none transition ease-in-out 
       duration-100 border border-transparent 
       peer-disabled:opacity-50 peer-disabled:pointer-events-none
@@ -58,7 +48,7 @@ const SelectInput = () => (
     peer-[:not(:placeholder-shown)]:text-gray-500
     "
     >
-     Select
+     {label}
     </label>
   </div>
 );
