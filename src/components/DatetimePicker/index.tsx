@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getMonth, getYear } from 'date-fns';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -35,15 +36,8 @@ const DatetimePicker: React.FC<DatePickerProps> = ({label}) => {
 
 
   return (
-    <>
- <label  className="relative text-left w-fit flex  text-red-900  duration-300 transform  border-t-1 border-l-1 border-r-1 rounded-full bg-gray-100 shadow-md shadow-gray-300 
-      -translate-y-4 scale-75 top-6 z-10   origin-[0] bg-white  px-2 
- peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
-      peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 
-      rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1 border-X"
-      >
-        {label}
-      </label>
+    <div className='relative'>
+ 
       <DatePicker 
         renderCustomHeader={({
           date,
@@ -96,6 +90,8 @@ const DatetimePicker: React.FC<DatePickerProps> = ({label}) => {
           </div>
         )}
         popperContainer={CalendarContainer} popperPlacement="bottom-end"
+
+        enableTabLoop={false}
         popperModifiers={[
           {
             name: "offset",
@@ -112,15 +108,26 @@ const DatetimePicker: React.FC<DatePickerProps> = ({label}) => {
             },
           },
         ]}
+        calendarClassName="calender-custom-position" 
         placeholderText='YYYY/MM/DD'  
-        dateFormat="yyyy/MM/dd" className='block   text-center border p-2.5 w-full 
-        text-sm text-gray-900 bg-transparent rounded-xl shadow-md 
-        appearance-none   bg-white flex
-          peer '
+        dateFormat="yyyy/MM/dd" className='  block  text-center border p-2.5 w-full 
+         text-gray-900  rounded-xl shadow  
+           bg-white  
+           '
         selected={startDate} onChange={(date: any) => setStartDate(date)} />
+<label  className="relative text-left w-fit flex  text-red-900  duration-300 transform  border-t-1  rounded-lg  
+      -translate-y-4 scale-75 -top-10    origin-[0] bg-white  px-2  mb-0
 
+   
+    
+      rtl:peer-focus:translate-x-1/4 
+      rtl:peer-focus:left-auto 
+      start-1 border-X"
+      >
+        {label}
+      </label>
      
-    </>
+    </div>
   );
 }
 export default DatetimePicker;

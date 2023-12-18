@@ -17,7 +17,7 @@ import HomeScreen from './screens/HomeScreen';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import LoginScreen from './screens/LoginScreen';
-
+import './utils/i18n'
 
 
 

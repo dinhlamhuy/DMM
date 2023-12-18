@@ -168,29 +168,27 @@ html {
   border-color: rgb(37 99 235) !important;
 } */
  .css-reqq1a-control {
+  outline:none !important;
+  border: none !important;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
 }
 
 .react-datepicker-wrapper{
   width: 100%;
   text-align: center !important;
-
+  outline:none !important;
+  border: none !important;
 }
-
+.react-datepicker.calender-custom-position {
+  height: fit-content !important;
+}
 
 .react-datepicker__input-container {
   width: 100% !important;
   text-align: center !important;
-  position: absolute;
-  
-
-}
-.react-datepicker-popper{
-  position: absolute !important;
-  top:-10px !important;
-  display: flex !important; 
-  /* left: 100px !important; */
-
+  position: relative !important;
+  outline:none !important;
+  border: none !important;
 }
 
 
@@ -207,3 +205,12 @@ label{
 }
 
 
+.react-date-picker__calendar--open {
+  top: 100% !important;
+  bottom: unset !important;
+}
+
+
+.css-iouwon-menu div{
+  z-index: 990000000 !important;
+}

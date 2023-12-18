@@ -7,17 +7,23 @@ import MenuBar from "../../components/MenuBar";
 import Camera from "../../components/Camera";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { MdEditSquare } from "react-icons/md";
-import SelectInput from "../../components/SelectInput";
+// import SelectInput from "../../components/SelectInput";
 import TextInput from "../../components/TextInput";
 import CreateInput from "../../components/CreateInput";
 import DatetimePicker from "../../components/DatetimePicker";
+import { useTranslation } from "react-i18next";
+import RadioCheck from "../../components/RadioCheck";
 
 const HomeScreen = () => {
+  const { t } = useTranslation();
+
   const [image, setImage] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [currentMenu, setCurrentMenu] = useState("chooseImg");
   const [imgAfterCrop, setImgAfterCrop] = useState("");
   const [text, setText] = useState("");
+  const [seleted, setseleted] = useState("");
+  const [status, setStatus] = useState("PASS");
   const openModal = () => {
     setModalIsOpen(true);
   };
@@ -62,7 +68,6 @@ const HomeScreen = () => {
         const dataURL = canvasEle.toDataURL("image/jpeg");
         setImgAfterCrop(dataURL);
         setCurrentMenu("imgCropped");
-
       };
     }
   };
@@ -75,38 +80,31 @@ const HomeScreen = () => {
   //   console.log(imgAfterCrop)
   // }, [imgAfterCrop])
 
-
   const options = [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "strawberry", label: "Strawberry" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vanilla1", label: "Vanilla" },
-    { value: "vanilla2", label: "Vanilla" },
-    { value: "vanilla2", label: "Vanilla" },
-    { value: "vanilla3", label: "Vanilla" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vani圣达菲sflla", label: "Vanilla" },
-    { value: "vanilla", label: "Vanillas" },
-    { value: "vanillas", label: "Vanillas" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vanillasdf", label: "Vanilla" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vanilla", label: "Vanilla" },
+    { value: "1", label: "Nhóm 1" },
+    { value: "2", label: "Nhóm 2" },
+    { value: "3", label: "Nhóm 3" },
+    { value: "4", label: "Nhóm 4" },
+    { value: "5", label: "Nhóm 5" },
+  ];
+  const optionsRadio = [
+    { value: "PASS", label: t("lblPass"), cusClass: "" },
+    { value: "FAIL", label: t("lblFail"), cusClass: "" },
   ];
   return (
     <>
       <MenuBar>
         <div className="container items-center justify-center mx-auto">
           {/* //  */}
-          <div className=" flex grid
+          <div
+            className=" flex grid
            grid-flow-col  grid-rows-2 md:grid-rows-2 gap-3 lg:grid-rows-1 xl:grid-rows-1 
-           ">
+           "
+          >
             <div className=" ">
-              <p className="titleName ">Upload thiết bị mới</p>
+              <p className="titleName ">{t("lblUploadNewDevice")}</p>
               <div className="grid  grid-cols-1 md:grid-cols-1 xl:grid-cols-2 lg:grid-cols-2  flex  ">
-                <div className="  flex flex-row   justify-center  ">
+                <div className="  flex flex-row   justify-center mb-14 md:mb-14  ">
                   {currentMenu === "chooseImg" ? (
                     // <div className=" reviewImg">
                     <div className="  cropped-img NoneImg grid  flex  content-around md:py-5 lg:py-5 xl:py-5  ">
@@ -116,162 +114,301 @@ const HomeScreen = () => {
                         <p>Upload an Image </p>
                       </div>
                       <div className="justify-center">
-                        <button className="btn rounded-xl px-4 py-2 bg-purple-600 text-white " onClick={() => setCurrentMenu("Camera")} >
+                        <button
+                          className="btn rounded-xl px-4 py-2 bg-purple-600 text-white "
+                          onClick={() => setCurrentMenu("Camera")}
+                        >
                           Camera
                         </button>
                       </div>
                       <div>
                         <FileInput onImageSelected={onImageSelected} />
                       </div>
-
-
                     </div>
-                  ) :
-                    currentMenu === "Camera" ? (
+                  ) : currentMenu === "Camera" ? (
+                    <Camera
+                      onCancelCam={onCancelCam}
+                      onImageSelected={onImageSelected}
+                    />
+                  ) : (
+                    <div className="  px-0 mx-0 cropped-img">
+                      <img src={imgAfterCrop} className="aspect-square" />
 
-                      <Camera
-                        onCancelCam={onCancelCam}
-                        onImageSelected={onImageSelected}
-                      />
-                    ) : (
-                      <div className="  px-0 mx-0  cropped-img">
-                        <img src={imgAfterCrop} className="aspect-square" />
-
-                        <div className="grid grid-cols-2">
-                          <button
-                            onClick={() => {
-                              setCurrentMenu("chooseImg");
-                              setImage("");
-                              closeModal();
-                            }}
-                            className=" text-red-600 btnIcon btn border items-center flex text-center justify-center   text-3xl p-2"
-                          >
-                            <FaRegTrashAlt />
-                          </button>
-                          <button
-                            onClick={() => {
-                              setCurrentMenu("cropImg");
-                              openModal();
-                            }}
-                            className="text-green-700 btnIcon btn  border  items-center flex text-center justify-center  text-3xl p-2"
-                          >
-                            <MdEditSquare />
-                          </button>
-
-                        </div>
+                      <div className="grid grid-cols-2 ">
+                        <button
+                          onClick={() => {
+                            setCurrentMenu("chooseImg");
+                            setImage("");
+                            closeModal();
+                          }}
+                          className=" text-red-600 btnIcon btn border items-center flex text-center justify-center   text-3xl p-2"
+                        >
+                          <FaRegTrashAlt />
+                        </button>
+                        <button
+                          onClick={() => {
+                            setCurrentMenu("cropImg");
+                            openModal();
+                          }}
+                          className="text-green-700 btnIcon btn  border  items-center flex text-center justify-center  text-3xl p-2"
+                        >
+                          <MdEditSquare />
+                        </button>
                       </div>
-                    )}
+                    </div>
+                  )}
                 </div>
                 <div className=" grid  gap-y-5  border py-4 px-2.5 bg-gray-100 rounded-md  relative flex items-end   shadow-md">
-                  <div >
-                    <TextInput label="Mã số quản lý / Unique code" TextChange={(value: any) => { setText(value) }} value={text} key="input1" />
+                  <div>
+                    <TextInput
+                      label={t("lblUniqueCode")}
+                      TextChange={(value: any) => {
+                        setText(value);
+                      }}
+                      value={text}
+                      keys="lblUniqueCode"
+                    />
                   </div>
-                  <div >
-                    <TextInput label="Mã số tài sản / Factory code" TextChange={(value: any) => { setText(value) }} value={text} key="input2" />
+                  <div>
+                    <TextInput
+                      // label="Mã số tài sản / Factory code"
+                      label={t("lblFactoryCode")}
+                      TextChange={(value: any) => {
+                        setText(value);
+                      }}
+                      value={text}
+                      keys="lblFactoryCode"
+                    />
                   </div>
-                  <div >
-                    <TextInput label="Dòng thiết bị / Model" TextChange={(value: any) => { setText(value) }} value={text} key="input3" />
+                  <div>
+                    <TextInput
+                      label={t("lblModel")}
+                      TextChange={(value: any) => {
+                        setText(value);
+                      }}
+                      value={text}
+                      keys="lblModel"
+                    />
                   </div>
-                  <div >
-                    <TextInput label="Nhóm / Group" TextChange={(value: any) => { setText(value) }} value={text} key="input4" />
-                  </div>
-                  <div className="relative">
-                    <DatetimePicker label="Ngày nhập về / Incomming date" />
+                  <div className="relative -mt-4">
+                    <CreateInput
+                      label={t("lblGroup")}
+                      options={options}
+                      value={seleted}
+                      OnSelected={(value: any) => {
+                        setseleted(value);
+                      }}
+                    />
 
+                    {/* <TextInput label="Nhóm / Group" TextChange={(value: any) => { setText(value) }} value={text}keys="input4" /> */}
                   </div>
-
+                  <div className="relative ">
+                    <DatetimePicker label={t("lblIncommingDate")} />
+                  </div>
                 </div>
               </div>
 
               <div className="flex items-center mt-10 ">
                 <div className="border-t-2 border-b-2 h-2 shadow border-gray-300 flex-grow"></div>
-                <div className="px-3 text-gray-800 text-xl font-bold border rounded-full shadow ">Thông tin chi tiết thiết bị</div>
+                <div className="px-3 text-gray-800 text-xl font-bold border rounded-full shadow ">
+                  {t("lblDeviceDetails")}
+                </div>
                 <div className="border-t-2 border-b-2 h-2 shadow border-gray-300 flex-grow"></div>
               </div>
               <div className="grid flex gap-5 mt-8 bg-yellow-100 pt-5 px-2.5 shadow rounded-lg">
-                <div >
-                  <TextInput label="Số Serial thiết bị / Device Serial No " TextChange={(value: any) => { setText(value) }} value={text} key="input5" />
+                <div>
+                  <TextInput
+                    label={t("lblDeviceSerialNumber")}
+                    TextChange={(value: any) => {
+                      setText(value);
+                    }}
+                    value={text}
+                    keys="lblDeviceSerialNumber"
+                  />
                 </div>
-                <div >
-                  <TextInput label="Nhà cung ứng / Supplier" TextChange={(value: any) => { setText(value) }} value={text} key="input6" />
+                <div>
+                  <TextInput
+                    label={t("lblSupplier")}
+                    TextChange={(value: any) => {
+                      setText(value);
+                    }}
+                    value={text}
+                    keys="lblSupplier"
+                  />
                 </div>
-                <div >
-                  <TextInput label="Nhãn hiệu / Brand" TextChange={(value: any) => { setText(value) }} value={text} key="input6" />
+                <div>
+                  <TextInput
+                    label={t("lblBrand")}
+                    TextChange={(value: any) => {
+                      setText(value);
+                    }}
+                    value={text}
+                    keys="lblBrand"
+                  />
                 </div>
-                <div >
-                  <TextInput label="Tên thiết bị / Equipment Name" TextChange={(value: any) => { setText(value) }} value={text} key="input7" />
+                <div>
+                  <TextInput
+                    label={t("lblEquipmentName")}
+                    TextChange={(value: any) => {
+                      setText(value);
+                    }}
+                    value={text}
+                    keys="lblEquipmentName"
+                  />
                 </div>
-                <div >
-                  <TextInput label="Nhóm / Group" TextChange={(value: any) => { setText(value) }} value={text} key="input8" />
+                <div>
+                  <TextInput
+                    label={t("lblRemark")}
+                    TextChange={(value: any) => {
+                      setText(value);
+                    }}
+                    value={text}
+                    keys="lblRemark"
+                  />
                 </div>
-                <div >
-
-                </div>
+                <div></div>
               </div>
-
-
             </div>
 
             {/* Danh sach */}
-            <div className=" p-3">
-              <p className="titleName">Danh sách thiết bị vừa nhập</p>
+            <div className=" p-3 mb-14">
+              {/* <p className="titleName">Danh sách thiết bị vừa nhập</p> */}
               <div className="flex items-center  ">
                 <div className="border-t-2 border-b-2 h-2 shadow border-gray-300 flex-grow"></div>
-                <div className="px-3 text-gray-800 text-xl font-bold border rounded-full shadow ">Kiểm tra định kỳ</div>
+                <div className="px-3 text-gray-800 text-xl font-bold border rounded-full shadow ">
+                  Kiểm tra định kỳ
+                </div>
                 <div className="border-t-2 border-b-2 h-2 shadow border-gray-300 flex-grow"></div>
               </div>
               <div className="grid flex gap-5 mt-8 bg-gray-100 pt-5 px-2.5 shadow rounded-lg">
-                <div >
-                  <TextInput label="Mục đích sử dụng /  Use Purpose" TextChange={(value: any) => { setText(value) }} value={text} key="input5" />
+                <div>
+                  <TextInput
+                    label={t("lblUsePurpose_MachineIndication")}
+                    TextChange={(value: any) => {
+                      setText(value);
+                    }}
+                    value={text}
+                    keys="lblUsePurpose_MachineIndication"
+                  />
                 </div>
-                <div >
-                  <TextInput label="Phạm Vi / Range" TextChange={(value: any) => { setText(value) }} value={text} key="input6" />
+                <div>
+                  <TextInput
+                    label={t("lblRange")}
+                    TextChange={(value: any) => {
+                      setText(value);
+                    }}
+                    value={text}
+                    keys="lblRange"
+                  />
                 </div>
                 <hr />
-                <div >
-                  <TextInput label="Xưởng / Building" TextChange={(value: any) => { setText(value) }} value={text} key="input6" />
-                </div>
-                <div >
-                  <TextInput label="Đơn vị-Chuyền / Department-Line" TextChange={(value: any) => { setText(value) }} value={text} key="input7" />
-                </div>
-                <div >
-                  <TextInput label="Người Phụ Trách / Person in charge" TextChange={(value: any) => { setText(value) }} value={text} key="input8" />
-                </div>
-                <div className="flex items-center  ">
-                  <div className="border-t-2 border-b-2 h-1 shadow border-gray-300 flex-grow"></div>
-                  <div className="px-3 text-gray-600 text-xs font-bold border rounded-full shadow ">Hiệu chuẩn nội bộ / Internal Calibration</div>
-                  <div className="border-t-2 border-b-2 h-1 shadow border-gray-300 flex-grow"></div>
-                </div>
-                <div className="grid grid-cols-2">
-                  <div >
-                    <TextInput label="Tần suất / Current Frequency" TextChange={(value: any) => { setText(value) }} value={text} key="input8" />
-                  </div>
-                  <div >
-                    <TextInput label="Tần suất theo adidas" TextChange={(value: any) => { setText(value) }} value={text} key="input8" />
-                  </div>
-                </div>
-                <div className="flex items-center  ">
-                  <div className="border-t-2 border-b-2 h-1 shadow border-gray-300 flex-grow"></div>
-                  <div className="px-3 text-gray-600 text-xs font-bold border rounded-full shadow ">Hiệu chuẩn ngoài / External Calibration</div>
-                  <div className="border-t-2 border-b-2 h-1 shadow border-gray-300 flex-grow"></div>
+                <div>
+                  <TextInput
+                    label={t("lblBuilding")}
+                    TextChange={(value: any) => {
+                      setText(value);
+                    }}
+                    value={text}
+                    keys="lblBuilding"
+                  />
                 </div>
                 <div>
-                    <TextInput label="Tần suất theo adidas" TextChange={(value: any) => { setText(value) }} value={text} key="input8" />
+                  <TextInput
+                    label={t("lblDepartment_Line")}
+                    TextChange={(value: any) => {
+                      setText(value);
+                    }}
+                    value={text}
+                    keys="lblDepartment_Line"
+                  />
+                </div>
+                <div>
+                  <TextInput
+                    label={t("lblPersonInCharge")}
+                    TextChange={(value: any) => {
+                      setText(value);
+                    }}
+                    value={text}
+                    keys="lblPersonInCharge"
+                  />
+                </div>
+                <div className="flex items-center  ">
+                  <div className="border-t-2 border-b-2 h-1 shadow border-gray-300 flex-grow"></div>
+                  <div className="px-3 text-gray-600 text-xs font-bold border rounded-full shadow ">
+                    {t("lblInternalCalibration")}
                   </div>
-               
+                  <div className="border-t-2 border-b-2 h-1 shadow border-gray-300 flex-grow"></div>
+                </div>
+                <div className="grid grid-cols-2 gap-2 ">
+                  <div>
+                    <TextInput
+                      label={t("lblCurrentFrequency")}
+                      TextChange={(value: any) => {
+                        setText(value);
+                      }}
+                      value={text}
+                      keys="lblCurrentFrequency"
+                    />
+                  </div>
+                  <div>
+                    <TextInput
+                      label={t("lblFrequencyFollowAdidasRequirement")}
+                      TextChange={(value: any) => {
+                        setText(value);
+                      }}
+                      value={text}
+                      keys="lblFrequencyFollowAdidasRequirement1"
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center  ">
+                  <div className="border-t-2 border-b-2 h-1 shadow border-gray-300 flex-grow"></div>
+                  <div className="px-3 text-gray-600 text-xs font-bold border rounded-full shadow ">
+                    {t("lblExternalCalibration")}
+                  </div>
+                  <div className="border-t-2 border-b-2 h-1 shadow border-gray-300 flex-grow"></div>
+                </div>
                 <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <DatetimePicker label={t("lblDateOfCalibration")} />
+                  </div>
+                  <div>
+                    <DatetimePicker label={t("lblDateOfNextCalibration")} />
+                  </div>
+                </div>
                 <div>
-                  <DatetimePicker label="Ngày hiệu chuẩn / Date Of Calibration" />
+                  <TextInput
+                    label={t("lblFrequencyFollowAdidasRequirement")}
+                    TextChange={(value: any) => {
+                      setText(value);
+                    }}
+                    value={text}
+                    keys="lblFrequencyFollowAdidasRequirement2"
+                  />
                 </div>
-                <div >
-                  <DatetimePicker label="Ngày hiệu chuẩn tiếp theo / Date Of Next Calibration" />
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <TextInput
+                      label={t("lblCertifiedCalibrationInstitute/Company")}
+                      TextChange={(value: any) => {
+                        setText(value);
+                      }}
+                      value={text}
+                      keys="lblCertifiedCalibrationInstitute/Company"
+                    />
+                  </div>
+                  <div>
+                    {/* <input type="radio" name="" id="" /> */}
+                    <RadioCheck
+                      item={optionsRadio}
+                      OnChecked={(value: any) => setStatus(value)}
+                      value={status}
+                    />
+                  </div>
                 </div>
-              </div>
+
                 <div></div>
-
               </div>
-
-
 
               {/* <div >
                 <TextInput label="Text" TextChange={(value: any) => { setText(value) }} value={text} />

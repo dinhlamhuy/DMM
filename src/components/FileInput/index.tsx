@@ -6,6 +6,7 @@ interface FileInputProps {
 }
 
 const FileInput: React.FC<FileInputProps> = ({ onImageSelected }) => {
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
