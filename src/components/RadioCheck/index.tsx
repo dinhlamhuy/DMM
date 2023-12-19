@@ -3,6 +3,7 @@ interface RadioProps {
     item:Option[];
     OnChecked: (value: string | null) => void;
     value: string | undefined;
+    names: string | undefined;
   }
 
   interface Option {
@@ -10,50 +11,41 @@ interface RadioProps {
     label: string;
     cusClass:string;
   }
-const RadioCheck: React.FC<RadioProps> = ({ item, OnChecked, value}) => {
+const RadioCheck: React.FC<RadioProps> = ({ item, OnChecked, value, names}) => {
+
     const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+   
         OnChecked(event.target.value);
+
       };
   return (
     <>
-      <ul className="grid w-full gap-2 md:grid-cols-2">
+      <ul className="grid w-full gap-2 md:grid-cols-2" >
       {item.map((radioItem) => (
-          <li key={radioItem.value}>
+          <li key={radioItem.value} >
             <input
               type="radio"
-              id={`radio-${radioItem}`}
-              name={radioItem.value}
-              value={value}
-              className={`${radioItem.cusClass} hidden peer`}
+              id={`radio-${radioItem.value}`}
+              name={names}
+              value={radioItem.value}
+              className={`hidden peer`}
               onChange={handleRadioChange}
               checked={value === radioItem.value}
+
               
             />
             <label
-              htmlFor={`radio-${radioItem}`}
-              className="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer 
-               peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 "
+              htmlFor={`radio-${radioItem.value}`}
+              className={`${radioItem.cusClass} inline-flex items-center justify-center  p-1.5 gap-4 border w-3/4 border-gray-200 rounded-lg cursor-pointer 
+              text-center  shadow 
+              ${value === radioItem.value ? '' : 'bg-white'}
+                hover:text-gray-600 hover:bg-gray-100 `}
             >
-              <div className="block">{radioItem.label}</div>
+              <div className={` items-center  ${value === radioItem.value ? 'text-white' : ''} text-center px-2 flex   `}>{radioItem.label}</div>
             </label>
           </li>
         ))}
-        {/* <li>
-          <input
-            type="radio"
-            id="hosting-small"
-            name="hosting"
-            value="hosting-small"
-            className="hidden peer"
-            required
-          />
-          <label
-            htmlFor="hosting-small"
-            className="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 "
-          >
-            <div className="block">đâsdasdasd</div>
-          </label>
-        </li> */}
+     
        
       </ul>
     </>

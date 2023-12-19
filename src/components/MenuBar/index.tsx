@@ -11,8 +11,8 @@ type Props = {
 
 const MenuBar: React.FC<Props> = ({ children }) => {
   const { t, i18n } = useTranslation();
-  const [img, setImg] = useState(VN);
-  const [lng, setLng] = useState("VN");
+  const [img, setImg] = useState(EN);
+  const [lng, setLng] = useState("EN");
 
   const ChangeLanguage = () => {
     if (lng === "VN") {

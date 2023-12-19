@@ -21,9 +21,31 @@ const HomeScreen = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [currentMenu, setCurrentMenu] = useState("chooseImg");
   const [imgAfterCrop, setImgAfterCrop] = useState("");
-  const [text, setText] = useState("");
-  const [seleted, setseleted] = useState("");
-  const [status, setStatus] = useState("PASS");
+
+  const [UniCode, setUniCode] = useState("");
+  const [FactoryCode, setFactoryCode] = useState("");
+  const [Model, setModel] = useState("");
+  const [selectedGroup, setselectedGroup] = useState("");
+  const [IncommingDate, setIncommingDate] = useState<Date>();
+  const [CurrentFrequency, setCurrentFrequency] = useState("");
+  const [FrequencyAdidas, setFrequencyAdidas] = useState("");
+  const [FrequencyOutAdidas, setFrequencyOutAdidas] = useState("");
+  const [InstituteCompany, setInstituteCompany] = useState("");
+  const [DateCalibration, setDateCalibration] = useState<Date>();
+  const [DateNextCalibration, setDateNextCalibration] = useState<Date>();
+  const [DeviceSerialNum, setDeviceSerialNum] = useState("");
+  const [Brand, setBrand] = useState("");
+  const [EquipmentName, setEquipmentName] = useState("");
+  const [Supplier, setSupplier] = useState("");
+  const [UsePurpose, setUsePurpose] = useState("");
+  const [Range, setRange] = useState("");
+  const [Building, setBuilding] = useState("");
+  const [DepartmentLine, setDepartmentLine] = useState("");
+  const [PersonInCharge, setPersonInCharge] = useState("");
+  const [Remark, setRemark] = useState("");
+  const [sttResult, setsttResult] = useState("");
+  const [txtStatus, settxtStatus] = useState("");
+
   const openModal = () => {
     setModalIsOpen(true);
   };
@@ -76,9 +98,6 @@ const HomeScreen = () => {
     // setImage("");
     setModalIsOpen(false);
   };
-  // useEffect(() => {
-  //   console.log(imgAfterCrop)
-  // }, [imgAfterCrop])
 
   const options = [
     { value: "1", label: "Nhóm 1" },
@@ -88,9 +107,34 @@ const HomeScreen = () => {
     { value: "5", label: "Nhóm 5" },
   ];
   const optionsRadio = [
-    { value: "PASS", label: t("lblPass"), cusClass: "" },
-    { value: "FAIL", label: t("lblFail"), cusClass: "" },
+    {
+      value: "PASS",
+      label: t("lblPass"),
+      cusClass:
+        "text-green-500  peer-checked:bg-green-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-lime-200",
+    },
+    {
+      value: "FAIL",
+      label: t("lblFail"),
+      cusClass:
+        "text-red-500 peer-checked:bg-red-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-red-200",
+    },
   ];
+  const optionsVaild = [
+    {
+      value: "1",
+      label: t("lblValid"),
+      cusClass:
+        "text-green-500  peer-checked:bg-green-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-lime-200",
+    },
+    {
+      value: "0",
+      label: t("lblInValid"),
+      cusClass:
+        "text-red-500 peer-checked:bg-red-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-red-200",
+    },
+  ];
+
   return (
     <>
       <MenuBar>
@@ -103,7 +147,7 @@ const HomeScreen = () => {
           >
             <div className=" ">
               <p className="titleName ">{t("lblUploadNewDevice")}</p>
-              <div className="grid  grid-cols-1 md:grid-cols-1 xl:grid-cols-2 lg:grid-cols-2  flex  ">
+              <div className="grid  grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2  flex  ">
                 <div className="  flex flex-row   justify-center mb-14 md:mb-14  ">
                   {currentMenu === "chooseImg" ? (
                     // <div className=" reviewImg">
@@ -163,9 +207,9 @@ const HomeScreen = () => {
                     <TextInput
                       label={t("lblUniqueCode")}
                       TextChange={(value: any) => {
-                        setText(value);
+                        setUniCode(value);
                       }}
-                      value={text}
+                      value={UniCode}
                       keys="lblUniqueCode"
                     />
                   </div>
@@ -174,9 +218,9 @@ const HomeScreen = () => {
                       // label="Mã số tài sản / Factory code"
                       label={t("lblFactoryCode")}
                       TextChange={(value: any) => {
-                        setText(value);
+                        setFactoryCode(value);
                       }}
-                      value={text}
+                      value={FactoryCode}
                       keys="lblFactoryCode"
                     />
                   </div>
@@ -184,9 +228,9 @@ const HomeScreen = () => {
                     <TextInput
                       label={t("lblModel")}
                       TextChange={(value: any) => {
-                        setText(value);
+                        setModel(value);
                       }}
-                      value={text}
+                      value={Model}
                       keys="lblModel"
                     />
                   </div>
@@ -194,144 +238,28 @@ const HomeScreen = () => {
                     <CreateInput
                       label={t("lblGroup")}
                       options={options}
-                      value={seleted}
+                      value={selectedGroup}
                       OnSelected={(value: any) => {
-                        setseleted(value);
+                        setselectedGroup(value);
                       }}
                     />
 
                     {/* <TextInput label="Nhóm / Group" TextChange={(value: any) => { setText(value) }} value={text}keys="input4" /> */}
                   </div>
                   <div className="relative ">
-                    <DatetimePicker label={t("lblIncommingDate")} />
+                    <DatetimePicker label={t("lblIncommingDate")} onChangeDate={(date:any)=> setIncommingDate(date)}  DateSelected={IncommingDate} />
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center mt-10 ">
-                <div className="border-t-2 border-b-2 h-2 shadow border-gray-300 flex-grow"></div>
-                <div className="px-3 text-gray-800 text-xl font-bold border rounded-full shadow ">
-                  {t("lblDeviceDetails")}
-                </div>
-                <div className="border-t-2 border-b-2 h-2 shadow border-gray-300 flex-grow"></div>
-              </div>
-              <div className="grid flex gap-5 mt-8 bg-yellow-100 pt-5 px-2.5 shadow rounded-lg">
-                <div>
-                  <TextInput
-                    label={t("lblDeviceSerialNumber")}
-                    TextChange={(value: any) => {
-                      setText(value);
-                    }}
-                    value={text}
-                    keys="lblDeviceSerialNumber"
-                  />
-                </div>
-                <div>
-                  <TextInput
-                    label={t("lblSupplier")}
-                    TextChange={(value: any) => {
-                      setText(value);
-                    }}
-                    value={text}
-                    keys="lblSupplier"
-                  />
-                </div>
-                <div>
-                  <TextInput
-                    label={t("lblBrand")}
-                    TextChange={(value: any) => {
-                      setText(value);
-                    }}
-                    value={text}
-                    keys="lblBrand"
-                  />
-                </div>
-                <div>
-                  <TextInput
-                    label={t("lblEquipmentName")}
-                    TextChange={(value: any) => {
-                      setText(value);
-                    }}
-                    value={text}
-                    keys="lblEquipmentName"
-                  />
-                </div>
-                <div>
-                  <TextInput
-                    label={t("lblRemark")}
-                    TextChange={(value: any) => {
-                      setText(value);
-                    }}
-                    value={text}
-                    keys="lblRemark"
-                  />
-                </div>
-                <div></div>
-              </div>
-            </div>
-
-            {/* Danh sach */}
-            <div className=" p-3 mb-14">
-              {/* <p className="titleName">Danh sách thiết bị vừa nhập</p> */}
-              <div className="flex items-center  ">
-                <div className="border-t-2 border-b-2 h-2 shadow border-gray-300 flex-grow"></div>
+              {/* <div className="flex items-center mt-10  ">
+                <div className="border-t-2 border-b h-2 shadow border-gray-300 flex-grow"></div>
                 <div className="px-3 text-gray-800 text-xl font-bold border rounded-full shadow ">
                   Kiểm tra định kỳ
                 </div>
-                <div className="border-t-2 border-b-2 h-2 shadow border-gray-300 flex-grow"></div>
-              </div>
-              <div className="grid flex gap-5 mt-8 bg-gray-100 pt-5 px-2.5 shadow rounded-lg">
-                <div>
-                  <TextInput
-                    label={t("lblUsePurpose_MachineIndication")}
-                    TextChange={(value: any) => {
-                      setText(value);
-                    }}
-                    value={text}
-                    keys="lblUsePurpose_MachineIndication"
-                  />
-                </div>
-                <div>
-                  <TextInput
-                    label={t("lblRange")}
-                    TextChange={(value: any) => {
-                      setText(value);
-                    }}
-                    value={text}
-                    keys="lblRange"
-                  />
-                </div>
-                <hr />
-                <div>
-                  <TextInput
-                    label={t("lblBuilding")}
-                    TextChange={(value: any) => {
-                      setText(value);
-                    }}
-                    value={text}
-                    keys="lblBuilding"
-                  />
-                </div>
-                <div>
-                  <TextInput
-                    label={t("lblDepartment_Line")}
-                    TextChange={(value: any) => {
-                      setText(value);
-                    }}
-                    value={text}
-                    keys="lblDepartment_Line"
-                  />
-                </div>
-                <div>
-                  <TextInput
-                    label={t("lblPersonInCharge")}
-                    TextChange={(value: any) => {
-                      setText(value);
-                    }}
-                    value={text}
-                    keys="lblPersonInCharge"
-                  />
-                </div>
+                <div className="border-t-2 border-b h-2 shadow border-gray-300 flex-grow"></div>
+              </div> */}
+              <div className="grid flex gap-5 mt-6 bg-gray-100 pt-4 px-2.5 shadow rounded-lg">
                 <div className="flex items-center  ">
                   <div className="border-t-2 border-b-2 h-1 shadow border-gray-300 flex-grow"></div>
                   <div className="px-3 text-gray-600 text-xs font-bold border rounded-full shadow ">
@@ -344,9 +272,9 @@ const HomeScreen = () => {
                     <TextInput
                       label={t("lblCurrentFrequency")}
                       TextChange={(value: any) => {
-                        setText(value);
+                        setCurrentFrequency(value);
                       }}
-                      value={text}
+                      value={CurrentFrequency}
                       keys="lblCurrentFrequency"
                     />
                   </div>
@@ -354,9 +282,9 @@ const HomeScreen = () => {
                     <TextInput
                       label={t("lblFrequencyFollowAdidasRequirement")}
                       TextChange={(value: any) => {
-                        setText(value);
+                        setFrequencyAdidas(value);
                       }}
-                      value={text}
+                      value={FrequencyAdidas}
                       keys="lblFrequencyFollowAdidasRequirement1"
                     />
                   </div>
@@ -368,21 +296,14 @@ const HomeScreen = () => {
                   </div>
                   <div className="border-t-2 border-b-2 h-1 shadow border-gray-300 flex-grow"></div>
                 </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <DatetimePicker label={t("lblDateOfCalibration")} />
-                  </div>
-                  <div>
-                    <DatetimePicker label={t("lblDateOfNextCalibration")} />
-                  </div>
-                </div>
+             
                 <div>
                   <TextInput
                     label={t("lblFrequencyFollowAdidasRequirement")}
                     TextChange={(value: any) => {
-                      setText(value);
+                      setFrequencyOutAdidas(value);
                     }}
-                    value={text}
+                    value={FrequencyOutAdidas}
                     keys="lblFrequencyFollowAdidasRequirement2"
                   />
                 </div>
@@ -391,43 +312,176 @@ const HomeScreen = () => {
                     <TextInput
                       label={t("lblCertifiedCalibrationInstitute/Company")}
                       TextChange={(value: any) => {
-                        setText(value);
+                        setInstituteCompany(value);
                       }}
-                      value={text}
+                      value={InstituteCompany}
                       keys="lblCertifiedCalibrationInstitute/Company"
                     />
                   </div>
                   <div>
-                    {/* <input type="radio" name="" id="" /> */}
                     <RadioCheck
+                      names={"Vaild"}
                       item={optionsRadio}
-                      OnChecked={(value: any) => setStatus(value)}
-                      value={status}
+                      OnChecked={(value: any) => {
+                        setsttResult(value);
+                        // console.log(value);
+                      }}
+                      value={sttResult}
                     />
                   </div>
                 </div>
+                <div className="grid grid-cols-2 gap-x-2">
+                  <div>
+                    <DatetimePicker label={t("lblDateOfCalibration")} onChangeDate={(date:any)=> setDateCalibration(date)}  DateSelected={DateCalibration} />
+                  </div>
+                  <div>
+                    <DatetimePicker label={t("lblDateOfNextCalibration")} onChangeDate={(date:any)=> setDateNextCalibration(date)}  DateSelected={DateNextCalibration} />
+                  </div>
+                </div>
 
+              
+              </div>
+            </div>
+
+            {/* Danh sach */}
+            <div className=" p-3  ">
+              <div className="flex items-center mt-12  ">
+                <div className="border-t-2 border-b-2 h-2 shadow border-gray-300 flex-grow"></div>
+                <div className="px-3 text-gray-800 text-xl font-bold border rounded-full shadow ">
+                  {t("lblDeviceDetails")}
+                </div>
+                <div className="border-t-2 border-b-2 h-2 shadow border-gray-300 flex-grow"></div>
+              </div>
+              {/* <p className="titleName">Danh sách thiết bị vừa nhập</p> */}
+              <div className="grid flex gap-5 mt-8 bg-yellow-100 pt-5 px-2.5 shadow rounded-lg">
+                <div className="grid md:grid-cols-2 grid-cols-1 gap-5 md:gap-2">
+                  <div>
+                    <TextInput
+                      label={t("lblDeviceSerialNumber")}
+                      TextChange={(value: any) => {
+                        setDeviceSerialNum(value);
+                      }}
+                      value={DeviceSerialNum}
+                      keys="lblDeviceSerialNumber"
+                    />
+                  </div>
+                  <div>
+                    <TextInput
+                      label={t("lblBrand")}
+                      TextChange={(value: any) => {
+                        setBrand(value);
+                      }}
+                      value={Brand}
+                      keys="lblBrand"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <TextInput
+                    label={t("lblEquipmentName")}
+                    TextChange={(value: any) => {
+                      setEquipmentName(value);
+                    }}
+                    value={EquipmentName}
+                    keys="lblEquipmentName"
+                  />
+                </div>
+                <div>
+                  <TextInput
+                    label={t("lblSupplier")}
+                    TextChange={(value: any) => {
+                      setSupplier(value);
+                    }}
+                    value={Supplier}
+                    keys="lblSupplier"
+                  />
+                </div>
+
+                <div>
+                  <TextInput
+                    label={t("lblUsePurpose_MachineIndication")}
+                    TextChange={(value: any) => {
+                      setUsePurpose(value);
+                    }}
+                    value={UsePurpose}
+                    keys="lblUsePurpose_MachineIndication"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <TextInput
+                      label={t("lblRange")}
+                      TextChange={(value: any) => {
+                        setRange(value);
+                      }}
+                      value={Range}
+                      keys="lblRange"
+                    />
+                  </div>
+                  <div>
+                    <RadioCheck
+                      names={"Status"}
+                      item={optionsVaild}
+                      OnChecked={(value: any) => {
+                        settxtStatus(value);
+                        // console.log(value);
+                      }}
+                      value={txtStatus}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <TextInput
+                      label={t("lblBuilding")}
+                      TextChange={(value: any) => {
+                        setBuilding(value);
+                      }}
+                      value={Building}
+                      keys="lblBuilding"
+                    />
+                  </div>
+                  <div>
+                    <TextInput
+                      label={t("lblDepartment_Line")}
+                      TextChange={(value: any) => {
+                        setDepartmentLine(value);
+                      }}
+                      value={DepartmentLine}
+                      keys="lblDepartment_Line"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <TextInput
+                    label={t("lblPersonInCharge")}
+                    TextChange={(value: any) => {
+                      setPersonInCharge(value);
+                    }}
+                    value={PersonInCharge}
+                    keys="lblPersonInCharge"
+                  />
+                </div>
+
+                <div>
+                  <TextInput
+                    label={t("lblRemark")}
+                    TextChange={(value: any) => {
+                      setRemark(value);
+                    }}
+                    value={Remark}
+                    keys="lblRemark"
+                  />
+                </div>
                 <div></div>
               </div>
-
-              {/* <div >
-                <TextInput label="Text" TextChange={(value: any) => { setText(value) }} value={text} />
+              <div className="text-center justify-center flex gap-3">
+                <button className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-gray-400 flex text-center justify-center items-center " disabled>Chỉnh sửa</button>
+                <button className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center">Thêm mới</button>
+                <button className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center">Làm mới</button>
+                {/* <button className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center"></button> */}
               </div>
-              <div>
-                <SelectInput label="Chọn Mã kệ" options={options} />
-
-              </div>
-              <div>
-                <CreateInput label="Chọn vị trí hoặc thêm" options={options} />
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <DatetimePicker label="Ngày nhập về/ " />
-                </div>
-                <div >
-                  <DatetimePicker label="Ngày nhập về/ " />
-                </div>
-              </div> */}
             </div>
           </div>
         </div>

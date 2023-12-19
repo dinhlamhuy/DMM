@@ -10,7 +10,7 @@ const ImageCropper = ({ image, onCropDone, onCropCancel }: any) => {
 
   const [aspectRatio] = useState(1 / 1);
   const onCropComplete = (
-    croppedAreaPercentage: any,
+    _croppedAreaPercentage: any,
     croppedAreaPixels: any
   ) => {
     setCroppedArea(croppedAreaPixels);

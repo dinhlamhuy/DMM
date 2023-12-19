@@ -1,20 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getMonth, getYear } from 'date-fns';
-import { useState } from 'react';
-import DatePicker from 'react-datepicker';
+import { getMonth, getYear } from "date-fns";
+// import { useState } from "react";
+import DatePicker from "react-datepicker";
 import { Portal } from "react-overlays";
 import "react-datepicker/dist/react-datepicker.css";
 interface DatePickerProps {
- label:string;
+  label: string;
+  onChangeDate: (value: Date | null) => void;
+  DateSelected: Date | null | undefined;
 }
 
-const DatetimePicker: React.FC<DatePickerProps> = ({label}) => {
-
-  const CalendarContainer = ({ children }:any) => {
+const DatetimePicker: React.FC<DatePickerProps> = ({
+  label,
+  onChangeDate,
+  DateSelected,
+}) => {
+  const CalendarContainer = ({ children }: any) => {
     const el = document.getElementById("calendar-portal");
-    return <Portal container={el} >{children}</Portal>;
+    return <Portal container={el}>{children}</Portal>;
   };
-  const years = Array.from({ length: getYear(new Date()) - 1999 }, (_, index) => 2007 + index);
+  const years = Array.from(
+    { length: getYear(new Date()) - 1999 },
+    (_, index) => 2007 + index
+  );
   const months = [
     "January",
     "February",
@@ -30,15 +38,14 @@ const DatetimePicker: React.FC<DatePickerProps> = ({label}) => {
     "December",
   ];
 
-  const [startDate, setStartDate] = useState(new Date());
-
-
-
+  // const [startDate, setStartDate] = useState(new Date());
+  const handleChangeTime = (Date: Date | null) => {
+    onChangeDate(Date);
+  };
 
   return (
-    <div className='relative'>
- 
-      <DatePicker 
+    <div className="relative">
+      <DatePicker
         renderCustomHeader={({
           date,
           changeYear,
@@ -50,19 +57,20 @@ const DatetimePicker: React.FC<DatePickerProps> = ({label}) => {
         }) => (
           <div
             style={{
-          
               display: "flex",
               justifyContent: "center",
             }}
           >
-            <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled} className="btn  px-3 py-1 bg-blue-300 rounded-lg  ">
+            <button
+              onClick={decreaseMonth}
+              disabled={prevMonthButtonDisabled}
+              className="btn  px-3 py-1 bg-blue-300 rounded-lg  "
+            >
               {"<"}
             </button>
             <select
               value={getYear(date)}
-              onChange={
-                ({ target: { value } }) => changeYear(Number(value))
-              }
+              onChange={({ target: { value } }) => changeYear(Number(value))}
             >
               {years.map((option) => (
                 <option key={option} value={option}>
@@ -84,13 +92,17 @@ const DatetimePicker: React.FC<DatePickerProps> = ({label}) => {
               ))}
             </select>
 
-            <button onClick={increaseMonth} disabled={nextMonthButtonDisabled} className="btn  px-3 py-1 bg-blue-300 rounded-lg  ">
+            <button
+              onClick={increaseMonth}
+              disabled={nextMonthButtonDisabled}
+              className="btn  px-3 py-1 bg-blue-300 rounded-lg  "
+            >
               {">"}
             </button>
           </div>
         )}
-        popperContainer={CalendarContainer} popperPlacement="bottom-end"
-
+        popperContainer={CalendarContainer}
+        popperPlacement="bottom-end"
         enableTabLoop={false}
         popperModifiers={[
           {
@@ -104,18 +116,22 @@ const DatetimePicker: React.FC<DatePickerProps> = ({label}) => {
             options: {
               rootBoundary: "viewport",
               tether: false,
-              altAxis: true, 
+              altAxis: true,
             },
           },
         ]}
-        calendarClassName="calender-custom-position" 
-        placeholderText='YYYY/MM/DD'  
-        dateFormat="yyyy/MM/dd" className='  block  text-center border p-2.5 w-full 
+        calendarClassName="calender-custom-position"
+        placeholderText="YYYY/MM/DD"
+        dateFormat="yyyy/MM/dd"
+        className="  block  text-center border p-2.5 w-full 
          text-gray-900  rounded-xl shadow  
            bg-white  
-           '
-        selected={startDate} onChange={(date: any) => setStartDate(date)} />
-<label  className="relative text-left w-fit flex  text-red-900  duration-300 transform  border-t-1  rounded-lg  
+           "
+        selected={DateSelected}
+        onChange={(value: any) => handleChangeTime(value)}
+      />
+      <label
+        className="relative text-left w-fit flex  text-red-900  duration-300 transform  border-t-1  rounded-lg  
       -translate-y-4 scale-75 -top-10    origin-[0] bg-white  px-2  mb-0
 
    
@@ -126,9 +142,7 @@ const DatetimePicker: React.FC<DatePickerProps> = ({label}) => {
       >
         {label}
       </label>
-     
     </div>
   );
-}
+};
 export default DatetimePicker;
-
