@@ -4,12 +4,14 @@ import logo from "../../../public/img/logo.png";
 import EN from "../../../public/img/en.png";
 import VN from "../../../public/img/vn.png";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   children: ReactNode;
 };
 
 const MenuBar: React.FC<Props> = ({ children }) => {
+
   const { t, i18n } = useTranslation();
   const [img, setImg] = useState(EN);
   const [lng, setLng] = useState("EN");
@@ -25,6 +27,11 @@ const MenuBar: React.FC<Props> = ({ children }) => {
 
     i18n.changeLanguage(lng);
   };
+  const navigate = useNavigate();
+  const handleUrl=(link:string)=>{
+    navigate(link);
+  }
+  
   const [isOpenSlide, setIsOpenSlide] = useState(false);
 
   return (
@@ -146,7 +153,7 @@ const MenuBar: React.FC<Props> = ({ children }) => {
               </button>
             </li>
             <li>
-              <button className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
+              <button onClick={()=>handleUrl('/login')}  className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
                 <svg
                   className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75  group-hover:text-gray-900 "
                   aria-hidden="true"
