@@ -53,9 +53,9 @@ const CreateInput: React.FC<SelectProps> = ({
       />
       {value && (
         <label
-          className="absolute  top-5 left-3 bg-white px-2 text-blue-600  h-fit  
+          className="absolute  top-5 bg-white px-2 text-blue-600  h-fit  
    rounded-t-lg
-  start-0  ml-0.5
+  start-0  
   truncate pointer-events-none transition ease-in-out 
   duration-100 border border-transparent 
   peer-disabled:opacity-50 peer-disabled:pointer-events-none

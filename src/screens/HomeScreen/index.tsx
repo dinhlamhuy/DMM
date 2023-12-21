@@ -23,6 +23,7 @@ const HomeScreen = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [currentMenu, setCurrentMenu] = useState("chooseImg");
   const [imgAfterCrop, setImgAfterCrop] = useState("");
+  const [DarkMode, setDarkMode] = useState(false);
 
   const [UniCode, setUniCode] = useState("");
   const [FactoryCode, setFactoryCode] = useState("");
@@ -56,7 +57,7 @@ const HomeScreen = () => {
       Device_Name: EquipmentName,
       Status: txtStatus,
       Group_Serial_Key: selectedGroup,
-      anh: imgAfterCrop.replace('data:image/jpeg;base64,',''),
+      anh: imgAfterCrop.replace('data:image/jpeg;base64,', ''),
       Model_Device: Model,
       Device_Serial_Number: DeviceSerialNum,
       Device_Brand: Brand,
@@ -88,7 +89,7 @@ const HomeScreen = () => {
           console.log("thành công");
         }
       })
-      .finally(() => {});
+      .finally(() => { });
   };
   const openModal = () => {
     setModalIsOpen(true);
@@ -180,11 +181,11 @@ const HomeScreen = () => {
 
   return (
     <>
-      <MenuBar>
+      <MenuBar onDarkMode={(darkmode: boolean | ((prevState: boolean) => boolean)) => setDarkMode(darkmode)}>
         <div className="container items-center justify-center mx-auto">
           {/* //  */}
           <div className="grid">
-            <p className="titleName flex justify-center dark:text-white ">
+            <p className={`titleName flex justify-center ${DarkMode ? "dark:text-white text-white" : ""} `}>
               {t("lblUploadNewDevice")}
             </p>
           </div>
@@ -199,14 +200,14 @@ const HomeScreen = () => {
                 <div className="  flex flex-row   justify-center mb-14 md:mb-14  ">
                   {currentMenu === "chooseImg" ? (
                     // <div className=" reviewImg">
-                    <div className="  cropped-img NoneImg grid  flex dark:text-white  content-around md:py-5 lg:py-5 xl:py-5  ">
-                      <div className="row-span-2 uploadView dark:text-white">
-                        <p className="dark:text-white text-[#008080]">
+                    <div className={`cropped-img NoneImg grid  flex  ${DarkMode ? "dark:text-white text-white" : ""}  content-around md:py-5 lg:py-5 xl:py-5  `}>
+                      <div className={`row-span-2 uploadView  ${DarkMode ? "dark:text-white text-white" : ""} `}>
+                        <p className={` ${DarkMode ? "dark:text-white text-white" : "text-[#008080]"} `}>
                           {" "}
                           Camera{" "}
                         </p>
-                        <p className="dark:text-white text-[#008080]"> OR</p>
-                        <p className="dark:text-white text-[#008080]">
+                        <p className={` ${DarkMode ? "dark:text-white text-white" : "text-[#008080]"} `}> OR</p>
+                        <p className={` ${DarkMode ? "dark:text-white text-white" : "text-[#008080]"} `}>
                           Upload an Image{" "}
                         </p>
                       </div>
@@ -238,7 +239,7 @@ const HomeScreen = () => {
                             setImage("");
                             closeModal();
                           }}
-                          className=" dark:border-yellow-400 text-red-700  btn border items-center flex text-center justify-center   text-3xl p-2"
+                          className={` ${DarkMode ? " dark:border-yellow-400 border-yellow-400" : ""} text-red-700 btn border items-center flex text-center justify-center   text-3xl p-2`}
                         >
                           <FaRegTrashAlt />
                         </button>
@@ -247,7 +248,7 @@ const HomeScreen = () => {
                             setCurrentMenu("cropImg");
                             openModal();
                           }}
-                          className="dark:border-yellow-400 text-green-500  btn  border  items-center flex text-center justify-center  text-3xl p-2"
+                          className={` ${DarkMode ? " dark:border-yellow-400 border-yellow-400" : ""} text-green-500  btn  border  items-center flex text-center justify-center  text-3xl p-2`}
                         >
                           <MdEditSquare />
                         </button>
@@ -255,7 +256,7 @@ const HomeScreen = () => {
                     </div>
                   )}
                 </div>
-                <div className=" grid  gap-y-5   py-4 px-2.5 bg-gray-100 dark:bg-zinc-900  rounded-md  relative flex items-end   shadow-md">
+                <div className={` ${DarkMode ? "dark:bg-zinc-900  bg-zinc-900 " : ""} grid  gap-y-5   py-4 px-2.5 bg-gray-100 rounded-md  relative flex items-end   shadow-md`}>
                   <div>
                     <TextInput
                       label={t("lblUniqueCode")}
@@ -310,19 +311,19 @@ const HomeScreen = () => {
               </div>
 
               {/* <div className="flex items-center mt-10  ">
-                <div className="border-t-2 border-b h-2 shadow border-gray-300 flex-grow"></div>
+                <div className="border-t-2 border-b h-2 shadow border-teal-700  flex-grow"></div>
                 <div className="px-3 text-gray-800 text-xl font-bold border rounded-full shadow ">
                   Kiểm tra định kỳ
                 </div>
-                <div className="border-t-2 border-b h-2 shadow border-gray-300 flex-grow"></div>
+                <div className="border-t-2 border-b h-2 shadow border-teal-700  flex-grow"></div>
               </div> */}
-              <div className="grid flex gap-5 mt-6 bg-gray-100 dark:bg-zinc-700 pt-4 px-2.5 shadow rounded-lg">
+              <div className={` ${DarkMode ? "dark:bg-zinc-700 bg-zinc-700" : ""} grid flex gap-5 mt-6 bg-gray-100  pt-4 px-2.5 shadow rounded-lg`}>
                 <div className="flex items-center  ">
-                  <div className="border-t-2 border-b-2 h-1 shadow border-gray-300 flex-grow"></div>
-                  <div className="px-3 text-gray-600 dark:text-white text-xs font-bold border rounded-full shadow ">
+                  <div className="border h-1 shadow rounded-l-full border-teal-700  flex-grow"></div>
+                  <div className={` ${DarkMode ? "dark:text-teal-400 dark:text-white text-white text-teal-400" : ""} px-3 text-teal-900  text-xs font-bold border border-teal-400  rounded-full shadow `}>
                     {t("lblInternalCalibration")}
                   </div>
-                  <div className="border-t-2 border-b-2 h-1 shadow border-gray-300 flex-grow"></div>
+                  <div className="border h-1 shadow rounded-r-full border-teal-700  flex-grow"></div>
                 </div>
                 <div className="grid grid-cols-2 gap-2 ">
                   <div>
@@ -347,11 +348,11 @@ const HomeScreen = () => {
                   </div>
                 </div>
                 <div className="flex items-center  ">
-                  <div className="border-t-2 border-b-2 h-1 shadow rounded-l-full border-gray-300 flex-grow"></div>
-                  <div className="px-3 text-gray-600 dark:text-white text-xs font-bold border rounded-full shadow ">
+                  <div className="border h-1 shadow rounded-l-full border-teal-700  flex-grow"></div>
+                  <div className={` ${DarkMode ? "dark:text-teal-400 dark:text-white text-white text-teal-400" : ""} px-3 text-teal-900  text-xs font-bold border border-teal-400  rounded-full shadow `}>
                     {t("lblExternalCalibration")}
                   </div>
-                  <div className="border-t-2 border-b-2 h-1 shadow rounded-r-full border-gray-300 flex-grow"></div>
+                  <div className="border  h-1 shadow rounded-r-full border-teal-700 flex-grow"></div>
                 </div>
 
                 <div>
@@ -407,17 +408,19 @@ const HomeScreen = () => {
             </div>
 
             {/* Danh sach */}
-            <div className=" p-3  ">
-              <div className="flex items-center   ">
-                <div className="border-2 rounded-l-full h-1 shadow border-gray-300 flex-grow"></div>
-                <div className="px-3 text-gray-800 dark:text-white text-xl font-bold border rounded-full shadow ">
-                  {t("lblDeviceDetails")}
-                </div>
-                <div className="border-2 rounded-r-full  h-1 shadow border-gray-300 flex-grow"></div>
-              </div>
+            <div className=" px-2 ">
+
               {/* <p className="titleName">Danh sách thiết bị vừa nhập</p> */}
-              <div className="grid flex gap-5 mt-8 bg-yellow-100 dark:bg-zinc-900 pt-5 px-2.5 shadow rounded-lg">
+              <div className={`grid flex gap-5   ${DarkMode ? "dark:bg-zinc-900 bg-zinc-900" : "bg-yellow-100"} pt-5 px-2.5 shadow rounded-lg`}>
+                <div className="flex items-center   ">
+                  <div className="border-2 rounded-l-full h-1 shadow border-teal-700  flex-grow"></div>
+                  <div className="px-3 text-teal-700 dark:text-teal-600 text-xl font-bold border-teal-700 border rounded-full shadow ">
+                    {t("lblDeviceDetails")}
+                  </div>
+                  <div className="border-2 rounded-r-full  h-1 shadow border-teal-700  flex-grow"></div>
+                </div>
                 <div className="grid md:grid-cols-2 grid-cols-1 gap-5 md:gap-2">
+
                   <div>
                     <TextInput
                       label={t("lblDeviceSerialNumber")}

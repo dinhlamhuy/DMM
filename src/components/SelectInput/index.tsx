@@ -38,7 +38,7 @@ const SelectInput: React.FC<SelectProps> = ({label,options}) => (
     />
     <label
       className="absolute  top-5 left-3 bg-white px-2   h-fit     border-t-1 border-l-1 border-r-1 rounded-full bg-gray-100 shadow-md shadow-gray-300 
-      start-0  ml-0.5 text-ms
+      start-0  text-ms
       truncate pointer-events-none transition ease-in-out 
       duration-100 border border-transparent 
       peer-disabled:opacity-50 peer-disabled:pointer-events-none

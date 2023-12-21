@@ -138,7 +138,7 @@ const DatetimePicker: React.FC<DatePickerProps> = ({
     
       rtl:peer-focus:translate-x-1/4 
       rtl:peer-focus:left-auto 
-      start-1 border-X"
+      start-0 border-X"
       >
         {label}
       </label>

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Expletus+Sans:wght@600&display=swap');
+
 #root {
   background: #ece6e6;
   margin: 0 auto;
@@ -5,9 +7,6 @@
   text-align: center;
 }
 
-html {
-  background: #ece6e6;
-}
 
 
 .cropper {
@@ -108,7 +107,8 @@ html {
 
 .projectName {
   font-weight: 800 !important;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: 'Expletus Sans', sans-serif;
+  /* font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
 }
 
 .uploadView p {
@@ -213,4 +213,9 @@ label{
 
 .css-iouwon-menu div{
   z-index: 990000000 !important;
+}
+input:focus{
+  outline: none !important;
+  /* outline: none !important;
+  border: none !important; */
 }
