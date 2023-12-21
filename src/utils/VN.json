@@ -36,7 +36,13 @@
     "lblListDevice": "Danh sách thiết bị",
     "lblLogout": "Thoát",
     "lblUploadNewDevice": "Upload thiết bị mới",
-    "lblDeviceDetails": "Thông tin chi tiết thiết bị"
+    "lblDeviceDetails": "Thông tin chi tiết thiết bị",
+    "lblLogin": "Đăng nhập",
+    "lblUserID": "User ID",
+    "lblPassword": "Mật khẩu"
+
+
+
 
 
 

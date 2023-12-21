@@ -36,7 +36,13 @@
     "lblListDevice": "List Device",
     "lblLogout": "Log Out",
     "lblUploadNewDevice": "Upload new device",
-    "lblDeviceDetails": "Device details"
+    "lblDeviceDetails": "Device details",
+    "lblLogin": "Login",
+    "lblUserID": "User ID",
+    "lblPassword": "Password"
+
+
+
 
 
 

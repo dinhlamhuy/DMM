@@ -50,9 +50,9 @@ const Camera: React.FC<CameraProps> = ({ onCancelCam, onImageSelected }) => {
           mirrored={true}
         />
         <div className="grid grid-cols-2  ">
-          <button className="border justify-center items-center  flex btnIcon btn px-2 text-3xl" onClick={HandleCancel}><ImCancelCircle />
+          <button className="text-red-500 border dark:border-yellow-400 justify-center items-center  flex  btn px-2 text-3xl" onClick={HandleCancel}><ImCancelCircle />
           </button>
-          <button className="border justify-center items-center   flex btnIcon btn px-2 text-4xl" onClick={capture}><IoCamera />
+          <button className="text-fuchsia-700 border dark:border-yellow-400 justify-center items-center   flex  btn px-2 text-4xl" onClick={capture}><IoCamera />
           </button>
         </div>
       </div>

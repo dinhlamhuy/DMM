@@ -13,6 +13,8 @@ import CreateInput from "../../components/CreateInput";
 import DatetimePicker from "../../components/DatetimePicker";
 import { useTranslation } from "react-i18next";
 import RadioCheck from "../../components/RadioCheck";
+import { api, config } from "../../utils/linkApi";
+import axios from "axios";
 
 const HomeScreen = () => {
   const { t } = useTranslation();
@@ -27,9 +29,9 @@ const HomeScreen = () => {
   const [Model, setModel] = useState("");
   const [selectedGroup, setselectedGroup] = useState("");
   const [IncommingDate, setIncommingDate] = useState<Date>();
-  const [CurrentFrequency, setCurrentFrequency] = useState("");
-  const [FrequencyAdidas, setFrequencyAdidas] = useState("");
-  const [FrequencyOutAdidas, setFrequencyOutAdidas] = useState("");
+  const [CurrentFrequency, setCurrentFrequency] = useState("Monthly");
+  const [FrequencyAdidas, setFrequencyAdidas] = useState("One per year");
+  const [FrequencyOutAdidas, setFrequencyOutAdidas] = useState("One per year");
   const [InstituteCompany, setInstituteCompany] = useState("");
   const [DateCalibration, setDateCalibration] = useState<Date>();
   const [DateNextCalibration, setDateNextCalibration] = useState<Date>();
@@ -46,6 +48,48 @@ const HomeScreen = () => {
   const [sttResult, setsttResult] = useState("");
   const [txtStatus, settxtStatus] = useState("");
 
+  const AddDevice = () => {
+    const url = api + "/api/Device/Insert_Device";
+    const data = {
+      Unique_ID: UniCode,
+      Factory_ID: FactoryCode,
+      Device_Name: EquipmentName,
+      Status: txtStatus,
+      Group_Serial_Key: selectedGroup,
+      anh: imgAfterCrop.replace('data:image/jpeg;base64,',''),
+      Model_Device: Model,
+      Device_Serial_Number: DeviceSerialNum,
+      Device_Brand: Brand,
+      Supplier_Name: Supplier,
+      Note: Remark,
+      Person_Serial_Key: PersonInCharge,
+      Frequency_Adidas: "One per year",
+      Quality_Testing_Center: "Quang Lạc",
+      Result: sttResult,
+      Note_External_Calibration: "Pass",
+      Frequency_Adidas_Internal: "Monthly",
+      Frequency_Internal: "Monthly",
+      Status_Internal: "Valid",
+      Note_Internal: "",
+      Factory: "N/A",
+      Building: Building,
+      Department: DepartmentLine,
+      Use_Purpose_Machine_Indication: UsePurpose,
+      Range: Range,
+      Note_Measurement: UsePurpose,
+      Group_Name: selectedGroup,
+      Group_Description: selectedGroup,
+    };
+
+    axios
+      .post(url, data, config)
+      .then((response: any) => {
+        if (response.data !== null) {
+          console.log("thành công");
+        }
+      })
+      .finally(() => {});
+  };
   const openModal = () => {
     setModalIsOpen(true);
   };
@@ -89,13 +133,12 @@ const HomeScreen = () => {
         );
         const dataURL = canvasEle.toDataURL("image/jpeg");
         setImgAfterCrop(dataURL);
+        console.log(dataURL);
         setCurrentMenu("imgCropped");
       };
     }
   };
   const onCropCancel = () => {
-    // setCurrentMenu("chooseImg");
-    // setImage("");
     setModalIsOpen(false);
   };
 
@@ -140,22 +183,32 @@ const HomeScreen = () => {
       <MenuBar>
         <div className="container items-center justify-center mx-auto">
           {/* //  */}
+          <div className="grid">
+            <p className="titleName flex justify-center dark:text-white ">
+              {t("lblUploadNewDevice")}
+            </p>
+          </div>
+
           <div
             className=" flex grid
            grid-flow-col  grid-rows-2 md:grid-rows-2 gap-3 lg:grid-rows-1 xl:grid-rows-1 
            "
           >
             <div className=" ">
-              <p className="titleName ">{t("lblUploadNewDevice")}</p>
               <div className="grid  grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2  flex  ">
                 <div className="  flex flex-row   justify-center mb-14 md:mb-14  ">
                   {currentMenu === "chooseImg" ? (
                     // <div className=" reviewImg">
-                    <div className="  cropped-img NoneImg grid  flex  content-around md:py-5 lg:py-5 xl:py-5  ">
-                      <div className="row-span-2 uploadView">
-                        <p> Camera </p>
-                        <p> OR</p>
-                        <p>Upload an Image </p>
+                    <div className="  cropped-img NoneImg grid  flex dark:text-white  content-around md:py-5 lg:py-5 xl:py-5  ">
+                      <div className="row-span-2 uploadView dark:text-white">
+                        <p className="dark:text-white text-[#008080]">
+                          {" "}
+                          Camera{" "}
+                        </p>
+                        <p className="dark:text-white text-[#008080]"> OR</p>
+                        <p className="dark:text-white text-[#008080]">
+                          Upload an Image{" "}
+                        </p>
                       </div>
                       <div className="justify-center">
                         <button
@@ -185,7 +238,7 @@ const HomeScreen = () => {
                             setImage("");
                             closeModal();
                           }}
-                          className=" text-red-600 btnIcon btn border items-center flex text-center justify-center   text-3xl p-2"
+                          className=" dark:border-yellow-400 text-red-700  btn border items-center flex text-center justify-center   text-3xl p-2"
                         >
                           <FaRegTrashAlt />
                         </button>
@@ -194,7 +247,7 @@ const HomeScreen = () => {
                             setCurrentMenu("cropImg");
                             openModal();
                           }}
-                          className="text-green-700 btnIcon btn  border  items-center flex text-center justify-center  text-3xl p-2"
+                          className="dark:border-yellow-400 text-green-500  btn  border  items-center flex text-center justify-center  text-3xl p-2"
                         >
                           <MdEditSquare />
                         </button>
@@ -202,7 +255,7 @@ const HomeScreen = () => {
                     </div>
                   )}
                 </div>
-                <div className=" grid  gap-y-5  border py-4 px-2.5 bg-gray-100 rounded-md  relative flex items-end   shadow-md">
+                <div className=" grid  gap-y-5   py-4 px-2.5 bg-gray-100 dark:bg-zinc-900  rounded-md  relative flex items-end   shadow-md">
                   <div>
                     <TextInput
                       label={t("lblUniqueCode")}
@@ -247,7 +300,11 @@ const HomeScreen = () => {
                     {/* <TextInput label="Nhóm / Group" TextChange={(value: any) => { setText(value) }} value={text}keys="input4" /> */}
                   </div>
                   <div className="relative ">
-                    <DatetimePicker label={t("lblIncommingDate")} onChangeDate={(date:any)=> setIncommingDate(date)}  DateSelected={IncommingDate} />
+                    <DatetimePicker
+                      label={t("lblIncommingDate")}
+                      onChangeDate={(date: any) => setIncommingDate(date)}
+                      DateSelected={IncommingDate}
+                    />
                   </div>
                 </div>
               </div>
@@ -259,10 +316,10 @@ const HomeScreen = () => {
                 </div>
                 <div className="border-t-2 border-b h-2 shadow border-gray-300 flex-grow"></div>
               </div> */}
-              <div className="grid flex gap-5 mt-6 bg-gray-100 pt-4 px-2.5 shadow rounded-lg">
+              <div className="grid flex gap-5 mt-6 bg-gray-100 dark:bg-zinc-700 pt-4 px-2.5 shadow rounded-lg">
                 <div className="flex items-center  ">
                   <div className="border-t-2 border-b-2 h-1 shadow border-gray-300 flex-grow"></div>
-                  <div className="px-3 text-gray-600 text-xs font-bold border rounded-full shadow ">
+                  <div className="px-3 text-gray-600 dark:text-white text-xs font-bold border rounded-full shadow ">
                     {t("lblInternalCalibration")}
                   </div>
                   <div className="border-t-2 border-b-2 h-1 shadow border-gray-300 flex-grow"></div>
@@ -290,13 +347,13 @@ const HomeScreen = () => {
                   </div>
                 </div>
                 <div className="flex items-center  ">
-                  <div className="border-t-2 border-b-2 h-1 shadow border-gray-300 flex-grow"></div>
-                  <div className="px-3 text-gray-600 text-xs font-bold border rounded-full shadow ">
+                  <div className="border-t-2 border-b-2 h-1 shadow rounded-l-full border-gray-300 flex-grow"></div>
+                  <div className="px-3 text-gray-600 dark:text-white text-xs font-bold border rounded-full shadow ">
                     {t("lblExternalCalibration")}
                   </div>
-                  <div className="border-t-2 border-b-2 h-1 shadow border-gray-300 flex-grow"></div>
+                  <div className="border-t-2 border-b-2 h-1 shadow rounded-r-full border-gray-300 flex-grow"></div>
                 </div>
-             
+
                 <div>
                   <TextInput
                     label={t("lblFrequencyFollowAdidasRequirement")}
@@ -332,28 +389,34 @@ const HomeScreen = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-x-2">
                   <div>
-                    <DatetimePicker label={t("lblDateOfCalibration")} onChangeDate={(date:any)=> setDateCalibration(date)}  DateSelected={DateCalibration} />
+                    <DatetimePicker
+                      label={t("lblDateOfCalibration")}
+                      onChangeDate={(date: any) => setDateCalibration(date)}
+                      DateSelected={DateCalibration}
+                    />
                   </div>
                   <div>
-                    <DatetimePicker label={t("lblDateOfNextCalibration")} onChangeDate={(date:any)=> setDateNextCalibration(date)}  DateSelected={DateNextCalibration} />
+                    <DatetimePicker
+                      label={t("lblDateOfNextCalibration")}
+                      onChangeDate={(date: any) => setDateNextCalibration(date)}
+                      DateSelected={DateNextCalibration}
+                    />
                   </div>
                 </div>
-
-              
               </div>
             </div>
 
             {/* Danh sach */}
             <div className=" p-3  ">
-              <div className="flex items-center mt-12  ">
-                <div className="border-t-2 border-b-2 h-2 shadow border-gray-300 flex-grow"></div>
-                <div className="px-3 text-gray-800 text-xl font-bold border rounded-full shadow ">
+              <div className="flex items-center   ">
+                <div className="border-2 rounded-l-full h-1 shadow border-gray-300 flex-grow"></div>
+                <div className="px-3 text-gray-800 dark:text-white text-xl font-bold border rounded-full shadow ">
                   {t("lblDeviceDetails")}
                 </div>
-                <div className="border-t-2 border-b-2 h-2 shadow border-gray-300 flex-grow"></div>
+                <div className="border-2 rounded-r-full  h-1 shadow border-gray-300 flex-grow"></div>
               </div>
               {/* <p className="titleName">Danh sách thiết bị vừa nhập</p> */}
-              <div className="grid flex gap-5 mt-8 bg-yellow-100 pt-5 px-2.5 shadow rounded-lg">
+              <div className="grid flex gap-5 mt-8 bg-yellow-100 dark:bg-zinc-900 pt-5 px-2.5 shadow rounded-lg">
                 <div className="grid md:grid-cols-2 grid-cols-1 gap-5 md:gap-2">
                   <div>
                     <TextInput
@@ -477,9 +540,18 @@ const HomeScreen = () => {
                 <div></div>
               </div>
               <div className="text-center justify-center flex gap-3">
-                <button className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-gray-400 flex text-center justify-center items-center " disabled>Chỉnh sửa</button>
-                <button className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center">Thêm mới</button>
-                <button className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center">Làm mới</button>
+                <button
+                  className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-gray-400 flex text-center justify-center items-center "
+                  disabled
+                >
+                  Chỉnh sửa
+                </button>
+                <button onClick={AddDevice} className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center">
+                  Thêm mới
+                </button>
+                <button className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center">
+                  Làm mới
+                </button>
                 {/* <button className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center"></button> */}
               </div>
             </div>

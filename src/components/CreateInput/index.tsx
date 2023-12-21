@@ -1,10 +1,9 @@
-
 // import { ActionMeta, SingleValue } from 'react-select';
-import CreatableSelect from 'react-select/creatable';
+import CreatableSelect from "react-select/creatable";
 interface SelectProps {
-  label:string;
+  label: string;
   options: Option[];
-  value:string |undefined;
+  value: string | undefined;
   OnSelected: (value: string | null) => void;
 }
 interface Option {
@@ -12,17 +11,20 @@ interface Option {
   label: string;
 }
 
-const CreateInput: React.FC<SelectProps> = ({label, options,value,OnSelected}) => {
-  
+const CreateInput: React.FC<SelectProps> = ({
+  label,
+  options,
+  value,
+  OnSelected,
+}) => {
   const handleChange = (selectedOption: Option | null) => {
     OnSelected(selectedOption ? selectedOption.value : null);
-    
   };
-  
-  
-  return(
-  <div className="relative w-full ">
-    <CreatableSelect className="   selectStyle
+
+  return (
+    <div className="relative w-full ">
+      <CreatableSelect
+        className="   selectStyle
     peer  p-0 w-full   text-sm  
     disabled:opacity-50 
     disabled:pointer-events-none 
@@ -32,39 +34,42 @@ const CreateInput: React.FC<SelectProps> = ({label, options,value,OnSelected}) =
   [&:not(:placeholder-shown)]:pt-6
   [&:not(:placeholder-shown)]:pb-2
   autofill:pt-6
-  autofill:pb-2" isClearable  
-  onChange={handleChange}
-// inputValue={value}
-      options={options}
-      placeholder=  {label}
-      theme={(theme) => ({
-        ...theme,
-        borderRadius: 10,
+  autofill:pb-2"
+        isClearable
+        onChange={handleChange}
+        // inputValue={value}
+        options={options}
+        placeholder={label}
+        theme={(theme) => ({
+          ...theme,
+          borderRadius: 10,
 
-        colors: {
-          ...theme.colors,
-          primary50: "hotpink",
-          primary: "black",
-        },
-      })}
-    />
-    <label
-      className="absolute  top-5 left-3 bg-white px-2 text-blue-600  h-fit  
-       rounded-full
-      start-0  ml-0.5
-      truncate pointer-events-none transition ease-in-out 
-      duration-100 border border-transparent 
-      peer-disabled:opacity-50 peer-disabled:pointer-events-none
- 
-    peer-[:not(:placeholder-shown)]:text-xs
-    peer-[:not(:placeholder-shown)]:-translate-y-1.5
-    peer-[:not(:placeholder-shown)]:text-gray-500
-    "
-    >
-      {/* {label} */}
-     {value ? label : ''}
-    </label>
-  </div>
-)};
+          colors: {
+            ...theme.colors,
+            primary50: "hotpink",
+            primary: "black",
+          },
+        })}
+      />
+      {value && (
+        <label
+          className="absolute  top-5 left-3 bg-white px-2 text-blue-600  h-fit  
+   rounded-t-lg
+  start-0  ml-0.5
+  truncate pointer-events-none transition ease-in-out 
+  duration-100 border border-transparent 
+  peer-disabled:opacity-50 peer-disabled:pointer-events-none
+
+peer-[:not(:placeholder-shown)]:text-xs
+peer-[:not(:placeholder-shown)]:-translate-y-1.5
+peer-[:not(:placeholder-shown)]:text-gray-500
+"
+        >
+          {label}
+        </label>
+      )}
+    </div>
+  );
+};
 
 export default CreateInput;

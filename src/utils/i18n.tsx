@@ -32,7 +32,7 @@ i18n
       escapeValue: false
     }
   });
-  console.log('Initialized i18n with:', resources, lngDefault, defaultNS);
+  // console.log('Initialized i18n with:', resources, lngDefault, defaultNS);
   
 
 export default i18n;

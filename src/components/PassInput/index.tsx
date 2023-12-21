@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { TbEyeClosed, TbEye  } from "react-icons/tb";
+
 interface InputProps {
   label: string | null;
   keys: string | undefined;
@@ -5,16 +8,22 @@ interface InputProps {
   TextChange: (value: string | null) => void;
   value: string | undefined;
 }
-const TextInput: React.FC<InputProps> = ({ label, TextChange, value, keys }) => {
+const PassInput: React.FC<InputProps> = ({ label, TextChange, value, keys }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
   const HandleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     TextChange(event.target.value);
+  };
+
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
     <div className="relative  " key={keys+'1'}>
       <input
         key={keys+'2'}
-        type="text"
+        type={showPassword ? 'text' : 'password'}
         value={value}
         onChange={HandleTextChange}
         id={keys}
@@ -26,16 +35,23 @@ const TextInput: React.FC<InputProps> = ({ label, TextChange, value, keys }) => 
         htmlFor={keys}
         className={`
         peer-focus:border-t-1 peer-focus:border-l-1 peer-focus:top-1  
-        peer-focus:border-r-1 peer-focus:rounded-t-lg 
+        peer-focus:border-r-1 peer-focus:rounded-full 
 
-        ${value ? " border-t-1 border-l-1 border-r-1  rounded-t-lg  " : ""}
+        ${value ? " border-t-1 border-l-1 border-r-1 rounded-full   " : ""}
         absolute  text-gray-300  duration-300 transform -translate-y-4 scale-75 top-1  origin-[0] bg-white  px-2 peer-focus:px-2  peer-placeholder-shown:scale-100 
         peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2  peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1`}
       >
         {label}
       </label>
+      <button
+        type="button"
+        className="absolute text-3xl top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
+        onClick={handleTogglePassword}
+      >
+        {showPassword ? <TbEye /> : <TbEyeClosed />}
+      </button>
     </div>
   );
 };
 
-export default TextInput;
+export default PassInput;
