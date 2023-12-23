@@ -298,7 +298,7 @@ const HomeScreen = () => {
                       }}
                     />
 
-                    {/* <TextInput label="Nhóm / Group" TextChange={(value: any) => { setText(value) }} value={text}keys="input4" /> */}
+                    
                   </div>
                   <div className="relative ">
                     <DatetimePicker
@@ -547,13 +547,15 @@ const HomeScreen = () => {
                   className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-gray-400 flex text-center justify-center items-center "
                   disabled
                 >
-                  Chỉnh sửa
+                                   {t('btnEdit')}
+
                 </button>
                 <button onClick={AddDevice} className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center">
-                  Thêm mới
+                  {t('btnAdd')}
                 </button>
                 <button className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center">
-                  Làm mới
+                {t('btnReset')}
+
                 </button>
                 {/* <button className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center"></button> */}
               </div>

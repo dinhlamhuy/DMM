@@ -60,6 +60,7 @@ const CreateInput: React.FC<SelectProps> = ({
   duration-100 border border-transparent 
   peer-disabled:opacity-50 peer-disabled:pointer-events-none
 
+  truncate text-ellipsis max-w-fit  flex  
 peer-[:not(:placeholder-shown)]:text-xs
 peer-[:not(:placeholder-shown)]:-translate-y-1.5
 peer-[:not(:placeholder-shown)]:text-gray-500

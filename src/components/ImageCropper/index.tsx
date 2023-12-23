@@ -21,7 +21,7 @@ const ImageCropper = ({ image, onCropDone, onCropCancel }: any) => {
 
   // }
   return (
-    <div className="cropper">
+    <div className="cropper ">
       {/* <div> */}
         <Cropper
           image={image}
@@ -35,7 +35,7 @@ const ImageCropper = ({ image, onCropDone, onCropCancel }: any) => {
             containerStyle: {
               width: "100%",
               height: "100%",
-              backgroundColor: "#fff",
+              backgroundColor: "#004",
             },
           }}
         />

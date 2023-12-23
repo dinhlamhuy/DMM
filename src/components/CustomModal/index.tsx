@@ -21,8 +21,9 @@ const CustomModal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
           backgroundColor: 'rgba(0, 0, 0, 0.5)'
         },
         content: {
-          maxWidth: '40vw',
-        //   minWidth: '40vw',
+          maxWidth: '90vw',
+          // width:'60vw',
+          minWidth: '40vw',
           maxHeight: '60vh',
           minHeight: '20vh',
           margin: 'auto',
@@ -30,10 +31,10 @@ const CustomModal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          border: '1px solid #ccc',
+          border: '1px solid gray',
           borderRadius: '4px',
           overflow:"hidden",
-          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.8)',
           padding: '0px',
           backgroundColor: '#008080'
         }

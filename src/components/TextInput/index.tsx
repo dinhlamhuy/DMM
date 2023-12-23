@@ -5,15 +5,20 @@ interface InputProps {
   TextChange: (value: string | null) => void;
   value: string | undefined;
 }
-const TextInput: React.FC<InputProps> = ({ label, TextChange, value, keys }) => {
+const TextInput: React.FC<InputProps> = ({
+  label,
+  TextChange,
+  value,
+  keys,
+}) => {
   const HandleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     TextChange(event.target.value);
   };
 
   return (
-    <div className="relative  " key={keys+'1'}>
+    <div className="relative  " key={keys + "1"}>
       <input
-        key={keys+'2'}
+        key={keys + "2"}
         type="text"
         value={value}
         onChange={HandleTextChange}
@@ -22,14 +27,23 @@ const TextInput: React.FC<InputProps> = ({ label, TextChange, value, keys }) => 
         placeholder=" "
       />
       <label
-        key={keys+'3'}
+        key={keys + "3"}
         htmlFor={keys}
         className={`
-        peer-focus:border-t peer-focus:border-l peer-focus:top-1  
-        peer-focus:border-r peer-focus:rounded-t-lg 
 
-        ${value ? " border-t border-l border-r-1 shadow-t shadow-l  rounded-t-lg  start-0  " : "start-1 "}
-        absolute  text-gray-300  duration-300 transform -translate-y-4 scale-75 top-1  origin-[0] bg-white  px-2 peer-focus:px-2  peer-placeholder-shown:scale-100 
+        peer-focus:border-t peer-focus:border-l peer-focus:top-1  
+        peer-focus:border-r peer-focus:rounded-t-lg   
+          peer-focus:truncate   peer-placeholder-shown:truncate 
+       
+          truncate text-ellipsis  flex  
+          line-clamp-1
+        ${
+          value
+            ? ` border-t border-l border-r-1 shadow-t shadow-l  rounded-t-lg  start-0  px-2 
+        ${
+          label != null && label.length <= 0.9 * 30 ? " max-w-full w-fit" : "w-full max-w-fit" }` : "start-1 w-11/12 max-w-fit"
+        }
+        absolute  text-gray-300  duration-300 transform -translate-y-4 scale-75 top-1  origin-[0] bg-white pl-2  peer-focus:px-2 text-nowrap   peer-placeholder-shown:scale-100 
         peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2  peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto `}
       >
         {label}

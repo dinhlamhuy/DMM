@@ -39,7 +39,10 @@
     "lblDeviceDetails": "Device details",
     "lblLogin": "Login",
     "lblUserID": "User ID",
-    "lblPassword": "Password"
+    "lblPassword": "Password",
+    "btnAdd":"Add",
+    "btnEdit":"Update",
+    "btnReset":"Reset"
 
 
 

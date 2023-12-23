@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ReactNode, useState } from "react";
 import logo from "../../../public/img/logo.png";
@@ -45,13 +46,13 @@ const MenuBar: React.FC<Props> = ({ children, onDarkMode }) => {
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start rtl:justify-end">
-              <button
+              <button 
                 className="flex ms-2 md:me-24"
                 onClick={() => setIsOpenSlide(!isOpenSlide)}
               >
                 <img src={logo} className="h-8 me-3" alt="LHG" />
                 <span className={`projectName self-center text-xl ${DarkMode ? "dark:text-yellow-400 text-yellow-400" : "text-black "}  font-bold sm:text-2xl whitespace-nowrap`}>
-                  Device Managent
+                  Device Management
                 </span>
               </button>
             </div>
@@ -96,16 +97,18 @@ const MenuBar: React.FC<Props> = ({ children, onDarkMode }) => {
 
       <aside
         id="logo-sidebar"
-        className={`fixed shadow-xl ${DarkMode ? "dark:shadow-gray-900  dark:border-slate-900  dark:bg-black shadow-gray-900 border-slate-900 bg-black" : ""} top-0 left-0 z-40 w-60 h-screen pt-20 
+        className={`fixed shadow-xl ${DarkMode ? "dark:shadow-gray-900  dark:border-slate-900  dark:bg-black shadow-gray-900 border-slate-900 bg-black" : "bg-white"} top-0 left-0 z-40 w-60 h-screen pt-20 
         ${isOpenSlide ? "transition-transform -translate-x-full md:translate-x-0 sm:translate-x-0 "
-            : " hidden  sm:translate-x-0 md:translate-x-0"
-          } bg-white border-r   translate-x-0`}
+            : " hidden  sm:translate-x-0 md:translate-x-0 "
+          }  border-r   translate-x-0`}
         aria-label="Sidebar"
       >
         <div className={`h-full px-3 grid gap-4 content-between  ${DarkMode ? "dark:text-white dark:bg-black bg-black text-white" : "text-gray-900 bg-white"} pb-4 overflow-y-auto  `} >
           <ul className="space-y-2 font-medium  ">
             <li>
-              <button className={`flex ${DarkMode ? "dark:text-white dark-hover:bg-gray-100 dark-hover:text-gray-800 hover:text-gray-800 hover:bg-gray-100 text-white " : "text-gray-900 hover:bg-gray-100 "}  items-center p-2  rounded-lg     group`}>
+              <button
+              onClick={() => handleUrl("/")}
+              className={`flex ${DarkMode ? "dark:text-white dark-hover:bg-gray-100 dark-hover:text-gray-800 hover:text-gray-800 hover:bg-gray-100 text-white " : "text-gray-900 hover:bg-gray-100 "}  items-center p-2  rounded-lg     group`}>
                 <svg
                   className={`${DarkMode ? "dark:text-white text-white" : "text-gray-600"}  w-5 h-5  transition duration-75  group-hover:text-gray-900 `}
                   aria-hidden="true"
@@ -122,7 +125,7 @@ const MenuBar: React.FC<Props> = ({ children, onDarkMode }) => {
               </button>
             </li>
             <li>
-              <button className=" flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
+              <button   onClick={() => handleUrl("/list")}  className=" flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
                 <svg
                   className={`${DarkMode ? "dark:text-white text-white" : "text-gray-600"}   flex-shrink-0 w-5 h-5  transition duration-75  group-hover:text-gray-900 `}
                   aria-hidden="true"
@@ -134,6 +137,22 @@ const MenuBar: React.FC<Props> = ({ children, onDarkMode }) => {
                 </svg>
                 <span className={`  ${DarkMode ? "dark:text-white text-white" : "text-gray-900"} group-hover:text-gray-900 pr-2 flex-1 ms-3 whitespace-nowrap `}>
                   {t("lblListDevice")}
+                </span>
+              </button>
+            </li>
+            <li>
+              <button className=" flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
+                <svg
+                  className={`${DarkMode ? "dark:text-white text-white" : "text-gray-600"}   flex-shrink-0 w-5 h-5  transition duration-75  group-hover:text-gray-900 `}
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 18 18"
+                >
+                  <path d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z" />
+                </svg>
+                <span className={`  ${DarkMode ? "dark:text-white text-white" : "text-gray-900"} group-hover:text-gray-900 pr-2 flex-1 ms-3 whitespace-nowrap `}>
+                  Thêm tài khoản
                 </span>
               </button>
             </li>

@@ -39,7 +39,10 @@
     "lblDeviceDetails": "Thông tin chi tiết thiết bị",
     "lblLogin": "Đăng nhập",
     "lblUserID": "User ID",
-    "lblPassword": "Mật khẩu"
+    "lblPassword": "Mật khẩu",
+    "btnAdd":"Thêm mới",
+    "btnEdit":"Cập nhật",
+    "btnReset":"Làm mới"
 
 
 

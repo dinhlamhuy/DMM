@@ -124,7 +124,7 @@ const DatetimePicker: React.FC<DatePickerProps> = ({
         placeholderText="YYYY/MM/DD"
         dateFormat="yyyy/MM/dd"
         className="  block  text-center border p-2.5 w-full 
-         text-gray-900  rounded-xl shadow  
+         text-gray-900  rounded-xl shadow  peer
            bg-white  
            "
         selected={DateSelected}
@@ -132,10 +132,11 @@ const DatetimePicker: React.FC<DatePickerProps> = ({
       />
       <label
         className="relative text-left w-fit flex  text-red-900  duration-300 transform  border-t-1  rounded-lg  
-      -translate-y-4 scale-75 -top-10    origin-[0] bg-white  px-2  mb-0
+      -translate-y-4 scale-75 -top-10    origin-[0] bg-white  px-2  mb-0 w-fit 
 
-   
-    
+      
+      truncate text-ellipsis w-11/12 lg:w-fit  xl:w-fit  flex  
+      
       rtl:peer-focus:translate-x-1/4 
       rtl:peer-focus:left-auto 
       start-0 border-X"
