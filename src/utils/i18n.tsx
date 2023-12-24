@@ -16,9 +16,9 @@ const resources = {
 
 }
 const defaultNS= 'all';
-const lngDefault = 'VN';
-// localStorage.userData ? JSON.parse(localStorage.userData).TLLanguage :   'VN';
 
+ const DefautLng = localStorage.getItem('Lng');
+const lngDefault = DefautLng ===null ? 'VN' :'EN';
 
 i18n
   .use(initReactI18next)

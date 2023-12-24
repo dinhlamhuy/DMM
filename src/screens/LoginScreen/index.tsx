@@ -42,10 +42,13 @@ const LoginScreen = () => {
   .then((response: any) => {
     if (response.data.result === true) {
       console.log("thành công");
+      const dataString = JSON.stringify(response.data);
+      localStorage.setItem('User', dataString);
+      
       handleUrl('/')
 
     }else{
-      alert('Thất bai5')
+      alert('Thất bai')
     }
   })
   .finally(() => { });

@@ -181,7 +181,7 @@ const HomeScreen = () => {
 
   return (
     <>
-      <MenuBar onDarkMode={(darkmode: boolean | ((prevState: boolean) => boolean)) => setDarkMode(darkmode)}>
+      <MenuBar isActive="home" onDarkMode={(darkmode: boolean | ((prevState: boolean) => boolean)) => setDarkMode(darkmode)}>
         <div className="container items-center justify-center mx-auto">
           {/* //  */}
           <div className="grid">
