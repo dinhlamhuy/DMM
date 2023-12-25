@@ -4,21 +4,24 @@ import { getMonth, getYear } from "date-fns";
 import DatePicker from "react-datepicker";
 import { Portal } from "react-overlays";
 import "react-datepicker/dist/react-datepicker.css";
-
 interface DatePickerProps {
-  label: string;
-  onChangeDate: (value:[Date, Date] | null) => void;
-  DateSelected: [Date, Date] | null;
+  labelStart: string;
+  labelEnd: string;
+  onChangeDateStart: (value: Date | null) => void;
+  onChangeDateEnd: (value: Date | null) => void;
+
+  selectsStart: any;
+  selectsEnd: any;
 }
 
 const DateRangePicker: React.FC<DatePickerProps> = ({
-  label,
-  onChangeDate,
-  DateSelected,
+  labelStart,
+  labelEnd,
+  onChangeDateStart,
+  onChangeDateEnd,
+  selectsStart,
+  selectsEnd,
 }) => {
-
-  const [startDate, endDate] = DateSelected ? DateSelected : [null,null];
-
   const CalendarContainer = ({ children }: any) => {
     const el = document.getElementById("calendar-portal");
     return <Portal container={el}>{children}</Portal>;
@@ -42,109 +45,110 @@ const DateRangePicker: React.FC<DatePickerProps> = ({
     "December",
   ];
 
-
-
-
-  const handleChangeTime = (dates: [Date, Date] | null) => {
+  const handleChangeTime = (dates:  Date | null) => {
     if (dates) {
-      onChangeDate(dates);
+      onChangeDateStart(dates);
     }
-  }
+  };
+  const handleChangeTime2 = (dates: Date| null) => {
+    if (dates) {
+      onChangeDateEnd(dates);
+    }
+  };
 
   return (
-    <div className="relative">
-      <DatePicker
-        renderCustomHeader={({
-          date,
-          changeYear,
-          changeMonth,
-          decreaseMonth,
-          increaseMonth,
-          prevMonthButtonDisabled,
-          nextMonthButtonDisabled,
-        }) => (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <button
-              onClick={decreaseMonth}
-              disabled={prevMonthButtonDisabled}
-              className="btn  px-3 py-1 bg-blue-300 rounded-lg  "
+    <>
+      <div className="relative">
+        <DatePicker
+          renderCustomHeader={({
+            date,
+            changeYear,
+            changeMonth,
+            decreaseMonth,
+            increaseMonth,
+            prevMonthButtonDisabled,
+            nextMonthButtonDisabled,
+          }) => (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
             >
-              {"<"}
-            </button>
-            <select
-              value={getYear(date)}
-              onChange={({ target: { value } }) => changeYear(Number(value))}
-            >
-              {years.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
+              <button
+                onClick={decreaseMonth}
+                disabled={prevMonthButtonDisabled}
+                className="btn  px-3 py-1 bg-blue-300 rounded-lg  "
+              >
+                {"<"}
+              </button>
+              <select
+                value={getYear(date)}
+                onChange={({ target: { value } }) => changeYear(Number(value))}
+              >
+                {years.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
 
-            <select
-              value={months[getMonth(date)]}
-              onChange={({ target: { value } }) =>
-                changeMonth(months.indexOf(value))
-              }
-            >
-              {months.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
+              <select
+                value={months[getMonth(date)]}
+                onChange={({ target: { value } }) =>
+                  changeMonth(months.indexOf(value))
+                }
+              >
+                {months.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
 
-            <button
-              onClick={increaseMonth}
-              disabled={nextMonthButtonDisabled}
-              className="btn  px-3 py-1 bg-blue-300 rounded-lg  "
-            >
-              {">"}
-            </button>
-          </div>
-        )}
-        popperContainer={CalendarContainer}
-        popperPlacement="bottom-end"
-        enableTabLoop={false}
-        popperModifiers={[
-          {
-            name: "offset",
-            options: {
-              offset: [0, 0],
+              <button
+                onClick={increaseMonth}
+                disabled={nextMonthButtonDisabled}
+                className="btn  px-3 py-1 bg-blue-300 rounded-lg  "
+              >
+                {">"}
+              </button>
+            </div>
+          )}
+          popperContainer={CalendarContainer}
+          popperPlacement="bottom-end"
+          enableTabLoop={false}
+          popperModifiers={[
+            {
+              name: "offset",
+              options: {
+                offset: [0, 0],
+              },
             },
-          },
-          {
-            name: "preventOverflow",
-            options: {
-              rootBoundary: "viewport",
-              tether: false,
-              altAxis: true,
+            {
+              name: "preventOverflow",
+              options: {
+                rootBoundary: "viewport",
+                tether: false,
+                altAxis: true,
+              },
             },
-          },
-        ]}
-        calendarClassName="calender-custom-position"
-        placeholderText="YYYY/MM/DD"
-        selectsRange={true}
-        dateFormat="yyyy/MM/dd"
-        className="  block  text-center border p-2.5 w-full 
+          ]}
+          calendarClassName="calender-custom-position"
+          placeholderText="YYYY/MM/DD"
+          dateFormat="yyyy/MM/dd"
+          className="  block  text-center border p-2.5 w-full 
          text-gray-900  rounded-xl shadow  peer
            bg-white  
            "
-           startDate={startDate}
-           endDate={endDate}
-           onChange={(dates: [Date, Date]) => {handleChangeTime(dates)}}
-          //  selectsStart
-          //  startDate={startDate}
-          //  endDate={endDate}
-      />
-      <label
-        className="relative text-left w-fit flex  text-red-900  duration-300 transform  border-t-1  rounded-lg  
+          selected={selectsStart}
+          selectsStart
+          startDate={selectsStart}
+          endDate={selectsEnd}
+          onChange={(value: any) => handleChangeTime(value)}
+        />
+        <label
+          className="relative text-left w-fit flex  text-red-900  duration-300 transform  border-t-1  rounded-lg  
       -translate-y-4 scale-75 -top-10    origin-[0] bg-white  px-2  mb-0 w-fit 
 
       
@@ -153,10 +157,115 @@ const DateRangePicker: React.FC<DatePickerProps> = ({
       rtl:peer-focus:translate-x-1/4 
       rtl:peer-focus:left-auto 
       start-0 border-X"
-      >
-        {label}
-      </label>
-    </div>
+        >
+          {labelStart}
+        </label>
+      </div>
+      <div className="relative">
+        <DatePicker
+          renderCustomHeader={({
+            date,
+            changeYear,
+            changeMonth,
+            decreaseMonth,
+            increaseMonth,
+            prevMonthButtonDisabled,
+            nextMonthButtonDisabled,
+          }) => (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <button
+                onClick={decreaseMonth}
+                disabled={prevMonthButtonDisabled}
+                className="btn  px-3 py-1 bg-blue-300 rounded-lg  "
+              >
+                {"<"}
+              </button>
+              <select
+                value={getYear(date)}
+                onChange={({ target: { value } }) => changeYear(Number(value))}
+              >
+                {years.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                value={months[getMonth(date)]}
+                onChange={({ target: { value } }) =>
+                  changeMonth(months.indexOf(value))
+                }
+              >
+                {months.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+
+              <button
+                onClick={increaseMonth}
+                disabled={nextMonthButtonDisabled}
+                className="btn  px-3 py-1 bg-blue-300 rounded-lg  "
+              >
+                {">"}
+              </button>
+            </div>
+          )}
+          popperContainer={CalendarContainer}
+          popperPlacement="bottom-end"
+          enableTabLoop={false}
+          popperModifiers={[
+            {
+              name: "offset",
+              options: {
+                offset: [0, 0],
+              },
+            },
+            {
+              name: "preventOverflow",
+              options: {
+                rootBoundary: "viewport",
+                tether: false,
+                altAxis: true,
+              },
+            },
+          ]}
+          calendarClassName="calender-custom-position"
+          placeholderText="YYYY/MM/DD"
+          dateFormat="yyyy/MM/dd"
+          className="  block  text-center border p-2.5 w-full 
+         text-gray-900  rounded-xl shadow  peer
+           bg-white  
+           "
+          selected={selectsEnd}
+          selectsEnd
+          startDate={selectsStart}
+          endDate={selectsEnd}
+          minDate={selectsStart}
+          onChange={(value: any) => handleChangeTime2(value)}
+        />
+        <label
+          className="relative text-left w-fit flex  text-red-900  duration-300 transform  border-t-1  rounded-lg  
+      -translate-y-4 scale-75 -top-10    origin-[0] bg-white  px-2  mb-0 w-fit 
+
+      
+      truncate text-ellipsis w-11/12 lg:w-fit  xl:w-fit  flex  
+      
+      rtl:peer-focus:translate-x-1/4 
+      rtl:peer-focus:left-auto 
+      start-0 border-X"
+        >
+          {labelEnd}
+        </label>
+      </div>
+    </>
   );
 };
 export default DateRangePicker;

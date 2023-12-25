@@ -23,15 +23,9 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
           <div className="  flex flex-col md:flex-row ">
             <div className="w-48 h-48 flex-none justify-center items-center my-auto mr-2">
               {item.Photo_for_reference != "" &&
-                (<img
-                  src={item.Photo_for_reference}
-                  alt=""
-                  className="w-48 h-48  rounded-lg "
-                />) 
-              }
-
+                (<img  src={item.Photo_for_reference}
+                  alt="" className="w-48 h-48  rounded-lg "/>) }
             </div>
-
             <div className="   flex ml-2">
               <div className=" grid grid-cols-2 md:gap-x-5 text-left">
               <div className=" font-bold text-2xl col-span-2 text-center">{item.Equipment_Name}</div>
@@ -114,26 +108,24 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
 
           </div>
 
-          {/* <div className="flex"> */}
-          <div className=" w-full grid grid-rows-3 text-left px-3">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-2 ">
-              <div className="flex items-center ">
+          
+          <div className="  grid text-left  lg:mt-1 px-3 gap-y-4  h-fit flex  items-start">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-2 h-fit  ">
+              <div className="flex items-center flex-wrap  ">
                 <span className="text-xs text-teal-800">{t('lblBuilding')}:</span>&ensp;
                 <span className="text-xs font-bold">{item.Building}</span>
               </div>
-
-              <div className="flex items-center ">
-                <span className="text-xs text-teal-800">
+              <div className="flex items-center flex-wrap gap-x-2">
+                <span className="text-xs text-teal-800 ">
                   {t('lblDepartment_Line')}:
                 </span>
-                &ensp;
                 <span className="text-xs font-bold">
                   {item.Department_Line}
                 </span>
               </div>
 
-              <div className="flex  items-center ">
-                <span className="text-xs text-teal-800 items-center ">{t('lblStatus')}:</span>&ensp;
+              <div className="flex  items-center   gap-x-3">
+                <span className="text-xs text-teal-800 items-center ">{t('lblStatus')}:</span>
                 <span className="text-xs font-bold">
                   {item.Valid === "VALID" ? (
                     <FaCheck className="  text-2xl font-bold text-yellow-400 " />
@@ -143,67 +135,80 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
                   )}
                 </span>
               </div>
+
+
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-2">
-              <div className="">
+            <div className="grid grid-cols-1 md:grid-cols-3 mt-1 lg:mt-0 gap-x-2 shadow-lg px-1 pb-2 
+            relative  h-fit gap-y-1 border rounded-md">
+              <div className="col-span-3 absolute text-xs -top-5  pb-0.5 ml-1   text-center  =lex justify-center
+                bg-white text-gray-500 border-b-white border  font-bold rounded-t-md px-1">{t('lblInternalCalibration')}</div>
+              
+              <div className="mt-2   h-fit flex gap-x-4 w-fit flex-wrap
+              ">
                 <span className="text-xs text-teal-800">
                   {t('lblFrequencyFollowAdidasRequirement')}:
-                </span>
-                &ensp;
-                <span className="text-xs font-bold">
+                </span> <span className="text-xs font-bold">
                   {item.Frequency_follow_adidas_requirement}
                 </span>
               </div>
 
-              <div className="">
-                <span className="text-xs text-teal-800">
+              <div className="lg:mt-2 h-fit flex gap-x-4 w-fit flex-wrap">
+                <span className="text-xs text-teal-800    ">
                   {t('lblCurrentFrequency')}:
-                </span>
-                &ensp;
-                <span className="text-xs font-bold">
+                </span>  <span className="text-xs font-bold">
                   {item.Current_Frequency}
                 </span>
               </div>
-              <div className="">
+
+              <div className="lg:mt-2 h-fit flex gap-x-4 flex-wrap">
                 <span className="text-xs text-teal-800">
                   {t('lblCertifiedCalibrationInstitute/Company')}:
-                </span>
-                &ensp;
-                <span className="text-xs font-bold">
+                </span> <span className="text-xs font-bold">
                   {item.Certified_Calibration_Institute_Company}
                 </span>
               </div>
+
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-2">
-              <div className="">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-2 shadow-lg px-1 pb-2   
+              h-fit gap-y-1 flex mt-2 relative border rounded-md
+             ">
+            <div className="col-span-3 absolute text-xs   -top-5  pb-0.5 ml-1  text-center flex justify-center
+                 bg-white text-gray-500 border-b-white border  font-bold rounded-t-md px-1 ">{t('lblExternalCalibration')}</div>
+              <div className="mt-2 flex-wrap flex w-fit gap-x-4">
                 <span className="text-xs text-teal-800">
                   {t('lblFrequencyFollowAdidasRequirement')}:
                 </span>
-                &ensp;
+                
                 <span className="text-xs font-bold">
                   {item.Frequency_follow_adidas_requirement2}
                 </span>
               </div>
-              <div className="">
+              <div className="lg:mt-2 flex-wrap flex w-fit gap-x-4">
                 <span className="text-xs text-teal-800">
                   {t('lblDateOfCalibration')}:
                 </span>
-                &ensp;
+               
                 <span className="text-xs font-bold">
                   {item.Date_Of_Calibration}
                 </span>
               </div>
-
-              <div className="">
+              <div className="lg:mt-2 flex-wrap flex w-fit gap-x-4">
                 <span className="text-xs text-teal-800">
-                  {t('lblDateOfNextCalibration')}:</span>
-                &ensp;
+                  {t('lblDateOfNextCalibration')}:</span> 
+              
                 <span className="text-xs font-bold">{item.Date_Of_Next}</span>
               </div>
+            </div>
+
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-2">
+
 
 
             </div>
+
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-x-2">
               <div className="text-xs text-teal-800 cols-span-2" >
                 {t('lblRemark')}:
@@ -224,6 +229,7 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
             </div>
 
           </div>
+
         </div>
       </div>
       // </div>

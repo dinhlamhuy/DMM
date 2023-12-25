@@ -16,8 +16,10 @@ const RadioCheck: React.FC<RadioProps> = ({ item, OnChecked, value, names}) => {
     const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
    
         OnChecked(event.target.value);
-
+       
       };
+
+      
   return (
     <>
       <ul className="grid w-full gap-2 md:grid-cols-2" >
@@ -29,6 +31,7 @@ const RadioCheck: React.FC<RadioProps> = ({ item, OnChecked, value, names}) => {
               name={names}
               value={radioItem.value}
               className={`hidden peer`}
+              onClick={() => value === radioItem.value && OnChecked(null)}
               onChange={handleRadioChange}
               checked={value === radioItem.value}
 

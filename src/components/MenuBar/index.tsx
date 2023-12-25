@@ -118,7 +118,7 @@ const MenuBar: React.FC<Props> = ({ children, onDarkMode, isActive }) => {
         <div className={`h-full px-3 grid gap-4 content-between  ${DarkMode ? "dark:text-white dark:bg-black bg-black text-white" : "text-gray-900 bg-white"} pb-4 overflow-y-auto  `} >
           <ul className="space-y-2 font-medium  ">
             <li onClick={() => handleUrl("/", "home")} className={`${isActive === 'home' ? (DarkMode ? 'activeMenuDark ' : 'activeMenuLight ') :
-              `${DarkMode ? '  hover:text-white hover:bg-gray-800  text-white' : ' text-gray-900 hover:bg-gray-100'}`}`}>
+              `${DarkMode ? '  hover:text-white hover:bg-gray-800  text-white' : ' text-gray-900 hover:bg-gray-100'}`} cursor-pointer `}>
               <button
 
                 className={`flex ${DarkMode ? "dark:text-white  text-white " : " "}  items-center p-2  rounded-lg group`}>
@@ -129,7 +129,7 @@ const MenuBar: React.FC<Props> = ({ children, onDarkMode, isActive }) => {
               </button>
             </li>
             <li onClick={() => handleUrl("/list", 'list')} className={`${isActive === 'list' ? (DarkMode ? 'activeMenuDark ' : 'activeMenuLight ') :
-              `${DarkMode ? '  hover:text-gray-900 hover:bg-gray-800  ' : ' text-gray-900 hover:bg-gray-100'}`}`}>
+              `${DarkMode ? '  hover:text-gray-900 hover:bg-gray-800  ' : ' text-gray-900 hover:bg-gray-100'}`} cursor-pointer `}>
               <button className=" flex items-center p-2 rounded-lg  group">
                 <FaListAlt className={`text-2xl ${DarkMode ? "dark:text-white text-white" : "text-gray-900"} `} />
                 <span className={`  ${DarkMode ? "text-white" : "text-gray-900"}  pr-2 flex-1 ms-3 whitespace-nowrap `}>
@@ -154,7 +154,7 @@ const MenuBar: React.FC<Props> = ({ children, onDarkMode, isActive }) => {
               </button>
             </li> */}
 
-            <li className={`${DarkMode ? "hover:bg-gray-800  text-white" : "hover:bg-gray-200  text-gray-900"} `} onClick={() => ChangeLanguage()}>
+            <li className={`${DarkMode ? "hover:bg-gray-800  text-white" : "hover:bg-gray-200  text-gray-900"} cursor-pointer  `} onClick={() => ChangeLanguage()}>
               <button
 
                 className={` flex items-center py-2 px-1.5
@@ -166,7 +166,7 @@ const MenuBar: React.FC<Props> = ({ children, onDarkMode, isActive }) => {
                 </span>
               </button>
             </li>
-            <li className={`${DarkMode ? "hover:bg-gray-800  text-white" : "hover:bg-gray-200  text-gray-900"} `} onClick={() => handleUrl("/login", 'login')}>
+            <li className={`${DarkMode ? "hover:bg-gray-800  text-white" : "hover:bg-gray-200  text-gray-900"} cursor-pointer `} onClick={() => handleUrl("/login", 'login')}>
               <button
 
                 className="flex items-center py-2 px-1.5   text-gray-900 rounded-lg    group"
