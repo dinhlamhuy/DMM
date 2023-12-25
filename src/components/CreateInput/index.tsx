@@ -51,7 +51,7 @@ const CreateInput: React.FC<SelectProps> = ({
           },
         })}
       />
-      {value && (
+      {value ? (
         <label
           className="absolute  top-5 bg-white px-2 text-blue-600  h-fit  
    rounded-t-lg
@@ -68,7 +68,7 @@ peer-[:not(:placeholder-shown)]:text-gray-500
         >
           {label}
         </label>
-      )}
+      ) : (<label className="absolute  top-5">&ensp;</label>)}
     </div>
   );
 };

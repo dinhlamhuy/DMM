@@ -13,7 +13,7 @@ import TableMasterList from "../../components/TableMasterList";
 import * as ExcelJS from "exceljs";
 import { FiFilter } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
-
+import moment from 'moment'
 import CreateInput from "../../components/CreateInput";
 import DateRangePicker from "../../components/DateRangePicker";
 import RadioCheck from "../../components/RadioCheck";
@@ -576,16 +576,21 @@ const MasterListScreen = () => {
   >([]);
 
   const [dtpFromIncommingDate, setdtpFromIncommingDate] =
-    useState<Date | null>();
-  const [dtpToIncommingDate, setdtpToIncommingDate] = useState<Date | null>();
+    useState<Date | null | undefined>();
+  const [dtpToIncommingDate, setdtpToIncommingDate] = 
+  useState<Date | null | undefined>();
   const [dtpFromDateOfCalibration, setdtpFromDateOfCalibration] =
-    useState<Date | null>();
+    useState<Date | null | undefined>();
   const [dtpToDateOfCalibration, setdtpToDateOfCalibration] =
-    useState<Date | null>();
+    useState<Date | null | undefined>();
   const [dtpFromDateOfNextCalibration, setdtpFromDateOfNextCalibration] =
-    useState<Date | null>();
+    useState<Date | null | undefined>();
   const [dtpToDateOfNextCalibration, setdtpToDateOfNextCalibration] =
-    useState<Date | null>();
+    useState<Date | null | undefined>();
+
+
+
+
 
   const { t } = useTranslation();
 
@@ -625,7 +630,7 @@ const MasterListScreen = () => {
       !txtGroup &&
       !txtDepartmentLine &&
       !chxResult &&
-      !chxStatus && !dtpFromIncommingDate && !dtpToIncommingDate;
+      !chxStatus && !dtpFromIncommingDate && !dtpToIncommingDate && !dtpFromDateOfCalibration && !dtpFromDateOfNextCalibration && !dtpToDateOfCalibration && !dtpToDateOfNextCalibration;
 
     if (shouldReset) {
       setnewRowTable(RowTable);
@@ -657,12 +662,10 @@ const MasterListScreen = () => {
       }
     ) => {
       if (!fieldValue) {
-        return true; // Include all items if fieldValue is not set
+        return true;
       }
 
-      let startDate = fieldValue.startDate
-        ? new Date(fieldValue.startDate)
-        : null;
+      let startDate = fieldValue.startDate ? new Date(fieldValue.startDate) : null;
       let endDate = fieldValue.endDate ? new Date(fieldValue.endDate) : null;
       if (!startDate && endDate) {
         startDate = endDate;
@@ -670,11 +673,12 @@ const MasterListScreen = () => {
       if (startDate && !endDate) {
         endDate = startDate;
       }
-
+      
       const itemDate = new Date(item[condition]);
-      console.log(itemDate);
+
+      
       return (
-        startDate && endDate && itemDate >= startDate && itemDate <= endDate
+        startDate && endDate && moment(itemDate).format('YYYY/MM/DD') >= moment(startDate).format('YYYY/MM/DD') && moment(itemDate).format('YYYY/MM/DD') <= moment(endDate).format('YYYY/MM/DD')
       );
     };
     const filteredRows = RowTable.filter((item) => {
@@ -692,10 +696,20 @@ const MasterListScreen = () => {
       const isBuildingMatched = filterRows(item, "Building", txtBuilding);
       const isStatusMatched = filterRows(item, "Valid", chxStatus);
       const isResultMatched = filterRows(item, "Result_Company", chxResult);
-      const isImmingDateMatched = filterRowsDate(item, "Incomming_date", {
+
+      const isImmingDateMatched = (dtpFromIncommingDate || dtpToIncommingDate )? filterRowsDate(item, "Incomming_date", {
         startDate: dtpFromIncommingDate,
         endDate: dtpToIncommingDate,
-      });
+      }):true;
+      const isDateOfCalibrationMatched = (dtpFromDateOfCalibration || dtpToDateOfCalibration) ?  filterRowsDate(item, "Date_Of_Calibration", {
+        startDate: dtpFromDateOfCalibration,
+        endDate: dtpToDateOfCalibration,
+      }):true;;
+    
+      const isDateOfNextCalibrationMatched = (dtpFromDateOfNextCalibration || dtpToDateOfNextCalibration) ? filterRowsDate(item, "Date_Of_Next", {
+        startDate: dtpFromDateOfNextCalibration,
+        endDate: dtpToDateOfNextCalibration,
+      }):true;
       return (
         isUniqueCodeMatched &&
         isBuildingMatched &&
@@ -703,7 +717,7 @@ const MasterListScreen = () => {
         isDepartmentLineMatched &&
         isStatusMatched &&
         isResultMatched &&
-        isImmingDateMatched
+       (isImmingDateMatched && isDateOfCalibrationMatched && isDateOfNextCalibrationMatched)
       );
     });
 
@@ -716,7 +730,7 @@ const MasterListScreen = () => {
     chxResult,
     chxStatus,
     dtpFromIncommingDate,
-    dtpToIncommingDate,
+    dtpToIncommingDate, dtpFromDateOfCalibration ,dtpFromDateOfNextCalibration,dtpToDateOfCalibration,dtpToDateOfNextCalibration
   ]);
 
   useEffect(() => {
@@ -752,7 +766,23 @@ const MasterListScreen = () => {
       )
     );
   }, [newRowTable]);
+  const resetValues = () => {
+   
+    settxtUniqueCode("");
+    settxtGroup("");
+    settxtBuilding("");
+    settxtDepartmentLine("");
+    setchxResult("");
+    setchxStatus("");
+    setdtpFromIncommingDate(null);
+    setdtpToIncommingDate(null);
+    setdtpFromDateOfCalibration(null);
+    setdtpToDateOfCalibration(null);
+    setdtpFromDateOfNextCalibration(null);
+    setdtpToDateOfNextCalibration(null);
+    setnewRowTable(RowTable);
 
+  };
   return (
     <MenuBar
       isActive="list"
@@ -807,7 +837,7 @@ const MasterListScreen = () => {
             />
           </div>
 
-          <div>
+          <div className="">
             <DateRangePicker
               labelStart={t("lblIncommingDate")}
               labelEnd={t("lblIncommingDate")}
@@ -825,10 +855,10 @@ const MasterListScreen = () => {
             <DateRangePicker
               labelStart={t("lblDateOfCalibration")}
               labelEnd={t("lblDateOfCalibration")}
-              onChangeDateStart={(date: any) => {
+              onChangeDateStart={(date: Date | null) => {
                 setdtpFromDateOfCalibration(date);
               }}
-              onChangeDateEnd={(date: any) => {
+              onChangeDateEnd={(date: Date | null) => {
                 setdtpToDateOfCalibration(date);
               }}
               selectsStart={dtpFromDateOfCalibration}
@@ -840,9 +870,11 @@ const MasterListScreen = () => {
               labelStart={t("lblDateOfNextCalibration")}
               labelEnd={t("lblDateOfNextCalibration")}
               onChangeDateStart={(date: any) => {
+                
                 setdtpFromDateOfNextCalibration(date);
               }}
               onChangeDateEnd={(date: any) => {
+                
                 setdtpToDateOfNextCalibration(date);
               }}
               selectsStart={dtpFromDateOfNextCalibration}
@@ -880,7 +912,7 @@ const MasterListScreen = () => {
           >
             Excel
           </button>
-          <button className="p-2 bg-white px-3 py-2 rounded-full font-bold text-lg">
+          <button onClick={resetValues} className="p-2 bg-white px-3 py-2 rounded-full font-bold text-lg">
             Làm mới
           </button>
         </div>
@@ -936,13 +968,13 @@ const MasterListScreen = () => {
             DarkMode={DarkMode}
             items={newRowTable}
             label={null}
-            keys={undefined}
+            keys={'lsdák'}
           />
         </div>
       ) : (
         <TableMasterList
           label={null}
-          keys={undefined}
+          keys={'daksjdksa'}
           items={newRowTable}
           DarkMode={DarkMode}
         />

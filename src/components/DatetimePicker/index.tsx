@@ -121,7 +121,7 @@ const DatetimePicker: React.FC<DatePickerProps> = ({
           },
         ]}
         calendarClassName="calender-custom-position"
-        placeholderText="YYYY/MM/DD"
+        placeholderText={label}
         dateFormat="yyyy/MM/dd"
         className="  block  text-center border p-2.5 w-full 
          text-gray-900  rounded-xl shadow  peer
@@ -130,7 +130,7 @@ const DatetimePicker: React.FC<DatePickerProps> = ({
         selected={DateSelected}
         onChange={(value: any) => handleChangeTime(value)}
       />
-      <label
+      {DateSelected ? (<label
         className="relative text-left w-fit flex  text-red-900  duration-300 transform  border-t-1  rounded-lg  
       -translate-y-4 scale-75 -top-10    origin-[0] bg-white  px-2  mb-0 w-fit 
 
@@ -142,7 +142,7 @@ const DatetimePicker: React.FC<DatePickerProps> = ({
       start-0 border-X"
       >
         {label}
-      </label>
+      </label>) : (<label className="relative  -top-10 ">&ensp;</label>) }
     </div>
   );
 };

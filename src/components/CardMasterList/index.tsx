@@ -138,12 +138,12 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
 
 
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 mt-1 lg:mt-0 gap-x-2 shadow-lg px-1 pb-2 
-            relative  h-fit gap-y-1 border rounded-md">
-              <div className="col-span-3 absolute text-xs -top-5  pb-0.5 ml-1   text-center  =lex justify-center
-                bg-white text-gray-500 border-b-white border  font-bold rounded-t-md px-1">{t('lblInternalCalibration')}</div>
+            <div className="grid grid-cols-1 md:grid-cols-3 mt-1 lg:mt-0 gap-x-2  px-1 pb-1 backdrop-blur-sm bg-white/50
+            relative  h-fit gap-y-1  rounded-md">
+              <div style={{fontSize:"8px"}} className="col-span-3 absolute  -top-3  ml-1 backdrop-blur-sm bg-white/50  text-center  flex justify-center
+               text-gray-500    font-bold rounded-t-md px-1">{t('lblInternalCalibration')}</div>
               
-              <div className="mt-2   h-fit flex gap-x-4 w-fit flex-wrap
+              <div className="lg:mt-2   h-fit flex gap-x-4 w-fit flex-wrap
               ">
                 <span className="text-xs text-teal-800">
                   {t('lblFrequencyFollowAdidasRequirement')}:
@@ -170,12 +170,12 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
 
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-2 shadow-lg px-1 pb-2   
-              h-fit gap-y-1 flex mt-2 relative border rounded-md
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-2  px-1  pb-1 items-center
+              h-fit gap-y-1 flex mt-2 relative  rounded-md backdrop-blur-xl bg-white/30 items-center
              ">
-            <div className="col-span-3 absolute text-xs   -top-5  pb-0.5 ml-1  text-center flex justify-center
-                 bg-white text-gray-500 border-b-white border  font-bold rounded-t-md px-1 ">{t('lblExternalCalibration')}</div>
-              <div className="mt-2 flex-wrap flex w-fit gap-x-4">
+            <div style={{fontSize:"8px"}} className="col-span-3 absolute   -top-3   ml-1 backdrop-blur-xl bg-white/30 text-center flex justify-center
+             text-gray-500    font-bold rounded-t-md px-1  ">{t('lblExternalCalibration')}</div>
+              <div className="lg:mt-2 flex-wrap flex w-fit gap-x-4">
                 <span className="text-xs text-teal-800">
                   {t('lblFrequencyFollowAdidasRequirement')}:
                 </span>
@@ -184,7 +184,7 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
                   {item.Frequency_follow_adidas_requirement2}
                 </span>
               </div>
-              <div className="lg:mt-2 flex-wrap flex w-fit gap-x-4">
+              <div className="lg:mt-2 flex-wrap flex w-fit gap-x-4 ">
                 <span className="text-xs text-teal-800">
                   {t('lblDateOfCalibration')}:
                 </span>

@@ -300,7 +300,7 @@ const HomeScreen = () => {
 
                     
                   </div>
-                  <div className="relative ">
+                  <div className="relative  -mt-3">
                     <DatetimePicker
                       label={t("lblIncommingDate")}
                       onChangeDate={(date: any) => setIncommingDate(date)}
@@ -497,29 +497,30 @@ const HomeScreen = () => {
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-x-2 -mt-3 ">
                   <div>
-                    <TextInput
+                    <CreateInput
                       label={t("lblBuilding")}
-                      TextChange={(value: any) => {
+                      OnSelected={(value: any) => {
                         setBuilding(value);
                       }}
                       value={Building}
-                      keys="lblBuilding"
+                      options={[]}
+                 
                     />
                   </div>
                   <div>
-                    <TextInput
+                    <CreateInput
                       label={t("lblDepartment_Line")}
-                      TextChange={(value: any) => {
+                      OnSelected={(value: any) => {
                         setDepartmentLine(value);
                       }}
                       value={DepartmentLine}
-                      keys="lblDepartment_Line"
+                      options={[]}
                     />
                   </div>
                 </div>
-                <div>
+                <div className="">
                   <TextInput
                     label={t("lblPersonInCharge")}
                     TextChange={(value: any) => {

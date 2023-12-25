@@ -4,6 +4,7 @@ import { getMonth, getYear } from "date-fns";
 import DatePicker from "react-datepicker";
 import { Portal } from "react-overlays";
 import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
 interface DatePickerProps {
   labelStart: string;
   labelEnd: string;
@@ -46,19 +47,18 @@ const DateRangePicker: React.FC<DatePickerProps> = ({
   ];
 
   const handleChangeTime = (dates:  Date | null) => {
-    if (dates) {
-      onChangeDateStart(dates);
-    }
+
+    onChangeDateStart(dates);
   };
   const handleChangeTime2 = (dates: Date| null) => {
-    if (dates) {
-      onChangeDateEnd(dates);
-    }
+ 
+    onChangeDateEnd(dates);
+    
   };
 
   return (
     <>
-      <div className="relative">
+      <div className="relative ">
         <DatePicker
           renderCustomHeader={({
             date,
@@ -135,7 +135,7 @@ const DateRangePicker: React.FC<DatePickerProps> = ({
             },
           ]}
           calendarClassName="calender-custom-position"
-          placeholderText="YYYY/MM/DD"
+          placeholderText={labelStart +' (YYYY/MM/DD)'}
           dateFormat="yyyy/MM/dd"
           className="  block  text-center border p-2.5 w-full 
          text-gray-900  rounded-xl shadow  peer
@@ -147,7 +147,9 @@ const DateRangePicker: React.FC<DatePickerProps> = ({
           endDate={selectsEnd}
           onChange={(value: any) => handleChangeTime(value)}
         />
-        <label
+        
+        
+        {selectsStart ? (<label
           className="relative text-left w-fit flex  text-red-900  duration-300 transform  border-t-1  rounded-lg  
       -translate-y-4 scale-75 -top-10    origin-[0] bg-white  px-2  mb-0 w-fit 
 
@@ -159,7 +161,7 @@ const DateRangePicker: React.FC<DatePickerProps> = ({
       start-0 border-X"
         >
           {labelStart}
-        </label>
+        </label>) : ( <label className=" ">&ensp;</label>)}
       </div>
       <div className="relative">
         <DatePicker
@@ -238,7 +240,7 @@ const DateRangePicker: React.FC<DatePickerProps> = ({
             },
           ]}
           calendarClassName="calender-custom-position"
-          placeholderText="YYYY/MM/DD"
+          placeholderText= {labelEnd+' (YYYY/MM/DD)'}
           dateFormat="yyyy/MM/dd"
           className="  block  text-center border p-2.5 w-full 
          text-gray-900  rounded-xl shadow  peer
@@ -251,7 +253,7 @@ const DateRangePicker: React.FC<DatePickerProps> = ({
           minDate={selectsStart}
           onChange={(value: any) => handleChangeTime2(value)}
         />
-        <label
+         {selectsEnd ? (<label
           className="relative text-left w-fit flex  text-red-900  duration-300 transform  border-t-1  rounded-lg  
       -translate-y-4 scale-75 -top-10    origin-[0] bg-white  px-2  mb-0 w-fit 
 
@@ -263,7 +265,7 @@ const DateRangePicker: React.FC<DatePickerProps> = ({
       start-0 border-X"
         >
           {labelEnd}
-        </label>
+        </label> ) : ( <label className=" ">&ensp;</label>)}
       </div>
     </>
   );
