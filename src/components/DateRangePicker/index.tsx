@@ -4,7 +4,7 @@ import { getMonth, getYear } from "date-fns";
 import DatePicker from "react-datepicker";
 import { Portal } from "react-overlays";
 import "react-datepicker/dist/react-datepicker.css";
-import moment from "moment";
+
 interface DatePickerProps {
   labelStart: string;
   labelEnd: string;
@@ -47,13 +47,10 @@ const DateRangePicker: React.FC<DatePickerProps> = ({
   ];
 
   const handleChangeTime = (dates:  Date | null) => {
-
     onChangeDateStart(dates);
   };
   const handleChangeTime2 = (dates: Date| null) => {
- 
     onChangeDateEnd(dates);
-    
   };
 
   return (

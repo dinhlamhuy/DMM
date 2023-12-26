@@ -8,29 +8,28 @@ import { Routes, Route, Navigate, useNavigate, Outlet } from "react-router-dom";
 import ErrorScreen from "./screens/ErrorScreen";
 import HomeScreen from "./screens/HomeScreen";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+
 import LoginScreen from "./screens/LoginScreen";
 import "./utils/i18n";
 import MasterListScreen from "./screens/MasterListScreen";
 
-const ProtectedRoutes = ({ authenticate }: { authenticate: boolean }) => {
-  if (!authenticate) {
-    return <Navigate to={"/login"} replace />;
-  }
-
-  return <Outlet />;
-};
 
 function App() {
-  const dataUser = useSelector((state: any) => state.UserLogin);
+  const ProtectedRoutes = ({ authenticate }: { authenticate: boolean }) => {
+    if (!authenticate) {
+      return <Navigate to={"/login"} replace />;
+    }
+    return <Outlet />;
+  };
+  const dataUser = localStorage.getItem("User");
   const navigate = useNavigate();
-  const [authenticate, setAuthenticate] = useState(true);
+  const [authenticate, setAuthenticate] = useState(false);
 
   useEffect(() => {
-    if (dataUser === "") {
+    if (dataUser) {
       setAuthenticate(true);
       navigate("/");
-    }
+    } 
   }, [dataUser]);
 
   return (
@@ -38,9 +37,11 @@ function App() {
       <Routes>
         <Route element={<ProtectedRoutes authenticate={authenticate} />}>
           <Route path={"/*"} element={<ErrorScreen />} />
+          {/* <Route path={"/"} element={<HomeScreen />} />
+          <Route path={"/list"} element={<MasterListScreen />} /> */}
+        </Route>
           <Route path={"/"} element={<HomeScreen />} />
           <Route path={"/list"} element={<MasterListScreen />} />
-        </Route>
           <Route path={"/login"} element={<LoginScreen />} />
       </Routes>
     </section>

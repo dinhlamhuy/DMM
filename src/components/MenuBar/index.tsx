@@ -8,6 +8,9 @@ import { IoSunny } from "react-icons/io5";
 import { FaListAlt } from "react-icons/fa";import { IoLogOutOutline } from "react-icons/io5";
 import { ImHome } from "react-icons/im";
 import { useNavigate } from "react-router-dom"; import { IoIosMoon } from "react-icons/io";
+import footer from '../../../public/img/footer2.jpg'
+import footerblack from '../../../public/img/footer1.jpg'
+
 import './index.css'
 
 type Props = {
@@ -166,7 +169,8 @@ const MenuBar: React.FC<Props> = ({ children, onDarkMode, isActive }) => {
                 </span>
               </button>
             </li>
-            <li className={`${DarkMode ? "hover:bg-gray-800  text-white" : "hover:bg-gray-200  text-gray-900"} cursor-pointer `} onClick={() => handleUrl("/login", 'login')}>
+    
+            <li className={`${DarkMode ? "hover:bg-gray-800  text-white" : "hover:bg-gray-200  text-gray-900"} cursor-pointer `} onClick={() => {localStorage.removeItem("User"); handleUrl("/login", 'login')}}>
               <button
 
                 className="flex items-center py-2 px-1.5   text-gray-900 rounded-lg    group"
@@ -189,6 +193,7 @@ const MenuBar: React.FC<Props> = ({ children, onDarkMode, isActive }) => {
                 <span className={`ms-3 text-sm font-medium ${DarkMode ? "dark:text-white text-white":""}  `}>{DarkMode ? "Sáng" : "Tối"}</span>
               </label>
             </li> */}
+            <li><img src={ DarkMode ? footerblack : footer} alt="" className="w-full" /></li>
             <li className="justify-center flex mb-12">
 
               <input type="checkbox" id="darkmode-toggle" className="inputDarkMode" checked={DarkMode} onChange={toggleDarkMode} />

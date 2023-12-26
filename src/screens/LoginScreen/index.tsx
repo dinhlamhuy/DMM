@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { useState } from "react";
+import {   useState } from "react";
 import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 import "./login.css";
 
@@ -19,40 +19,37 @@ const LoginScreen = () => {
   const [Open, setOpen] = useState("hopclose");
   const PlaceholderUser = t("lblUserID");
   const PlaceholderPass = t("lblPassword");
-
+  // useEffect(() => {
+  //   localStorage.removeItem("User");
+  // }, []); 
+  // const dataUser = localStorage.getItem("User");
   const [showPassword, setShowPassword] = useState(false);
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
   const navigate = useNavigate();
-  const handleUrl = (link: string) => {
-    navigate(link);
-  };
-  const handleLogin=()=>{
+
+  const handleLogin = () => {
     const url = api + "/api/User/Sign_In";
 
-  const data={
-    
-      "user_Id": UserID,
-      "user_Password": password
-    
-  }
-  axios
-  .post(url, data, config)
-  .then((response: any) => {
-    if (response.data.result === true) {
-      console.log("thành công");
-      const dataString = JSON.stringify(response.data);
-      localStorage.setItem('User', dataString);
-      
-      handleUrl('/')
-
-    }else{
-      alert('Thất bai')
-    }
-  })
-  .finally(() => { });
-  }
+    const data = {
+      user_Id: UserID,
+      user_Password: password,
+    };
+    axios
+      .post(url, data, config)
+      .then((response: any) => {
+        if (response.data.result === true) {
+          const dataString = JSON.stringify(response.data);
+          localStorage.setItem("User", dataString);
+          navigate("/");
+        } else {
+          alert("Thất bai");
+        }
+      })
+      .finally(() => {});
+  };
+ 
 
   return (
     <div className="screen">
@@ -93,13 +90,15 @@ const LoginScreen = () => {
               -translate-y-1/4 cursor-pointer text-2xl"
               onClick={handleTogglePassword}
             >
-              {showPassword ?  <RiEyeLine /> :<RiEyeCloseLine />}
+              {showPassword ? <RiEyeLine /> : <RiEyeCloseLine />}
             </button>
             {/* <input type="radio" name="" id="" /> */}
 
             {/* <input type="submit" value="Sign In" /> */}
 
-            <button className="btnSubmit " onClick={handleLogin}>{t("lblLogin")}</button>
+            <button className="btnSubmit " onClick={handleLogin}>
+              {t("lblLogin")}
+            </button>
 
             <div className="nhom flex justify-center">
               <LanguageIcon />

@@ -57,7 +57,7 @@ const HomeScreen = () => {
       Device_Name: EquipmentName,
       Status: txtStatus,
       Group_Serial_Key: selectedGroup,
-      anh: imgAfterCrop.replace('data:image/jpeg;base64,', ''),
+      anh: imgAfterCrop,
       Model_Device: Model,
       Device_Serial_Number: DeviceSerialNum,
       Device_Brand: Brand,

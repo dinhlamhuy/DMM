@@ -138,10 +138,10 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
 
 
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 mt-1 lg:mt-0 gap-x-2  px-1 pb-1 backdrop-blur-sm bg-white/50
-            relative  h-fit gap-y-1  rounded-md">
-              <div style={{fontSize:"8px"}} className="col-span-3 absolute  -top-3  ml-1 backdrop-blur-sm bg-white/50  text-center  flex justify-center
-               text-gray-500    font-bold rounded-t-md px-1">{t('lblInternalCalibration')}</div>
+            <div className={`grid grid-cols-1 md:grid-cols-3 mt-1 lg:mt-0 gap-x-2  px-1 pb-1 backdrop-blur-sm ${DarkMode ? "bg-yellow-50/50" : "bg-white/50"}
+            relative  h-fit gap-y-1  rounded-md`}>
+              <div style={{fontSize:"8px"}} className={`col-span-3 absolute  -top-3  ml-1 backdrop-blur-sm  ${DarkMode ? "bg-yellow-50/50" : "bg-white/50"}  text-center  flex justify-center
+               text-gray-500    font-bold rounded-t-md px-1`}>{t('lblInternalCalibration')}</div>
               
               <div className="lg:mt-2   h-fit flex gap-x-4 w-fit flex-wrap
               ">
@@ -170,11 +170,10 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
 
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-2  px-1  pb-1 items-center
-              h-fit gap-y-1 flex mt-2 relative  rounded-md backdrop-blur-xl bg-white/30 items-center
-             ">
-            <div style={{fontSize:"8px"}} className="col-span-3 absolute   -top-3   ml-1 backdrop-blur-xl bg-white/30 text-center flex justify-center
-             text-gray-500    font-bold rounded-t-md px-1  ">{t('lblExternalCalibration')}</div>
+            <div className={`grid grid-cols-1 md:grid-cols-3 gap-x-2  px-1  pb-1 items-center ${DarkMode ? "bg-yellow-50/50" : "bg-white/50"} 
+              h-fit gap-y-1 flex mt-2 relative  rounded-md backdrop-blur-xl  items-center`}>
+            <div style={{fontSize:"8px"}} className={`col-span-3 absolute   -top-3   ml-1 backdrop-blur-xl ${DarkMode ? "bg-yellow-50/50" : "bg-white/50"}  text-center flex justify-center
+             text-gray-500    font-bold rounded-t-md px-1  `}>{t('lblExternalCalibration')}</div>
               <div className="lg:mt-2 flex-wrap flex w-fit gap-x-4">
                 <span className="text-xs text-teal-800">
                   {t('lblFrequencyFollowAdidasRequirement')}:
