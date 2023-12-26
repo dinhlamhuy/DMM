@@ -212,6 +212,7 @@ const MenuBar: React.FC<Props> = ({ children, onDarkMode, isActive }) => {
         <div className={` ${DarkMode ? "dark:bg-black bg-black" : "bg-white "}  p-4 border    border-gray-200   min-h-screen border-dashed rounded-lg  mt-14 pt-1 pb-12`}>
           {children}
         </div>
+        <p className={` ${DarkMode ? "text-teal-200" : "text-teal-900"} mt-2`}> Copyright 2023 &copy; IT-SW LHG Huii & Shan</p>
       </div>
     </>
   );

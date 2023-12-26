@@ -30,6 +30,7 @@
     "react-icons": "^4.12.0",
     "react-modal": "^3.16.1",
     "react-overlays": "^5.2.1",
+    "react-paginate": "^8.2.0",
     "react-redux": "^9.0.4",
     "react-router-dom": "^6.20.1",
     "react-select": "^5.8.0",

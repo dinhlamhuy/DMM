@@ -20,7 +20,7 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
       setBorderColor("border-white text-white");
       setBorderColorTH("border-white ");
     } else {
-      setBorderColor("border-black ");
+      setBorderColor("border-black");
       setBorderColorTH("border-black ");
     }
   }, [DarkMode]);
@@ -180,7 +180,7 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
                   </td>
                   <td className={`border ${borderColor}`}>{item.Group}</td>
                   <td className={`border ${borderColor}`}>
-                    <img
+                    <img loading="lazy"
                       src={item.Photo_for_reference}
                       className="w-full"
                       alt=""
@@ -214,7 +214,7 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
                   </td>
                   {item.Valid == "VALID" ? (
                     <>
-                      <td className={`border ${borderColor} bg-green-300`}>
+                      <td className={`border ${borderColor} bg-green-400`}>
                         <div className=" text-center px-auto flex justify-center items-center ">
                           <FaCheck className=" w-fit text-2xl font-bold  " />
                         </div>
@@ -225,7 +225,7 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
                     <>
                       
                       <td className="border border-black border-black"></td>
-                      <td className={`border ${borderColor} bg-red-300`}>
+                      <td className={`border ${borderColor} bg-red-400`}>
                         <div className=" text-center px-auto flex justify-center items-center  ">
                           <FaCheck className=" w-fit text-2xl font-bold  " />
                         </div>
