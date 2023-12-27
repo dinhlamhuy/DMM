@@ -13,6 +13,14 @@ interface CardMListProps {
 const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
   const { t } = useTranslation();
   return items.map((item: Equipment, index: number) => {
+    const ngayHC = new Date(item.Date_Of_Next);
+    const ngayHT = new Date();
+    let the;
+    if (ngayHC < ngayHT) {
+      the = " text-white font-bold  bg-red-900 px-2";
+    }
+
+
     return (
       <div
         key={`Equi` + index}
@@ -196,7 +204,7 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
                 <span className="text-xs text-gray-800">
                   {t('lblDateOfNextCalibration')}:</span> 
               
-                <span className="text-xs font-bold">{item.Date_Of_Next}</span>
+                <span className={`text-xs font-bold ${the}`}>{item.Date_Of_Next}</span>
               </div>
             </div>
 

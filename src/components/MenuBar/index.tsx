@@ -58,14 +58,14 @@ const MenuBar: React.FC<Props> = ({ children, onDarkMode, isActive }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start rtl:justify-end">
               <button
-                className="flex ms-2 md:me-24"
+                className="flex ms-2 md:me-24 select-none"
                 onClick={() => {
                   const newIsOpenSlide = !isOpenSlide;
                   setIsOpenSlide(newIsOpenSlide);
                   localStorage.setItem('isOpen', newIsOpenSlide.toString());
                 }}
               >
-                <img src={logo} className="h-8 me-3" alt="LHG" />
+                <img src={logo} className="h-8 me-3 select-none" alt="LHG" />
                 <span className={`projectName self-center text-xl ${DarkMode ? "dark:text-yellow-400 text-yellow-400" : "text-black "}  font-bold sm:text-2xl whitespace-nowrap`}>
                   Device Management
                 </span>
@@ -119,7 +119,7 @@ const MenuBar: React.FC<Props> = ({ children, onDarkMode, isActive }) => {
         aria-label="Sidebar"
       >
         <div className={`h-full px-3 grid gap-4 content-between  ${DarkMode ? "dark:text-white dark:bg-black bg-black text-white" : "text-gray-900 bg-white"} pb-4 overflow-y-auto  `} >
-          <ul className="space-y-2 font-medium  ">
+          <ul className="space-y-2 font-medium  select-none ">
             <li onClick={() => handleUrl("/", "home")} className={`${isActive === 'home' ? (DarkMode ? 'activeMenuDark ' : 'activeMenuLight ') :
               `${DarkMode ? '  hover:text-white hover:bg-gray-800  text-white' : ' text-gray-900 hover:bg-gray-100'}`} cursor-pointer `}>
               <button
@@ -193,7 +193,7 @@ const MenuBar: React.FC<Props> = ({ children, onDarkMode, isActive }) => {
                 <span className={`ms-3 text-sm font-medium ${DarkMode ? "dark:text-white text-white":""}  `}>{DarkMode ? "Sáng" : "Tối"}</span>
               </label>
             </li> */}
-            <li><img src={ DarkMode ? footerblack : footer} alt="" className="w-full" /></li>
+            <li className=" select-none"><img src={ DarkMode ? footerblack : footer} alt="" className="w-full" /></li>
             <li className="justify-center flex mb-12">
 
               <input type="checkbox" id="darkmode-toggle" className="inputDarkMode" checked={DarkMode} onChange={toggleDarkMode} />
@@ -208,8 +208,8 @@ const MenuBar: React.FC<Props> = ({ children, onDarkMode, isActive }) => {
         </div>
       </aside>
 
-      <div className={`p-4    ${isOpenSlide ? "sm:ml-60" : "  "} ${DarkMode ? "dark:bg-slate-800 bg-slate-800" : "bg-gray-200"} `}>
-        <div className={` ${DarkMode ? "dark:bg-black bg-black" : "bg-white "}  p-4 border    border-gray-200   min-h-screen border-dashed rounded-lg  mt-14 pt-1 pb-12`}>
+      <div className={`p-4   select-none ${isOpenSlide ? "sm:ml-60" : "  "} ${DarkMode ? "dark:bg-slate-800 bg-slate-800" : "bg-gray-200"} `}>
+        <div className={`  select-none ${DarkMode ? "dark:bg-black bg-black" : "bg-white "}  p-4 border    border-gray-200   min-h-screen border-dashed rounded-lg  mt-14 pt-1 pb-12`}>
           {children}
         </div>
         <p className={` ${DarkMode ? "text-teal-200" : "text-teal-900"} mt-2`}> Copyright 2023 &copy; IT-SW LHG Huii & Shan</p>

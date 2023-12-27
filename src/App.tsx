@@ -36,13 +36,13 @@ function App() {
     <section className={"App"}>
       <Routes>
         <Route element={<ProtectedRoutes authenticate={authenticate} />}>
-          <Route path={"/*"} element={<ErrorScreen />} />
           {/* <Route path={"/"} element={<HomeScreen />} />
           <Route path={"/list"} element={<MasterListScreen />} /> */}
         </Route>
+          <Route path={"/*"} element={<ErrorScreen />} />
+          <Route path={"/login"} element={<LoginScreen />} />
           <Route path={"/"} element={<HomeScreen />} />
           <Route path={"/list"} element={<MasterListScreen />} />
-          <Route path={"/login"} element={<LoginScreen />} />
       </Routes>
     </section>
   );

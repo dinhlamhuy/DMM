@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FileInput from "../../components/FileInput";
 import ImageCropper from "../../components/ImageCropper";
 import CustomModal from "../../components/CustomModal";
@@ -49,6 +49,59 @@ const HomeScreen = () => {
   const [sttResult, setsttResult] = useState("");
   const [txtStatus, settxtStatus] = useState("");
 
+  const [optGroup, setoptGroup] = useState<{ value: string; label: string }[]>(
+    []
+  );
+  const [optinternalCalibration, setoptinternalCalibration] = useState<
+    { value: string; label: string }[]
+  >([]);
+  const [optinternalCalibrationAdidas, setoptinternalCalibrationAdidas] = useState<
+    { value: string; label: string }[]
+  >([]);
+  const [optExternalCalibration, setoptExternalCalibration] = useState<
+    { value: string; label: string }[]
+  >([]);
+  // const [optLocation, setoptLocation] = useState<
+  //   { value: string; label: string }[]
+  // >([]);
+  const [optDepartment, setoptDepartment] = useState<
+    { value: string; label: string }[]
+  >([]);
+  const [optBuilding, setoptBuilding] = useState<
+    { value: string; label: string }[]
+  >([]);
+
+  const optionsRadio = [
+    {
+      value: "PASS",
+      label: t("lblPass"),
+      cusClass:
+        "text-green-500  peer-checked:bg-green-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-lime-200",
+    },
+    {
+      value: "FAIL",
+      label: t("lblFail"),
+      cusClass:
+        "text-red-500 peer-checked:bg-red-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-red-200",
+    },
+  ];
+  const optionsVaild = [
+    {
+      value: "1",
+      label: t("lblValid"),
+      cusClass:
+        "text-green-500  peer-checked:bg-green-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-lime-200",
+    },
+    {
+      value: "0",
+      label: t("lblInValid"),
+      cusClass:
+        "text-red-500 peer-checked:bg-red-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-red-200",
+    },
+  ];
+
+  // const []
+
   const AddDevice = () => {
     const url = api + "/api/Device/Insert_Device";
     const data = {
@@ -89,7 +142,50 @@ const HomeScreen = () => {
           console.log("thành công");
         }
       })
-      .finally(() => { });
+      .finally(() => {});
+  };
+
+  const OptionSelect = () => {
+    const url = api + "/api/Get_Data_Filter/Get_Data_Filter";
+
+    const data = {};
+    axios
+      .post(url, data, config)
+      .then((response: any) => {
+        if (response.data !== null) {
+          const groupOptions = response.data.group.map((group: { name_Group: string }) => ({
+            value: group.name_Group,
+            label: group.name_Group
+          }));
+          const icAdidasOptions = response.data.ic.map((ic: { frequency_Adidas: string }) => ({
+            value: ic.frequency_Adidas,
+            label: ic.frequency_Adidas
+          }));
+          const icOptions = response.data.ic.map((ic: { frequency: string }) => ({
+            value: ic.frequency,
+            label: ic.frequency
+          }));
+          const ecAdidasOptions = response.data.ec.map((ec: { frequency_Adidas: string }) => ({
+            value: ec.frequency_Adidas,
+            label: ec.frequency_Adidas
+          }));
+          const buildingOptions = response.data.location.map((location: { building: string }) => ({
+            value: location.building,
+            label: location.building
+          }));
+          const DepartmentOptions = response.data.location.map((location: { department: string }) => ({
+            value: location.department,
+            label: location.department
+          }));
+          setoptGroup(groupOptions);
+          setoptinternalCalibrationAdidas(icAdidasOptions)
+          setoptinternalCalibration(icOptions);
+          setoptExternalCalibration(ecAdidasOptions);
+          setoptBuilding(buildingOptions);
+          setoptDepartment(DepartmentOptions);
+        }
+      })
+      .finally(() => {});
   };
   const openModal = () => {
     setModalIsOpen(true);
@@ -143,49 +239,26 @@ const HomeScreen = () => {
     setModalIsOpen(false);
   };
 
-  const options = [
-    { value: "1", label: "Nhóm 1" },
-    { value: "2", label: "Nhóm 2" },
-    { value: "3", label: "Nhóm 3" },
-    { value: "4", label: "Nhóm 4" },
-    { value: "5", label: "Nhóm 5" },
-  ];
-  const optionsRadio = [
-    {
-      value: "PASS",
-      label: t("lblPass"),
-      cusClass:
-        "text-green-500  peer-checked:bg-green-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-lime-200",
-    },
-    {
-      value: "FAIL",
-      label: t("lblFail"),
-      cusClass:
-        "text-red-500 peer-checked:bg-red-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-red-200",
-    },
-  ];
-  const optionsVaild = [
-    {
-      value: "1",
-      label: t("lblValid"),
-      cusClass:
-        "text-green-500  peer-checked:bg-green-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-lime-200",
-    },
-    {
-      value: "0",
-      label: t("lblInValid"),
-      cusClass:
-        "text-red-500 peer-checked:bg-red-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-red-200",
-    },
-  ];
+  useEffect(() => {
+    OptionSelect();
+  }, []);
 
   return (
     <>
-      <MenuBar isActive="home" onDarkMode={(darkmode: boolean | ((prevState: boolean) => boolean)) => setDarkMode(darkmode)}>
+      <MenuBar
+        isActive="home"
+        onDarkMode={(darkmode: boolean | ((prevState: boolean) => boolean)) =>
+          setDarkMode(darkmode)
+        }
+      >
         <div className="container items-center justify-center mx-auto">
           {/* //  */}
           <div className="grid">
-            <p className={`titleName flex justify-center ${DarkMode ? "dark:text-white text-white" : ""} `}>
+            <p
+              className={`titleName flex justify-center ${
+                DarkMode ? "dark:text-white text-white" : ""
+              } `}
+            >
               {t("lblUploadNewDevice")}
             </p>
           </div>
@@ -200,14 +273,43 @@ const HomeScreen = () => {
                 <div className="  flex flex-row   justify-center mb-14 md:mb-14  ">
                   {currentMenu === "chooseImg" ? (
                     // <div className=" reviewImg">
-                    <div className={`cropped-img NoneImg grid  flex  ${DarkMode ? "dark:text-white text-white" : ""}  content-around md:py-5 lg:py-5 xl:py-5  `}>
-                      <div className={`row-span-2 uploadView  ${DarkMode ? "dark:text-white text-white" : ""} `}>
-                        <p className={` ${DarkMode ? "dark:text-white text-white" : "text-[#008080]"} `}>
+                    <div
+                      className={`cropped-img NoneImg grid  flex  ${
+                        DarkMode ? "dark:text-white text-white" : ""
+                      }  content-around md:py-5 lg:py-5 xl:py-5  `}
+                    >
+                      <div
+                        className={`row-span-2 uploadView  ${
+                          DarkMode ? "dark:text-white text-white" : ""
+                        } `}
+                      >
+                        <p
+                          className={` ${
+                            DarkMode
+                              ? "dark:text-white text-white"
+                              : "text-[#008080]"
+                          } `}
+                        >
                           {" "}
                           Camera{" "}
                         </p>
-                        <p className={` ${DarkMode ? "dark:text-white text-white" : "text-[#008080]"} `}> OR</p>
-                        <p className={` ${DarkMode ? "dark:text-white text-white" : "text-[#008080]"} `}>
+                        <p
+                          className={` ${
+                            DarkMode
+                              ? "dark:text-white text-white"
+                              : "text-[#008080]"
+                          } `}
+                        >
+                          {" "}
+                          OR
+                        </p>
+                        <p
+                          className={` ${
+                            DarkMode
+                              ? "dark:text-white text-white"
+                              : "text-[#008080]"
+                          } `}
+                        >
                           Upload an Image{" "}
                         </p>
                       </div>
@@ -239,7 +341,11 @@ const HomeScreen = () => {
                             setImage("");
                             closeModal();
                           }}
-                          className={` ${DarkMode ? " dark:border-yellow-400 border-yellow-400" : ""} text-red-700 btn border items-center flex text-center justify-center   text-3xl p-2`}
+                          className={` ${
+                            DarkMode
+                              ? " dark:border-yellow-400 border-yellow-400"
+                              : ""
+                          } text-red-700 btn border items-center flex text-center justify-center   text-3xl p-2`}
                         >
                           <FaRegTrashAlt />
                         </button>
@@ -248,7 +354,11 @@ const HomeScreen = () => {
                             setCurrentMenu("cropImg");
                             openModal();
                           }}
-                          className={` ${DarkMode ? " dark:border-yellow-400 border-yellow-400" : ""} text-green-500  btn  border  items-center flex text-center justify-center  text-3xl p-2`}
+                          className={` ${
+                            DarkMode
+                              ? " dark:border-yellow-400 border-yellow-400"
+                              : ""
+                          } text-green-500  btn  border  items-center flex text-center justify-center  text-3xl p-2`}
                         >
                           <MdEditSquare />
                         </button>
@@ -256,7 +366,11 @@ const HomeScreen = () => {
                     </div>
                   )}
                 </div>
-                <div className={` ${DarkMode ? "dark:bg-zinc-900  bg-zinc-900 " : ""} grid  gap-y-5   py-4 px-2.5 bg-gray-100 rounded-md  relative flex items-end   shadow-md`}>
+                <div
+                  className={` ${
+                    DarkMode ? "dark:bg-zinc-900  bg-zinc-900 " : ""
+                  } grid  gap-y-5   py-4 px-2.5 bg-gray-100 rounded-md  relative flex items-end   shadow-md`}
+                >
                   <div>
                     <TextInput
                       label={t("lblUniqueCode")}
@@ -291,14 +405,12 @@ const HomeScreen = () => {
                   <div className="relative -mt-4">
                     <CreateInput
                       label={t("lblGroup")}
-                      options={options}
+                      options={optGroup}
                       value={selectedGroup}
                       OnSelected={(value: any) => {
                         setselectedGroup(value);
                       }}
                     />
-
-                    
                   </div>
                   <div className="relative  -mt-3">
                     <DatetimePicker
@@ -317,52 +429,68 @@ const HomeScreen = () => {
                 </div>
                 <div className="border-t-2 border-b h-2 shadow border-teal-700  flex-grow"></div>
               </div> */}
-              <div className={` ${DarkMode ? "dark:bg-zinc-700 bg-zinc-700" : ""} grid flex gap-5 mt-6 bg-gray-100  pt-4 px-2.5 shadow rounded-lg`}>
+              <div
+                className={` ${
+                  DarkMode ? "dark:bg-zinc-700 bg-zinc-700" : ""
+                } grid flex gap-5 mt-6 bg-gray-100  pt-4 px-2.5 shadow rounded-lg`}
+              >
                 <div className="flex items-center  ">
                   <div className="border h-1 shadow rounded-l-full border-teal-700  flex-grow"></div>
-                  <div className={` ${DarkMode ? "dark:text-teal-400 dark:text-white text-white text-teal-400" : ""} px-3 text-teal-900  text-xs font-bold border border-teal-400  rounded-full shadow `}>
+                  <div
+                    className={` ${
+                      DarkMode
+                        ? "dark:text-teal-400 dark:text-white text-white text-teal-400"
+                        : ""
+                    } px-3 text-teal-900  text-xs font-bold border border-teal-400  rounded-full shadow `}
+                  >
                     {t("lblInternalCalibration")}
                   </div>
                   <div className="border h-1 shadow rounded-r-full border-teal-700  flex-grow"></div>
                 </div>
                 <div className="grid grid-cols-2 gap-2 ">
                   <div>
-                    <TextInput
+                    <CreateInput
                       label={t("lblCurrentFrequency")}
-                      TextChange={(value: any) => {
+                      OnSelected={(value: any) => {
                         setCurrentFrequency(value);
                       }}
                       value={CurrentFrequency}
-                      keys="lblCurrentFrequency"
+                      options={optinternalCalibration} // k="lblCurrentFrequency"
                     />
                   </div>
                   <div>
-                    <TextInput
+                    <CreateInput
                       label={t("lblFrequencyFollowAdidasRequirement")}
-                      TextChange={(value: any) => {
+                      OnSelected={(value: any) => {
                         setFrequencyAdidas(value);
                       }}
                       value={FrequencyAdidas}
-                      keys="lblFrequencyFollowAdidasRequirement1"
+                      options={optinternalCalibrationAdidas}
                     />
                   </div>
                 </div>
                 <div className="flex items-center  ">
                   <div className="border h-1 shadow rounded-l-full border-teal-700  flex-grow"></div>
-                  <div className={` ${DarkMode ? "dark:text-teal-400 dark:text-white text-white text-teal-400" : ""} px-3 text-teal-900  text-xs font-bold border border-teal-400  rounded-full shadow `}>
+                  <div
+                    className={` ${
+                      DarkMode
+                        ? "dark:text-teal-400 dark:text-white text-white text-teal-400"
+                        : ""
+                    } px-3 text-teal-900  text-xs font-bold border border-teal-400  rounded-full shadow `}
+                  >
                     {t("lblExternalCalibration")}
                   </div>
                   <div className="border  h-1 shadow rounded-r-full border-teal-700 flex-grow"></div>
                 </div>
 
                 <div>
-                  <TextInput
+                  <CreateInput
                     label={t("lblFrequencyFollowAdidasRequirement")}
-                    TextChange={(value: any) => {
+                    OnSelected={(value: any) => {
                       setFrequencyOutAdidas(value);
                     }}
                     value={FrequencyOutAdidas}
-                    keys="lblFrequencyFollowAdidasRequirement2"
+                    options={optExternalCalibration}
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
@@ -409,9 +537,12 @@ const HomeScreen = () => {
 
             {/* Danh sach */}
             <div className=" px-2 ">
-
               {/* <p className="titleName">Danh sách thiết bị vừa nhập</p> */}
-              <div className={`grid flex gap-5   ${DarkMode ? "dark:bg-zinc-900 bg-zinc-900" : "bg-yellow-100"} pt-5 px-2.5 shadow rounded-lg`}>
+              <div
+                className={`grid flex gap-5   ${
+                  DarkMode ? "dark:bg-zinc-900 bg-zinc-900" : "bg-yellow-100"
+                } pt-5 px-2.5 shadow rounded-lg`}
+              >
                 <div className="flex items-center   ">
                   <div className="border-2 rounded-l-full h-1 shadow border-teal-700  flex-grow"></div>
                   <div className="px-3 text-teal-700 dark:text-teal-600 text-xl font-bold border-teal-700 border rounded-full shadow ">
@@ -420,7 +551,6 @@ const HomeScreen = () => {
                   <div className="border-2 rounded-r-full  h-1 shadow border-teal-700  flex-grow"></div>
                 </div>
                 <div className="grid md:grid-cols-2 grid-cols-1 gap-5 md:gap-2">
-
                   <div>
                     <TextInput
                       label={t("lblDeviceSerialNumber")}
@@ -505,8 +635,7 @@ const HomeScreen = () => {
                         setBuilding(value);
                       }}
                       value={Building}
-                      options={[]}
-                 
+                      options={optBuilding}
                     />
                   </div>
                   <div>
@@ -516,7 +645,7 @@ const HomeScreen = () => {
                         setDepartmentLine(value);
                       }}
                       value={DepartmentLine}
-                      options={[]}
+                      options={optDepartment}
                     />
                   </div>
                 </div>
@@ -548,15 +677,16 @@ const HomeScreen = () => {
                   className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-gray-400 flex text-center justify-center items-center "
                   disabled
                 >
-                                   {t('btnEdit')}
-
+                  {t("btnEdit")}
                 </button>
-                <button onClick={AddDevice} className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center">
-                  {t('btnAdd')}
+                <button
+                  onClick={AddDevice}
+                  className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center"
+                >
+                  {t("btnAdd")}
                 </button>
                 <button className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center">
-                {t('btnReset')}
-
+                  {t("btnReset")}
                 </button>
                 {/* <button className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center"></button> */}
               </div>
