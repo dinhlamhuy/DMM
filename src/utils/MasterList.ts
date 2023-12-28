@@ -1,4 +1,6 @@
 export interface Equipment {
+    No:string,
+    Serial_Key:string;
     Equipment_Name: string;
     Unique_code: string;
     Factory_code: string;

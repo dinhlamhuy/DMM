@@ -293,7 +293,7 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
                   <td className={`border ${borderColor}`}>
                     {item.Current_Frequency}
                   </td>
-                  {item.Valid == "VALID" ? (
+                  {item.Valid == "Valid" ? (
                     <>
                       <td className={`border ${borderColor} bg-green-400`}>
                         <div className=" text-center px-auto flex justify-center items-center ">

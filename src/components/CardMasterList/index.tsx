@@ -24,7 +24,7 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
     return (
       <div
         key={`Equi` + index}
-        className={` ${DarkMode ? `bg-whitse   ${item.Valid === "VALID" ? "bg-[#96FFC6]": "bg-[#FF969A]"}` : ` bg-ambser-50  ${item.Valid === "VALID" ? "bg-[#96FFC6]": "bg-[#FF969A]" }    `
+        className={` ${DarkMode ? `bg-whitse   ${item.Valid === "Valid" ? "bg-[#96FFC6]": "bg-[#FF969A]"}` : ` bg-ambser-50  ${item.Valid === "Valid" ? "bg-[#96FFC6]": "bg-[#FF969A]" }    `
           } rounded-lg shadow  h-fit flex justify-center w-full p-2`}
       >
         <div className="container pt-1    gird grid-flow-row auto-rows-max">
@@ -135,7 +135,7 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
               <div className="flex  items-center   gap-x-3">
                 <span className="text-xs text-gray-800 items-center ">{t('lblStatus')}:</span>
                 <span className="text-xs font-bold">
-                  {item.Valid === "VALID" ? (
+                  {item.Valid === "Valid" ? (
                     <FaCheck className="  text-2xl font-bold text-green-500 " />
                   ) : (
 

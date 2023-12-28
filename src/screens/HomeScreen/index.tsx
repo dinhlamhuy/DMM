@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import RadioCheck from "../../components/RadioCheck";
 import { api, config } from "../../utils/linkApi";
 import axios from "axios";
+import moment from "moment";
 
 const HomeScreen = () => {
   const { t } = useTranslation();
@@ -61,9 +62,7 @@ const HomeScreen = () => {
   const [optExternalCalibration, setoptExternalCalibration] = useState<
     { value: string; label: string }[]
   >([]);
-  // const [optLocation, setoptLocation] = useState<
-  //   { value: string; label: string }[]
-  // >([]);
+
   const [optDepartment, setoptDepartment] = useState<
     { value: string; label: string }[]
   >([]);
@@ -73,13 +72,13 @@ const HomeScreen = () => {
 
   const optionsRadio = [
     {
-      value: "PASS",
+      value: "Pass",
       label: t("lblPass"),
       cusClass:
         "text-green-500  peer-checked:bg-green-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-lime-200",
     },
     {
-      value: "FAIL",
+      value: "Fail",
       label: t("lblFail"),
       cusClass:
         "text-red-500 peer-checked:bg-red-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-red-200",
@@ -105,35 +104,59 @@ const HomeScreen = () => {
   const AddDevice = () => {
     const url = api + "/api/Device/Insert_Device";
     const data = {
-      Unique_ID: UniCode,
-      Factory_ID: FactoryCode,
-      Device_Name: EquipmentName,
+      unique_ID: UniCode,
+      factory_ID: FactoryCode,
+      device_Name: EquipmentName,
+      group_Serial_Key: selectedGroup,
       Status: txtStatus,
-      Group_Serial_Key: selectedGroup,
-      anh: imgAfterCrop,
-      Model_Device: Model,
-      Device_Serial_Number: DeviceSerialNum,
-      Device_Brand: Brand,
-      Supplier_Name: Supplier,
-      Note: Remark,
-      Person_Serial_Key: PersonInCharge,
-      Frequency_Adidas: "One per year",
-      Quality_Testing_Center: "Quang Lạc",
-      Result: sttResult,
-      Note_External_Calibration: "Pass",
-      Frequency_Adidas_Internal: "Monthly",
-      Frequency_Internal: "Monthly",
-      Status_Internal: "Valid",
+      delivery_Date: IncommingDate,
+      modify_Date:moment(new Date()),
+      Image_Device: imgAfterCrop,
+      model_Device: Model,
+      device_Serial_Number: DeviceSerialNum,
+      device_Brand: Brand,
+      supplier_Name: Supplier,
+      note: Remark,
+      person_Charge: PersonInCharge,
+      external_Calibration_Serial_Key: FrequencyOutAdidas,
+   
+      result: sttResult,
+      
+      internal_Calibration_Serial_Key:CurrentFrequency,
+      Frequency_Internal: FrequencyAdidas,
+      status: sttResult,
       Note_Internal: "",
-      Factory: "N/A",
+      Factory: FactoryCode,
+      location_Serial_Key:DepartmentLine,
       Building: Building,
       Department: DepartmentLine,
-      Use_Purpose_Machine_Indication: UsePurpose,
-      Range: Range,
-      Note_Measurement: UsePurpose,
-      Group_Name: selectedGroup,
-      Group_Description: selectedGroup,
+      user_Purpose_Machine_Indication: UsePurpose,
+      range: Range,
+      measurement_Serial_Key: UsePurpose,
+      certified_Calibration_Institute_Company: InstituteCompany,
+      date_Calibration: DateCalibration,
+      date_Next_Calibration: DateNextCalibration,
+      person_Calibration: "Nguyễn Sơn"
+
     };
+
+
+    // {
+    //   "device_Serial_Key": "DS0000000000051",
+
+    //   "measurement_Serial_Key": "MS0000000000003",
+    //   "location_Serial_Key": "LS00000000000001",
+    //   "internal_Calibration_Serial_Key": "IC0000000000002",
+    //   "external_Calibration_Serial_Key": "EC0000000000001",
+      
+
+    //   "person_Calibration": "Nguyễn Sơn",
+    //   "date_Calibration": "2023-12-21",
+    
+     
+   
+    //   "certified_Calibration_Institute_Company": "Quang Lạc"
+    // }
 
     axios
       .post(url, data, config)
@@ -153,33 +176,30 @@ const HomeScreen = () => {
       .post(url, data, config)
       .then((response: any) => {
         if (response.data !== null) {
-          const groupOptions = response.data.group.map((group: { name_Group: string }) => ({
-            value: group.name_Group,
+          const groupOptions = response.data.group.map((group:any) => ({
+            value: group.group_Serial_Key,
             label: group.name_Group
           }));
-          const icAdidasOptions = response.data.ic.map((ic: { frequency_Adidas: string }) => ({
-            value: ic.frequency_Adidas,
-            label: ic.frequency_Adidas
+          const icAdidasOptions = response.data.ic.map((ic:any) => ({
+            value: ic.internal_Calibration_Serial_Key,
+            label: ic.frequency_General
           }));
-          const icOptions = response.data.ic.map((ic: { frequency: string }) => ({
-            value: ic.frequency,
-            label: ic.frequency
-          }));
-          const ecAdidasOptions = response.data.ec.map((ec: { frequency_Adidas: string }) => ({
-            value: ec.frequency_Adidas,
+      
+          const ecAdidasOptions = response.data.ec.map((ec:any) => ({
+            value: ec.external_Calibration_Serial_Key,
             label: ec.frequency_Adidas
           }));
           const buildingOptions = response.data.location.map((location: { building: string }) => ({
             value: location.building,
             label: location.building
           }));
-          const DepartmentOptions = response.data.location.map((location: { department: string }) => ({
-            value: location.department,
+          const DepartmentOptions = response.data.location.map((location: any) => ({
+            value: location.location_Serial_Key,
             label: location.department
           }));
           setoptGroup(groupOptions);
           setoptinternalCalibrationAdidas(icAdidasOptions)
-          setoptinternalCalibration(icOptions);
+          setoptinternalCalibration(icAdidasOptions);
           setoptExternalCalibration(ecAdidasOptions);
           setoptBuilding(buildingOptions);
           setoptDepartment(DepartmentOptions);
@@ -242,6 +262,25 @@ const HomeScreen = () => {
   useEffect(() => {
     OptionSelect();
   }, []);
+  useEffect(() => {
+    
+    if (DateCalibration) {
+      let ngay: Date | undefined;
+      if (FrequencyOutAdidas === 'EC0000000000001') {
+        ngay = new Date(DateCalibration);
+        ngay.setFullYear(ngay.getFullYear() + 1);
+      } else if (FrequencyOutAdidas === 'EC0000000000002') {
+        ngay = new Date(DateCalibration);
+        ngay.setMonth(ngay.getMonth() + 6);
+      } else if (FrequencyOutAdidas === 'EC0000000000005') {
+        ngay = new Date(DateCalibration);
+        ngay.setMonth(ngay.getMonth() + 3);
+      }
+      setDateNextCalibration(ngay);
+      // console.log(ngay)
+    }
+    
+  }, [DateCalibration, FrequencyOutAdidas]);
 
   return (
     <>
