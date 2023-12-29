@@ -5,8 +5,7 @@ import { Equipment } from "../../utils/MasterList";
 import { IoClose } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 interface CardMListProps {
-  label: string | null;
-  keys: string | undefined;
+
   items: Equipment[];
   DarkMode: boolean;
 }

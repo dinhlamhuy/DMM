@@ -11,6 +11,7 @@ import { SiMicrosoftexcel } from "react-icons/si";
 import { Equipment } from "../../utils/MasterList";
 import CardMasterList from "../../components/CardMasterList";
 import TableMasterList from "../../components/TableMasterList";
+
 import * as ExcelJS from "exceljs";
 import { FiFilter } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
@@ -20,10 +21,13 @@ import DateRangePicker from "../../components/DateRangePicker";
 import RadioCheck from "../../components/RadioCheck";
 import { api, config } from "../../utils/linkApi";
 import axios from "axios";
+import LoadingPage from "../../components/LoadingPage";
+// import LoadingPage from "../../components/loadingPage";
 
 const MasterListScreen = () => {
   const [isFilter, setIsFilter] = useState(false);
-  const [RowTable, setRowTable] = useState<Equipment[]>([])
+  const [isLoading, setIsLoading] = useState(false);
+  const [RowTable, setRowTable] = useState<Equipment[]>([]);
 
   const [newRowTable, setnewRowTable] = useState<Equipment[]>([]);
 
@@ -322,7 +326,7 @@ const MasterListScreen = () => {
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = "Danh sách nhập kho.xlsx";
+      link.download = "Danh sách thiết bị Master List.xlsx";
       link.click();
     });
   };
@@ -610,7 +614,7 @@ const MasterListScreen = () => {
 
   const getDataDeviceList = () => {
     const url = api + "/api/ShowDevice/Show_List";
-
+    setIsLoading(true);
     const data = {};
     axios
       .post(url, data, config)
@@ -649,20 +653,21 @@ const MasterListScreen = () => {
             Remarky: item.note_Device,
           }));
 
-          setRowTable(arr)
+          setRowTable(arr);
           // setnewRowTable(arr)
-
         }
       })
-      .finally(() => {});
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
-  useEffect(()=>{
-    getDataDeviceList()
-  },[])
-  useEffect(()=>{
-    setnewRowTable(RowTable)
-  },[RowTable])
+  useEffect(() => {
+    getDataDeviceList();
+  }, []);
+  useEffect(() => {
+    setnewRowTable(RowTable);
+  }, [RowTable]);
   return (
     <MenuBar
       isActive="list"
@@ -670,6 +675,7 @@ const MasterListScreen = () => {
         setDarkMode(darkMode)
       }
     >
+      {/* tim kiếm */}
       <div
         className={` ${DarkMode ? "bg-gray-900" : "bg-gray-200"} ${
           isFilter ? "" : "hidden"
@@ -782,25 +788,27 @@ const MasterListScreen = () => {
 
         <div className="gap-3  flex justify-center">
           <button className="bg-white px-3 py-2 rounded-full font-bold text-lg">
-            Tìm kiếm
+          {t('btnSearch')}
           </button>
           <button
             className="p-2 bg-white px-3 py-2 rounded-full font-bold text-lg"
             onClick={exportToExcel}
           >
-            Excel
+            {t('btnExcel')}
           </button>
           <button
             onClick={resetValues}
             className="p-2 bg-white px-3 py-2 rounded-full font-bold text-lg"
           >
-            Làm mới
+            {t('btnReset')}
           </button>
         </div>
       </div>
+
+      {/* chọn chế độ hiển thị */}
       <div className="justify-end flex mb-2 mt-2">
         <div className="flex items-center mr-2 text-gray-400 text-xs font-bold">
-          Tổng {newRowTable.length} / {RowTable.length}
+          {t('lblTotal')} {newRowTable.length} / {RowTable.length}
         </div>
         <div
           onClick={() => {
@@ -843,37 +851,36 @@ const MasterListScreen = () => {
           <FaTableCells className="text-2xl" />
         </button>
       </div>
-      {list ? (
-        <div className="grid grid-cols-1 md:grid-cols-1   lg:grid-cols-2 gap-5 py-3">
-          <CardMasterList
-            DarkMode={DarkMode}
-            items={currentData}
-            label={null}
-            keys={"lsdák"}
-          />
+
+      {isLoading ? (
+        <div className=" Loading">
+          <LoadingPage />
         </div>
       ) : (
-        <TableMasterList
-          label={null}
-          keys={"daksjdksa"}
-          items={currentData}
-          DarkMode={DarkMode}
-        />
+        <>
+          {list ? (
+            <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1    xl:grid-cols-2 gap-5 py-3">
+              <CardMasterList DarkMode={DarkMode} items={currentData} />
+            </div>
+          ) : (
+            <TableMasterList items={currentData} DarkMode={DarkMode} />
+          )}
+          <div className="">
+            <ReactPaginate
+              previousLabel={t('btnPrev')}
+              nextLabel={t('btnNext')}
+              className=" phantrang"
+              breakLabel={"..."}
+              pageCount={pageCount}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              onPageChange={handlePageClick}
+              containerClassName={"pagination"}
+              activeClassName={"activePhantrang"}
+            />
+          </div>
+        </>
       )}
-      <div className="">
-        <ReactPaginate
-          previousLabel={"Prev"}
-          nextLabel={"Next"}
-          className=" phantrang"
-          breakLabel={"..."}
-          pageCount={pageCount}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageClick}
-          containerClassName={"pagination"}
-          activeClassName={"activePhantrang"}
-        />
-      </div>
     </MenuBar>
   );
 };

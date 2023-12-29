@@ -1,9 +1,10 @@
 // import { ActionMeta, SingleValue } from 'react-select';
+
 import CreatableSelect from "react-select/creatable";
 interface SelectProps {
   label: string;
   options: Option[];
-  value: string | undefined;
+  value: string | undefined | null;
   OnSelected: (value: string | null) => void;
 }
 interface Option {
@@ -17,13 +18,15 @@ const CreateInput: React.FC<SelectProps> = ({
   value,
   OnSelected,
 }) => {
-  const handleChange = (selectedOption: Option | null) => {
+
+
+  const handleChange = (selectedOption: Option | "" | null) => {
     OnSelected(selectedOption ? selectedOption.value : null);
   };
-
   return (
     <div className="relative w-full ">
       <CreatableSelect
+
         className="   selectStyle
     peer  p-0 w-full   text-sm  
     disabled:opacity-50 
@@ -37,7 +40,6 @@ const CreateInput: React.FC<SelectProps> = ({
   autofill:pb-2"
         isClearable
         onChange={handleChange}
-        // inputValue={value}
         options={options}
         placeholder={label}
         theme={(theme) => ({
@@ -68,7 +70,9 @@ peer-[:not(:placeholder-shown)]:text-gray-500
         >
           {label}
         </label>
-      ) : (<label className="absolute  top-5">&ensp;</label>)}
+      ) : (
+        <label className="absolute  top-5">&ensp;</label>
+      )}
     </div>
   );
 };

@@ -42,7 +42,16 @@
     "lblPassword": "Password",
     "btnAdd":"Add",
     "btnEdit":"Update",
-    "btnReset":"Reset"
+    "btnReset":"Reset",
+    "btnSearch":"Search",
+    "btnExcel":"Export Excel",
+    "lblTotal": "Total",
+    "btnPrev":"Prev",
+    "btnNext":"Next"
+
+
+
+
 
 
 

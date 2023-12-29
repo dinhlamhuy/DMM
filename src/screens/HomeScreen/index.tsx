@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
+import { useEffect,  useState } from "react";
 import FileInput from "../../components/FileInput";
 import ImageCropper from "../../components/ImageCropper";
 import CustomModal from "../../components/CustomModal";
@@ -31,9 +31,9 @@ const HomeScreen = () => {
   const [Model, setModel] = useState("");
   const [selectedGroup, setselectedGroup] = useState("");
   const [IncommingDate, setIncommingDate] = useState<Date>();
-  const [CurrentFrequency, setCurrentFrequency] = useState("Monthly");
-  const [FrequencyAdidas, setFrequencyAdidas] = useState("One per year");
-  const [FrequencyOutAdidas, setFrequencyOutAdidas] = useState("One per year");
+  const [CurrentFrequency, setCurrentFrequency] = useState();
+  const [FrequencyAdidas, setFrequencyAdidas] = useState();
+  const [FrequencyOutAdidas, setFrequencyOutAdidas] = useState();
   const [InstituteCompany, setInstituteCompany] = useState("");
   const [DateCalibration, setDateCalibration] = useState<Date>();
   const [DateNextCalibration, setDateNextCalibration] = useState<Date>();
@@ -49,6 +49,8 @@ const HomeScreen = () => {
   const [Remark, setRemark] = useState("");
   const [sttResult, setsttResult] = useState("");
   const [txtStatus, settxtStatus] = useState("");
+
+
 
   const [optGroup, setoptGroup] = useState<{ value: string; label: string }[]>(
     []

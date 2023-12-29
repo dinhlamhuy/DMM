@@ -5,8 +5,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface TableMListProps {
-  label: string | null;
-  keys: string | undefined;
+
   items: Equipment[] | null;
   DarkMode: boolean;
 }

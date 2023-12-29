@@ -66,7 +66,7 @@ const MenuBar: React.FC<Props> = ({ children, onDarkMode, isActive }) => {
                 }}
               >
                 <img src={logo} className="h-8 me-3 select-none" alt="LHG" />
-                <span className={`projectName self-center text-xl ${DarkMode ? "dark:text-yellow-400 text-yellow-400" : "text-black "}  font-bold sm:text-2xl whitespace-nowrap`}>
+                <span className={`uppercase  projectName self-center text-xl ${DarkMode ? "dark:text-yellow-400 text-yellow-400" : "text-black "}  font-bold sm:text-2xl whitespace-nowrap`}>
                   Device Management
                 </span>
               </button>

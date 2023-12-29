@@ -42,7 +42,12 @@
     "lblPassword": "Mật khẩu",
     "btnAdd":"Thêm mới",
     "btnEdit":"Cập nhật",
-    "btnReset":"Làm mới"
+    "btnReset":"Làm mới",
+    "btnSearch":"Tìm kiếm",
+    "btnExcel":"Xuất Excel",
+    "lblTotal": "Tổng",
+    "btnPrev":"Lùi",
+    "btnNext":"Tiếp"
 
 
 
