@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect,  useState } from "react";
+import { useEffect, useState } from "react";
 import FileInput from "../../components/FileInput";
 import ImageCropper from "../../components/ImageCropper";
 import CustomModal from "../../components/CustomModal";
@@ -7,7 +7,6 @@ import MenuBar from "../../components/MenuBar";
 import Camera from "../../components/Camera";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { MdEditSquare } from "react-icons/md";
-// import SelectInput from "../../components/SelectInput";
 import TextInput from "../../components/TextInput";
 import CreateInput from "../../components/CreateInput";
 import DatetimePicker from "../../components/DatetimePicker";
@@ -23,9 +22,10 @@ const HomeScreen = () => {
   const [image, setImage] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [currentMenu, setCurrentMenu] = useState("chooseImg");
-  const [imgAfterCrop, setImgAfterCrop] = useState("");
   const [DarkMode, setDarkMode] = useState(false);
 
+  //#region Các state cho ô nhập thiết bị
+  const [imgAfterCrop, setImgAfterCrop] = useState("");
   const [UniCode, setUniCode] = useState("");
   const [FactoryCode, setFactoryCode] = useState("");
   const [Model, setModel] = useState("");
@@ -49,18 +49,16 @@ const HomeScreen = () => {
   const [Remark, setRemark] = useState("");
   const [sttResult, setsttResult] = useState("");
   const [txtStatus, settxtStatus] = useState("");
-
-
-
+  //#endregion
+  //#region Các state Option của react-select
   const [optGroup, setoptGroup] = useState<{ value: string; label: string }[]>(
     []
   );
   const [optinternalCalibration, setoptinternalCalibration] = useState<
     { value: string; label: string }[]
   >([]);
-  const [optinternalCalibrationAdidas, setoptinternalCalibrationAdidas] = useState<
-    { value: string; label: string }[]
-  >([]);
+  const [optinternalCalibrationAdidas, setoptinternalCalibrationAdidas] =
+    useState<{ value: string; label: string }[]>([]);
   const [optExternalCalibration, setoptExternalCalibration] = useState<
     { value: string; label: string }[]
   >([]);
@@ -100,9 +98,8 @@ const HomeScreen = () => {
         "text-red-500 peer-checked:bg-red-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-red-200",
     },
   ];
-
-  // const []
-
+  //#endregion
+  //#region Function Thêm thiết bị
   const AddDevice = () => {
     const url = api + "/api/Device/Insert_Device";
     const data = {
@@ -112,7 +109,7 @@ const HomeScreen = () => {
       group_Serial_Key: selectedGroup,
       Status: txtStatus,
       delivery_Date: IncommingDate,
-      modify_Date:moment(new Date()),
+      modify_Date: moment(new Date()),
       Image_Device: imgAfterCrop,
       model_Device: Model,
       device_Serial_Number: DeviceSerialNum,
@@ -121,15 +118,15 @@ const HomeScreen = () => {
       note: Remark,
       person_Charge: PersonInCharge,
       external_Calibration_Serial_Key: FrequencyOutAdidas,
-   
+
       result: sttResult,
-      
-      internal_Calibration_Serial_Key:CurrentFrequency,
+
+      internal_Calibration_Serial_Key: CurrentFrequency,
       Frequency_Internal: FrequencyAdidas,
       status: sttResult,
       Note_Internal: "",
       Factory: FactoryCode,
-      location_Serial_Key:DepartmentLine,
+      location_Serial_Key: DepartmentLine,
       Building: Building,
       Department: DepartmentLine,
       user_Purpose_Machine_Indication: UsePurpose,
@@ -138,10 +135,8 @@ const HomeScreen = () => {
       certified_Calibration_Institute_Company: InstituteCompany,
       date_Calibration: DateCalibration,
       date_Next_Calibration: DateNextCalibration,
-      person_Calibration: "Nguyễn Sơn"
-
+      person_Calibration: "Nguyễn Sơn",
     };
-
 
     // {
     //   "device_Serial_Key": "DS0000000000051",
@@ -150,13 +145,10 @@ const HomeScreen = () => {
     //   "location_Serial_Key": "LS00000000000001",
     //   "internal_Calibration_Serial_Key": "IC0000000000002",
     //   "external_Calibration_Serial_Key": "EC0000000000001",
-      
 
     //   "person_Calibration": "Nguyễn Sơn",
     //   "date_Calibration": "2023-12-21",
-    
-     
-   
+
     //   "certified_Calibration_Institute_Company": "Quang Lạc"
     // }
 
@@ -169,7 +161,8 @@ const HomeScreen = () => {
       })
       .finally(() => {});
   };
-
+  //#endregion
+  //#region Function Cập nhật option cho select
   const OptionSelect = () => {
     const url = api + "/api/Get_Data_Filter/Get_Data_Filter";
 
@@ -178,29 +171,33 @@ const HomeScreen = () => {
       .post(url, data, config)
       .then((response: any) => {
         if (response.data !== null) {
-          const groupOptions = response.data.group.map((group:any) => ({
+          const groupOptions = response.data.group.map((group: any) => ({
             value: group.group_Serial_Key,
-            label: group.name_Group
+            label: group.name_Group,
           }));
-          const icAdidasOptions = response.data.ic.map((ic:any) => ({
+          const icAdidasOptions = response.data.ic.map((ic: any) => ({
             value: ic.internal_Calibration_Serial_Key,
-            label: ic.frequency_General
+            label: ic.frequency_General,
           }));
-      
-          const ecAdidasOptions = response.data.ec.map((ec:any) => ({
+
+          const ecAdidasOptions = response.data.ec.map((ec: any) => ({
             value: ec.external_Calibration_Serial_Key,
-            label: ec.frequency_Adidas
+            label: ec.frequency_Adidas,
           }));
-          const buildingOptions = response.data.location.map((location: { building: string }) => ({
-            value: location.building,
-            label: location.building
-          }));
-          const DepartmentOptions = response.data.location.map((location: any) => ({
-            value: location.location_Serial_Key,
-            label: location.department
-          }));
+          const buildingOptions = response.data.location.map(
+            (location: { building: string }) => ({
+              value: location.building,
+              label: location.building,
+            })
+          );
+          const DepartmentOptions = response.data.location.map(
+            (location: any) => ({
+              value: location.location_Serial_Key,
+              label: location.department,
+            })
+          );
           setoptGroup(groupOptions);
-          setoptinternalCalibrationAdidas(icAdidasOptions)
+          setoptinternalCalibrationAdidas(icAdidasOptions);
           setoptinternalCalibration(icAdidasOptions);
           setoptExternalCalibration(ecAdidasOptions);
           setoptBuilding(buildingOptions);
@@ -209,13 +206,17 @@ const HomeScreen = () => {
       })
       .finally(() => {});
   };
+  useEffect(() => {
+    OptionSelect();
+  }, []);
+  //#endregion
+  //#region Các funtion upload hình ảnh
   const openModal = () => {
     setModalIsOpen(true);
   };
   const closeModal = () => {
     setModalIsOpen(false);
   };
-
   const onImageSelected = (selectedImg: any) => {
     setImage(selectedImg);
     setImgAfterCrop(selectedImg);
@@ -260,30 +261,53 @@ const HomeScreen = () => {
   const onCropCancel = () => {
     setModalIsOpen(false);
   };
-
+  //#endregion Funtion upload hình ảnh
+  //#region Function tự động điền ngày hiệu chuẩn tiếp theo
   useEffect(() => {
-    OptionSelect();
-  }, []);
-  useEffect(() => {
-    
     if (DateCalibration) {
       let ngay: Date | undefined;
-      if (FrequencyOutAdidas === 'EC0000000000001') {
+      if (FrequencyOutAdidas === "EC0000000000001") {
         ngay = new Date(DateCalibration);
         ngay.setFullYear(ngay.getFullYear() + 1);
-      } else if (FrequencyOutAdidas === 'EC0000000000002') {
+      } else if (FrequencyOutAdidas === "EC0000000000002") {
         ngay = new Date(DateCalibration);
         ngay.setMonth(ngay.getMonth() + 6);
-      } else if (FrequencyOutAdidas === 'EC0000000000005') {
+      } else if (FrequencyOutAdidas === "EC0000000000005") {
         ngay = new Date(DateCalibration);
         ngay.setMonth(ngay.getMonth() + 3);
       }
       setDateNextCalibration(ngay);
-      // console.log(ngay)
     }
-    
   }, [DateCalibration, FrequencyOutAdidas]);
-
+  //#endregion
+  //#region Function làm mới các ô nhập liệu
+  const resetValue = () => {
+    setUniCode("");
+    setFactoryCode("");
+    setModel("");
+    setselectedGroup("");
+    setIncommingDate(undefined);
+    setCurrentFrequency(undefined);
+    setFrequencyAdidas(undefined);
+    setFrequencyOutAdidas(undefined);
+    setInstituteCompany("");
+    setDateCalibration(undefined);
+    setDateNextCalibration(undefined);
+    setDeviceSerialNum("");
+    setBrand("");
+    setEquipmentName("");
+    setSupplier("");
+    setUsePurpose("");
+    setRange("");
+    setBuilding("");
+    setDepartmentLine("");
+    setPersonInCharge("");
+    setRemark("");
+    setsttResult("");
+    settxtStatus("");
+    setImgAfterCrop("");
+  };
+  //#endregion
   return (
     <>
       <MenuBar
@@ -293,7 +317,6 @@ const HomeScreen = () => {
         }
       >
         <div className="container items-center justify-center mx-auto">
-          {/* //  */}
           <div className="grid">
             <p
               className={`titleName flex justify-center ${
@@ -313,7 +336,6 @@ const HomeScreen = () => {
               <div className="grid  grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2  flex  ">
                 <div className="  flex flex-row   justify-center mb-14 md:mb-14  ">
                   {currentMenu === "chooseImg" ? (
-                    // <div className=" reviewImg">
                     <div
                       className={`cropped-img NoneImg grid  flex  ${
                         DarkMode ? "dark:text-white text-white" : ""
@@ -463,13 +485,6 @@ const HomeScreen = () => {
                 </div>
               </div>
 
-              {/* <div className="flex items-center mt-10  ">
-                <div className="border-t-2 border-b h-2 shadow border-teal-700  flex-grow"></div>
-                <div className="px-3 text-gray-800 text-xl font-bold border rounded-full shadow ">
-                  Kiểm tra định kỳ
-                </div>
-                <div className="border-t-2 border-b h-2 shadow border-teal-700  flex-grow"></div>
-              </div> */}
               <div
                 className={` ${
                   DarkMode ? "dark:bg-zinc-700 bg-zinc-700" : ""
@@ -551,7 +566,6 @@ const HomeScreen = () => {
                       item={optionsRadio}
                       OnChecked={(value: any) => {
                         setsttResult(value);
-                        // console.log(value);
                       }}
                       value={sttResult}
                     />
@@ -578,7 +592,6 @@ const HomeScreen = () => {
 
             {/* Danh sach */}
             <div className=" px-2 ">
-              {/* <p className="titleName">Danh sách thiết bị vừa nhập</p> */}
               <div
                 className={`grid flex gap-5   ${
                   DarkMode ? "dark:bg-zinc-900 bg-zinc-900" : "bg-yellow-100"
@@ -726,10 +739,12 @@ const HomeScreen = () => {
                 >
                   {t("btnAdd")}
                 </button>
-                <button className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center">
+                <button
+                  onClick={resetValue}
+                  className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center"
+                >
                   {t("btnReset")}
                 </button>
-                {/* <button className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center"></button> */}
               </div>
             </div>
           </div>

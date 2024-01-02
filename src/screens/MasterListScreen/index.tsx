@@ -4,14 +4,12 @@
 import { SetStateAction, useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import MenuBar from "../../components/MenuBar";
-// import { FaCheck } from "react-icons/fa6";
 import { HiSquares2X2 } from "react-icons/hi2";
 import { FaTableCells } from "react-icons/fa6";
 import { SiMicrosoftexcel } from "react-icons/si";
 import { Equipment } from "../../utils/MasterList";
 import CardMasterList from "../../components/CardMasterList";
 import TableMasterList from "../../components/TableMasterList";
-
 import * as ExcelJS from "exceljs";
 import { FiFilter } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
@@ -22,15 +20,351 @@ import RadioCheck from "../../components/RadioCheck";
 import { api, config } from "../../utils/linkApi";
 import axios from "axios";
 import LoadingPage from "../../components/LoadingPage";
-// import LoadingPage from "../../components/loadingPage";
 
 const MasterListScreen = () => {
+  const { t } = useTranslation();
+  const DefautMode = localStorage.getItem("isDark");
+  const [DarkMode, setDarkMode] = useState<boolean>(
+    DefautMode ? DefautMode === "true" : false
+  );
+  const [list, setList] = useState<boolean>(true);
   const [isFilter, setIsFilter] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [RowTable, setRowTable] = useState<Equipment[]>([]);
-
   const [newRowTable, setnewRowTable] = useState<Equipment[]>([]);
+  //#region Các state tìm kiếm gồm createSelect, Radio, DatePicker
+  const [txtUniqueCode, settxtUniqueCode] = useState("");
+  const [txtGroup, settxtGroup] = useState("");
+  const [txtBuilding, settxtBuilding] = useState("");
+  const [txtDepartmentLine, settxtDepartmentLine] = useState("");
+  const [chxResult, setchxResult] = useState("");
+  const [chxStatus, setchxStatus] = useState("");
+  const [optUniqueCode, setOptUniqueCode] = useState<
+    { label: string; value: string }[]
+  >([]);
+  const [optGroup, setOptGroup] = useState<{ label: string; value: string }[]>(
+    []
+  );
+  const [optBuilding, setOptBuilding] = useState<
+    { label: string; value: string }[]
+  >([]);
+  const [optDepartmentLine, setOptDepartmentLine] = useState<
+    { label: string; value: string }[]
+  >([]);
+  const [dtpFromIncommingDate, setdtpFromIncommingDate] = useState<
+    Date | null | undefined
+  >();
+  const [dtpToIncommingDate, setdtpToIncommingDate] = useState<
+    Date | null | undefined
+  >();
+  const [dtpFromDateOfCalibration, setdtpFromDateOfCalibration] = useState<
+    Date | null | undefined
+  >();
+  const [dtpToDateOfCalibration, setdtpToDateOfCalibration] = useState<
+    Date | null | undefined
+  >();
+  const [dtpFromDateOfNextCalibration, setdtpFromDateOfNextCalibration] =
+    useState<Date | null | undefined>();
+  const [dtpToDateOfNextCalibration, setdtpToDateOfNextCalibration] = useState<
+    Date | null | undefined
+  >();
 
+  const optionsRadio = [
+    {
+      value: "Valid",
+      label: t("lblValid"),
+      cusClass:
+        "text-green-500  peer-checked:bg-green-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-lime-200",
+    },
+    {
+      value: "InValid",
+      label: t("lblInValid"),
+      cusClass:
+        "text-red-500 peer-checked:bg-red-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-red-200",
+    },
+  ];
+  const optionsReusltRadio = [
+    {
+      value: "Pass",
+      label: t("lblPass"),
+      cusClass:
+        "text-green-500  peer-checked:bg-green-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-lime-200",
+    },
+    {
+      value: "Fail",
+      label: t("lblFail"),
+      cusClass:
+        "text-red-500 peer-checked:bg-red-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-red-200",
+    },
+  ];
+  //#endregion
+  //#region  function lọc lại các option tìm kiếm
+
+  useEffect(() => {
+    setOptUniqueCode(
+      Array.from(new Set(newRowTable.map((item) => item.Unique_code))).map(
+        (uniqueCode) => {
+          return { label: uniqueCode, value: uniqueCode };
+        }
+      )
+    );
+    setOptGroup(
+      Array.from(new Set(newRowTable.map((item) => item.Group))).map(
+        (group) => {
+          return { label: group, value: group };
+        }
+      )
+    );
+
+    setOptBuilding(
+      Array.from(new Set(newRowTable.map((item) => item.Building))).map(
+        (building) => {
+          return { label: building, value: building };
+        }
+      )
+    );
+
+    setOptDepartmentLine(
+      Array.from(new Set(newRowTable.map((item) => item.Department_Line))).map(
+        (departmentLine) => {
+          return { label: departmentLine, value: departmentLine };
+        }
+      )
+    );
+
+    setpageCount(Math.ceil(newRowTable.length / itemsPerPage));
+    setCurrentPage(0);
+    // if(Math.ceil(newRowTable.length / itemsPerPage) > currentPage){
+    // }
+  }, [newRowTable]);
+  //#endregion
+  //#region function lọc dữ liệu
+  useEffect(() => {
+    const shouldReset =
+      !txtUniqueCode &&
+      !txtBuilding &&
+      !txtGroup &&
+      !txtDepartmentLine &&
+      !chxResult &&
+      !chxStatus &&
+      !dtpFromIncommingDate &&
+      !dtpToIncommingDate &&
+      !dtpFromDateOfCalibration &&
+      !dtpFromDateOfNextCalibration &&
+      !dtpToDateOfCalibration &&
+      !dtpToDateOfNextCalibration;
+
+    if (shouldReset) {
+      setnewRowTable(RowTable);
+      return;
+    }
+
+    const filterRows = (
+      item: any,
+      condition: string,
+      fieldValue: string | null
+    ) => {
+      if (fieldValue === null || fieldValue === "") {
+        return true;
+      }
+
+      if (condition === "Valid") {
+        return item[condition] === fieldValue;
+      } else {
+        return item[condition].includes(fieldValue);
+      }
+    };
+
+    const filterRowsDate = (
+      item: any,
+      condition: string,
+      fieldValue: {
+        startDate: Date | null | undefined;
+        endDate: Date | null | undefined;
+      }
+    ) => {
+      if (!fieldValue) {
+        return true;
+      }
+
+      let startDate = fieldValue.startDate
+        ? new Date(fieldValue.startDate)
+        : null;
+      let endDate = fieldValue.endDate ? new Date(fieldValue.endDate) : null;
+      if (!startDate && endDate) {
+        startDate = endDate;
+      }
+      if (startDate && !endDate) {
+        endDate = startDate;
+      }
+
+      const itemDate = new Date(item[condition]);
+
+      return (
+        startDate &&
+        endDate &&
+        moment(itemDate).format("YYYY/MM/DD") >=
+          moment(startDate).format("YYYY/MM/DD") &&
+        moment(itemDate).format("YYYY/MM/DD") <=
+          moment(endDate).format("YYYY/MM/DD")
+      );
+    };
+    const filteredRows = RowTable.filter((item) => {
+      const isUniqueCodeMatched = filterRows(
+        item,
+        "Unique_code",
+        txtUniqueCode
+      );
+      const isGroupMatched = filterRows(item, "Group", txtGroup);
+      const isDepartmentLineMatched = filterRows(
+        item,
+        "Department_Line",
+        txtDepartmentLine
+      );
+      const isBuildingMatched = filterRows(item, "Building", txtBuilding);
+      const isStatusMatched = filterRows(item, "Valid", chxStatus);
+      const isResultMatched = filterRows(item, "Result_Company", chxResult);
+
+      const isImmingDateMatched =
+        dtpFromIncommingDate || dtpToIncommingDate
+          ? filterRowsDate(item, "Incomming_date", {
+              startDate: dtpFromIncommingDate,
+              endDate: dtpToIncommingDate,
+            })
+          : true;
+      const isDateOfCalibrationMatched =
+        dtpFromDateOfCalibration || dtpToDateOfCalibration
+          ? filterRowsDate(item, "Date_Of_Calibration", {
+              startDate: dtpFromDateOfCalibration,
+              endDate: dtpToDateOfCalibration,
+            })
+          : true;
+
+      const isDateOfNextCalibrationMatched =
+        dtpFromDateOfNextCalibration || dtpToDateOfNextCalibration
+          ? filterRowsDate(item, "Date_Of_Next", {
+              startDate: dtpFromDateOfNextCalibration,
+              endDate: dtpToDateOfNextCalibration,
+            })
+          : true;
+      return (
+        isUniqueCodeMatched &&
+        isBuildingMatched &&
+        isGroupMatched &&
+        isDepartmentLineMatched &&
+        isStatusMatched &&
+        isResultMatched &&
+        isImmingDateMatched &&
+        isDateOfCalibrationMatched &&
+        isDateOfNextCalibrationMatched
+      );
+    });
+
+    setnewRowTable(filteredRows);
+  }, [
+    txtUniqueCode,
+    txtBuilding,
+    txtGroup,
+    txtDepartmentLine,
+    chxResult,
+    chxStatus,
+    dtpFromIncommingDate,
+    dtpToIncommingDate,
+    dtpFromDateOfCalibration,
+    dtpFromDateOfNextCalibration,
+    dtpToDateOfCalibration,
+    dtpToDateOfNextCalibration,
+  ]);
+  //#endregion
+  //#region Phân trang
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageCount, setpageCount] = useState(0);
+  const itemsPerPage = 6;
+  const currentData = newRowTable.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage
+  );
+  const handlePageClick = (selectedPage: {
+    selected: SetStateAction<number>;
+  }) => {
+    setCurrentPage(selectedPage.selected);
+  };
+  //#endregion
+  //#region Function reset lại giá trị tìm kiếm
+  const resetValues = () => {
+    settxtUniqueCode("");
+    settxtGroup("");
+    settxtBuilding("");
+    settxtDepartmentLine("");
+    setchxResult("");
+    setchxStatus("");
+    setdtpFromIncommingDate(null);
+    setdtpToIncommingDate(null);
+    setdtpFromDateOfCalibration(null);
+    setdtpToDateOfCalibration(null);
+    setdtpFromDateOfNextCalibration(null);
+    setdtpToDateOfNextCalibration(null);
+    setnewRowTable(RowTable);
+  };
+  //#endregion
+  //#region Function tìm tất cả danh sách thiết bị
+  const getDataDeviceList = () => {
+    const url = api + "/api/ShowDevice/Show_List";
+    setIsLoading(true);
+    const data = {};
+    axios
+      .post(url, data, config)
+      .then((response: any) => {
+        if (response.data !== null) {
+          const arr = response.data.map((item: any, index: number) => ({
+            No: index + 1,
+            Serial_Key: item.device_Serial_Key,
+            Equipment_Name: item.device_Name,
+            Unique_code: item.unique_ID,
+            Factory_code: item.factory_ID,
+            Group: item.name_Group,
+            Photo_for_reference: item.image_Device,
+            Model: item.model_Device,
+            Device_Serial_Number: item.device_Serial_Number,
+            Brand: item.device_Brand,
+            Supplier: item.supplier_Name,
+            Incomming_date: moment(item.delivery_Date).format("YYYY/MM/DD"),
+            Use_Purpose_Machine_indication: item.use_Purpose_Machine_Indication,
+            Range: item.range,
+            Building: item.building,
+            Department_Line: item.department,
+            Person_in_charge: item.person_Charge,
+            Frequency_follow_adidas_requirement: item.iC_Frequency_Adidas,
+            Current_Frequency: item.frequency,
+            Valid: item.status_Device,
+            Frequency_follow_adidas_requirement2: item.eC_Frequency_Adidas,
+            Certified_Calibration_Institute_Company: item.person_Calibration,
+            Date_Of_Calibration: moment(item.date_Calibration).format(
+              "YYYY/MM/DD"
+            ),
+            Result_Company: item.result,
+            Date_Of_Next: moment(item.date_Next_Calibration).format(
+              "YYYY/MM/DD"
+            ),
+            Remarky: item.note_Device,
+          }));
+
+          setRowTable(arr);
+          // setnewRowTable(arr)
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  useEffect(() => {
+    getDataDeviceList();
+  }, []);
+  useEffect(() => {
+    setnewRowTable(RowTable);
+  }, [RowTable]);
+  //#endregion
+  //#region Xuất excel
   const exportToExcel = () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Sheet 1");
@@ -330,344 +664,8 @@ const MasterListScreen = () => {
       link.click();
     });
   };
+  //#endregion
 
-  const DefautMode = localStorage.getItem("isDark");
-  const [DarkMode, setDarkMode] = useState<boolean>(
-    DefautMode ? DefautMode === "true" : false
-  );
-  const [list, setList] = useState<boolean>(true);
-
-  const [txtUniqueCode, settxtUniqueCode] = useState("");
-  const [txtGroup, settxtGroup] = useState("");
-  const [txtBuilding, settxtBuilding] = useState("");
-  const [txtDepartmentLine, settxtDepartmentLine] = useState("");
-
-  const [chxResult, setchxResult] = useState("");
-  const [chxStatus, setchxStatus] = useState("");
-
-  const [optUniqueCode, setOptUniqueCode] = useState<
-    { label: string; value: string }[]
-  >([]);
-  const [optGroup, setOptGroup] = useState<{ label: string; value: string }[]>(
-    []
-  );
-  const [optBuilding, setOptBuilding] = useState<
-    { label: string; value: string }[]
-  >([]);
-  const [optDepartmentLine, setOptDepartmentLine] = useState<
-    { label: string; value: string }[]
-  >([]);
-
-  const [dtpFromIncommingDate, setdtpFromIncommingDate] = useState<
-    Date | null | undefined
-  >();
-  const [dtpToIncommingDate, setdtpToIncommingDate] = useState<
-    Date | null | undefined
-  >();
-  const [dtpFromDateOfCalibration, setdtpFromDateOfCalibration] = useState<
-    Date | null | undefined
-  >();
-  const [dtpToDateOfCalibration, setdtpToDateOfCalibration] = useState<
-    Date | null | undefined
-  >();
-  const [dtpFromDateOfNextCalibration, setdtpFromDateOfNextCalibration] =
-    useState<Date | null | undefined>();
-  const [dtpToDateOfNextCalibration, setdtpToDateOfNextCalibration] = useState<
-    Date | null | undefined
-  >();
-
-  const { t } = useTranslation();
-
-  const optionsRadio = [
-    {
-      value: "Valid",
-      label: t("lblValid"),
-      cusClass:
-        "text-green-500  peer-checked:bg-green-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-lime-200",
-    },
-    {
-      value: "InValid",
-      label: t("lblInValid"),
-      cusClass:
-        "text-red-500 peer-checked:bg-red-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-red-200",
-    },
-  ];
-  const optionsReusltRadio = [
-    {
-      value: "Pass",
-      label: t("lblPass"),
-      cusClass:
-        "text-green-500  peer-checked:bg-green-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-lime-200",
-    },
-    {
-      value: "Fail",
-      label: t("lblFail"),
-      cusClass:
-        "text-red-500 peer-checked:bg-red-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-red-200",
-    },
-  ];
-
-  const [currentPage, setCurrentPage] = useState(0);
-  // const [currentPage, setCurrentPage] = useState<>([]));
-  const [pageCount, setpageCount] = useState(0);
-  const itemsPerPage = 6;
-
-  useEffect(() => {
-    const shouldReset =
-      !txtUniqueCode &&
-      !txtBuilding &&
-      !txtGroup &&
-      !txtDepartmentLine &&
-      !chxResult &&
-      !chxStatus &&
-      !dtpFromIncommingDate &&
-      !dtpToIncommingDate &&
-      !dtpFromDateOfCalibration &&
-      !dtpFromDateOfNextCalibration &&
-      !dtpToDateOfCalibration &&
-      !dtpToDateOfNextCalibration;
-
-    if (shouldReset) {
-      setnewRowTable(RowTable);
-      return;
-    }
-
-    const filterRows = (
-      item: any,
-      condition: string,
-      fieldValue: string | null
-    ) => {
-      if (fieldValue === null || fieldValue === "") {
-        return true;
-      }
-
-      if (condition === "Valid") {
-        return item[condition] === fieldValue;
-      } else {
-        return item[condition].includes(fieldValue);
-      }
-    };
-
-    const filterRowsDate = (
-      item: any,
-      condition: string,
-      fieldValue: {
-        startDate: Date | null | undefined;
-        endDate: Date | null | undefined;
-      }
-    ) => {
-      if (!fieldValue) {
-        return true;
-      }
-
-      let startDate = fieldValue.startDate
-        ? new Date(fieldValue.startDate)
-        : null;
-      let endDate = fieldValue.endDate ? new Date(fieldValue.endDate) : null;
-      if (!startDate && endDate) {
-        startDate = endDate;
-      }
-      if (startDate && !endDate) {
-        endDate = startDate;
-      }
-
-      const itemDate = new Date(item[condition]);
-
-      return (
-        startDate &&
-        endDate &&
-        moment(itemDate).format("YYYY/MM/DD") >=
-          moment(startDate).format("YYYY/MM/DD") &&
-        moment(itemDate).format("YYYY/MM/DD") <=
-          moment(endDate).format("YYYY/MM/DD")
-      );
-    };
-    const filteredRows = RowTable.filter((item) => {
-      const isUniqueCodeMatched = filterRows(
-        item,
-        "Unique_code",
-        txtUniqueCode
-      );
-      const isGroupMatched = filterRows(item, "Group", txtGroup);
-      const isDepartmentLineMatched = filterRows(
-        item,
-        "Department_Line",
-        txtDepartmentLine
-      );
-      const isBuildingMatched = filterRows(item, "Building", txtBuilding);
-      const isStatusMatched = filterRows(item, "Valid", chxStatus);
-      const isResultMatched = filterRows(item, "Result_Company", chxResult);
-
-      const isImmingDateMatched =
-        dtpFromIncommingDate || dtpToIncommingDate
-          ? filterRowsDate(item, "Incomming_date", {
-              startDate: dtpFromIncommingDate,
-              endDate: dtpToIncommingDate,
-            })
-          : true;
-      const isDateOfCalibrationMatched =
-        dtpFromDateOfCalibration || dtpToDateOfCalibration
-          ? filterRowsDate(item, "Date_Of_Calibration", {
-              startDate: dtpFromDateOfCalibration,
-              endDate: dtpToDateOfCalibration,
-            })
-          : true;
-
-      const isDateOfNextCalibrationMatched =
-        dtpFromDateOfNextCalibration || dtpToDateOfNextCalibration
-          ? filterRowsDate(item, "Date_Of_Next", {
-              startDate: dtpFromDateOfNextCalibration,
-              endDate: dtpToDateOfNextCalibration,
-            })
-          : true;
-      return (
-        isUniqueCodeMatched &&
-        isBuildingMatched &&
-        isGroupMatched &&
-        isDepartmentLineMatched &&
-        isStatusMatched &&
-        isResultMatched &&
-        isImmingDateMatched &&
-        isDateOfCalibrationMatched &&
-        isDateOfNextCalibrationMatched
-      );
-    });
-
-    setnewRowTable(filteredRows);
-  }, [
-    txtUniqueCode,
-    txtBuilding,
-    txtGroup,
-    txtDepartmentLine,
-    chxResult,
-    chxStatus,
-    dtpFromIncommingDate,
-    dtpToIncommingDate,
-    dtpFromDateOfCalibration,
-    dtpFromDateOfNextCalibration,
-    dtpToDateOfCalibration,
-    dtpToDateOfNextCalibration,
-  ]);
-
-  useEffect(() => {
-    setOptUniqueCode(
-      Array.from(new Set(newRowTable.map((item) => item.Unique_code))).map(
-        (uniqueCode) => {
-          return { label: uniqueCode, value: uniqueCode };
-        }
-      )
-    );
-
-    setOptGroup(
-      Array.from(new Set(newRowTable.map((item) => item.Group))).map(
-        (group) => {
-          return { label: group, value: group };
-        }
-      )
-    );
-
-    setOptBuilding(
-      Array.from(new Set(newRowTable.map((item) => item.Building))).map(
-        (building) => {
-          return { label: building, value: building };
-        }
-      )
-    );
-
-    setOptDepartmentLine(
-      Array.from(new Set(newRowTable.map((item) => item.Department_Line))).map(
-        (departmentLine) => {
-          return { label: departmentLine, value: departmentLine };
-        }
-      )
-    );
-
-    setpageCount(Math.ceil(newRowTable.length / itemsPerPage));
-    setCurrentPage(0);
-    // if(Math.ceil(newRowTable.length / itemsPerPage) > currentPage){
-    // }
-  }, [newRowTable]);
-  const currentData = newRowTable.slice(
-    currentPage * itemsPerPage,
-    (currentPage + 1) * itemsPerPage
-  );
-  const handlePageClick = (selectedPage: {
-    selected: SetStateAction<number>;
-  }) => {
-    setCurrentPage(selectedPage.selected);
-  };
-  const resetValues = () => {
-    settxtUniqueCode("");
-    settxtGroup("");
-    settxtBuilding("");
-    settxtDepartmentLine("");
-    setchxResult("");
-    setchxStatus("");
-    setdtpFromIncommingDate(null);
-    setdtpToIncommingDate(null);
-    setdtpFromDateOfCalibration(null);
-    setdtpToDateOfCalibration(null);
-    setdtpFromDateOfNextCalibration(null);
-    setdtpToDateOfNextCalibration(null);
-    setnewRowTable(RowTable);
-  };
-
-  const getDataDeviceList = () => {
-    const url = api + "/api/ShowDevice/Show_List";
-    setIsLoading(true);
-    const data = {};
-    axios
-      .post(url, data, config)
-      .then((response: any) => {
-        if (response.data !== null) {
-          const arr = response.data.map((item: any, index: number) => ({
-            No: index + 1,
-            Serial_Key: item.device_Serial_Key,
-            Equipment_Name: item.device_Name,
-            Unique_code: item.unique_ID,
-            Factory_code: item.factory_ID,
-            Group: item.name_Group,
-            Photo_for_reference: item.image_Device,
-            Model: item.model_Device,
-            Device_Serial_Number: item.device_Serial_Number,
-            Brand: item.device_Brand,
-            Supplier: item.supplier_Name,
-            Incomming_date: moment(item.delivery_Date).format("YYYY/MM/DD"),
-            Use_Purpose_Machine_indication: item.use_Purpose_Machine_Indication,
-            Range: item.range,
-            Building: item.building,
-            Department_Line: item.department,
-            Person_in_charge: item.person_Charge,
-            Frequency_follow_adidas_requirement: item.iC_Frequency_Adidas,
-            Current_Frequency: item.frequency,
-            Valid: item.status_Device,
-            Frequency_follow_adidas_requirement2: item.eC_Frequency_Adidas,
-            Certified_Calibration_Institute_Company: item.person_Calibration,
-            Date_Of_Calibration: moment(item.date_Calibration).format(
-              "YYYY/MM/DD"
-            ),
-            Result_Company: item.result,
-            Date_Of_Next: moment(item.date_Next_Calibration).format(
-              "YYYY/MM/DD"
-            ),
-            Remarky: item.note_Device,
-          }));
-
-          setRowTable(arr);
-          // setnewRowTable(arr)
-        }
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-
-  useEffect(() => {
-    getDataDeviceList();
-  }, []);
-  useEffect(() => {
-    setnewRowTable(RowTable);
-  }, [RowTable]);
   return (
     <MenuBar
       isActive="list"
@@ -675,7 +673,7 @@ const MasterListScreen = () => {
         setDarkMode(darkMode)
       }
     >
-      {/* tim kiếm */}
+      {/* #region khung Tìm kiếm */}
       <div
         className={` ${DarkMode ? "bg-gray-900" : "bg-gray-200"} ${
           isFilter ? "" : "hidden"
@@ -788,27 +786,26 @@ const MasterListScreen = () => {
 
         <div className="gap-3  flex justify-center">
           <button className="bg-white px-3 py-2 rounded-full font-bold text-lg">
-          {t('btnSearch')}
+            {t("btnSearch")}
           </button>
           <button
             className="p-2 bg-white px-3 py-2 rounded-full font-bold text-lg"
             onClick={exportToExcel}
           >
-            {t('btnExcel')}
+            {t("btnExcel")}
           </button>
           <button
             onClick={resetValues}
             className="p-2 bg-white px-3 py-2 rounded-full font-bold text-lg"
           >
-            {t('btnReset')}
+            {t("btnReset")}
           </button>
         </div>
       </div>
-
-      {/* chọn chế độ hiển thị */}
+      {/* #region khung tùy chọn như chế độ hiển thị, filter, */}
       <div className="justify-end flex mb-2 mt-2">
         <div className="flex items-center mr-2 text-gray-400 text-xs font-bold">
-          {t('lblTotal')} {newRowTable.length} / {RowTable.length}
+          {t("lblTotal")} {newRowTable.length} / {RowTable.length}
         </div>
         <div
           onClick={() => {
@@ -851,7 +848,7 @@ const MasterListScreen = () => {
           <FaTableCells className="text-2xl" />
         </button>
       </div>
-
+      {/* #region khung hiển thị danh sách thiết bị */}
       {isLoading ? (
         <div className=" Loading">
           <LoadingPage />
@@ -867,8 +864,8 @@ const MasterListScreen = () => {
           )}
           <div className="">
             <ReactPaginate
-              previousLabel={t('btnPrev')}
-              nextLabel={t('btnNext')}
+              previousLabel={t("btnPrev")}
+              nextLabel={t("btnNext")}
               className=" phantrang"
               breakLabel={"..."}
               pageCount={pageCount}
@@ -884,5 +881,4 @@ const MasterListScreen = () => {
     </MenuBar>
   );
 };
-
 export default MasterListScreen;

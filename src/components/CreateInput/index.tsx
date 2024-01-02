@@ -1,5 +1,6 @@
 // import { ActionMeta, SingleValue } from 'react-select';
 
+import { useState } from "react";
 import CreatableSelect from "react-select/creatable";
 interface SelectProps {
   label: string;
@@ -19,9 +20,11 @@ const CreateInput: React.FC<SelectProps> = ({
   OnSelected,
 }) => {
 
-
+// console.log()
+const [vl,setvl]=useState('');
   const handleChange = (selectedOption: Option | "" | null) => {
     OnSelected(selectedOption ? selectedOption.value : null);
+    setvl(selectedOption ? selectedOption.label : '')
   };
   return (
     <div className="relative w-full ">
@@ -41,6 +44,7 @@ const CreateInput: React.FC<SelectProps> = ({
         isClearable
         onChange={handleChange}
         options={options}
+        value={value ? { label: vl, value } : null}
         placeholder={label}
         theme={(theme) => ({
           ...theme,
