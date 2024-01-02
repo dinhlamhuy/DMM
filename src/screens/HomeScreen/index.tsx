@@ -15,6 +15,8 @@ import RadioCheck from "../../components/RadioCheck";
 import { api, config } from "../../utils/linkApi";
 import axios from "axios";
 import moment from "moment";
+import ConfirmForm from "../../components/ConfirmForm";
+import AlertForm from "../../components/AlertForm";
 
 const HomeScreen = () => {
   const { t } = useTranslation();
@@ -100,66 +102,57 @@ const HomeScreen = () => {
   ];
   //#endregion
   //#region Function Thêm thiết bị
-  const AddDevice = () => {
-    const url = api + "/api/Device/Insert_Device";
-    const data = {
-      unique_ID: UniCode,
-      factory_ID: FactoryCode,
-      device_Name: EquipmentName,
-      group_Serial_Key: selectedGroup,
-      Status: txtStatus,
-      delivery_Date: IncommingDate,
-      modify_Date: moment(new Date()),
-      Image_Device: imgAfterCrop,
-      model_Device: Model,
-      device_Serial_Number: DeviceSerialNum,
-      device_Brand: Brand,
-      supplier_Name: Supplier,
-      note: Remark,
-      person_Charge: PersonInCharge,
-      external_Calibration_Serial_Key: FrequencyOutAdidas,
+  const AddDevice = async () => {
+    const isConfirmed = await ConfirmForm();
+    if (isConfirmed) {
+      const url = api + "/api/Device/Insert_Device";
+      const data = {
+        unique_ID: UniCode,
+        factory_ID: FactoryCode,
+        device_Name: EquipmentName,
+        group_Serial_Key: selectedGroup,
+        Status: txtStatus,
+        delivery_Date: IncommingDate,
+        modify_Date: moment(new Date()),
+        Image_Device: imgAfterCrop,
+        model_Device: Model,
+        device_Serial_Number: DeviceSerialNum,
+        device_Brand: Brand,
+        supplier_Name: Supplier,
+        note: Remark,
+        person_Charge: PersonInCharge,
+        external_Calibration_Serial_Key: FrequencyOutAdidas,
+        result: sttResult,
+        internal_Calibration_Serial_Key: CurrentFrequency,
+        Frequency_Internal: FrequencyAdidas,
+        status: sttResult,
+        Note_Internal: "",
+        Factory: FactoryCode,
+        location_Serial_Key: DepartmentLine,
+        Building: Building,
+        Department: DepartmentLine,
+        user_Purpose_Machine_Indication: UsePurpose,
+        range: Range,
+        measurement_Serial_Key: UsePurpose,
+        certified_Calibration_Institute_Company: InstituteCompany,
+        date_Calibration: DateCalibration,
+        date_Next_Calibration: DateNextCalibration,
+        person_Calibration: "Nguyễn Sơn",
+      };
 
-      result: sttResult,
-
-      internal_Calibration_Serial_Key: CurrentFrequency,
-      Frequency_Internal: FrequencyAdidas,
-      status: sttResult,
-      Note_Internal: "",
-      Factory: FactoryCode,
-      location_Serial_Key: DepartmentLine,
-      Building: Building,
-      Department: DepartmentLine,
-      user_Purpose_Machine_Indication: UsePurpose,
-      range: Range,
-      measurement_Serial_Key: UsePurpose,
-      certified_Calibration_Institute_Company: InstituteCompany,
-      date_Calibration: DateCalibration,
-      date_Next_Calibration: DateNextCalibration,
-      person_Calibration: "Nguyễn Sơn",
-    };
-
-    // {
-    //   "device_Serial_Key": "DS0000000000051",
-
-    //   "measurement_Serial_Key": "MS0000000000003",
-    //   "location_Serial_Key": "LS00000000000001",
-    //   "internal_Calibration_Serial_Key": "IC0000000000002",
-    //   "external_Calibration_Serial_Key": "EC0000000000001",
-
-    //   "person_Calibration": "Nguyễn Sơn",
-    //   "date_Calibration": "2023-12-21",
-
-    //   "certified_Calibration_Institute_Company": "Quang Lạc"
-    // }
-
-    axios
-      .post(url, data, config)
-      .then((response: any) => {
-        if (response.data !== null) {
-          console.log("thành công");
-        }
-      })
-      .finally(() => {});
+      await axios
+        .post(url, data, config)
+        .then(async (response: any) => {
+          if (response.data !== null) {
+            console.log("thành công");
+            await AlertForm("success", "Thêm thành công");
+          }
+        })
+        .catch(async () => {
+          await AlertForm("error", "Thêm thất bại");
+        })
+        .finally(() => {});
+    }
   };
   //#endregion
   //#region Function Cập nhật option cho select
@@ -308,6 +301,7 @@ const HomeScreen = () => {
     setImgAfterCrop("");
   };
   //#endregion
+
   return (
     <>
       <MenuBar
@@ -729,7 +723,7 @@ const HomeScreen = () => {
               <div className="text-center justify-center flex gap-3">
                 <button
                   className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-gray-400 flex text-center justify-center items-center "
-                  disabled
+                  // onClick={handleButtonClick}
                 >
                   {t("btnEdit")}
                 </button>
