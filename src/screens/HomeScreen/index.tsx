@@ -304,6 +304,8 @@ const HomeScreen = () => {
     setsttResult("");
     settxtStatus("");
     setImgAfterCrop("");
+    setImage("");
+    setCurrentMenu("chooseImg");
   };
   //#endregion
 
@@ -502,7 +504,7 @@ const HomeScreen = () => {
                   </div>
                   <div className="border h-1 shadow rounded-r-full border-teal-700  flex-grow"></div>
                 </div>
-                <div className="grid grid-cols-2 gap-2 ">
+                <div className="grid grid-cols-2 gap-2 -mt-5">
                   <div>
                     <CreateInput
                       label={t("lblCurrentFrequency")}
@@ -538,7 +540,7 @@ const HomeScreen = () => {
                   <div className="border  h-1 shadow rounded-r-full border-teal-700 flex-grow"></div>
                 </div>
 
-                <div>
+                <div className="-mt-5">
                   <CreateInput
                     label={t("lblFrequencyFollowAdidasRequirement")}
                     OnSelected={(value: any) => {
