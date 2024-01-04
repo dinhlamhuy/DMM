@@ -24,7 +24,10 @@ const HomeScreen = () => {
   const [image, setImage] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [currentMenu, setCurrentMenu] = useState("chooseImg");
-  const [DarkMode, setDarkMode] = useState(false);
+  const DefautMode = localStorage.getItem("isDark");
+  const [DarkMode, setDarkMode] = useState<boolean>(
+    DefautMode ? DefautMode === "true" : false
+  );
 
   //#region Các state cho ô nhập thiết bị
   const [imgAfterCrop, setImgAfterCrop] = useState("");
@@ -103,7 +106,7 @@ const HomeScreen = () => {
   //#endregion
   //#region Function Thêm thiết bị
   const AddDevice = async () => {
-    const isConfirmed = await ConfirmForm();
+    const isConfirmed = await ConfirmForm("question", "Bạn chắc chắn chưa?");
     if (isConfirmed) {
       const url = api + "/api/Device/Insert_Device";
       const data = {
@@ -143,9 +146,11 @@ const HomeScreen = () => {
       await axios
         .post(url, data, config)
         .then(async (response: any) => {
-          if (response.data !== null) {
+          if (response.data === true) {
             console.log("thành công");
             await AlertForm("success", "Thêm thành công");
+          } else {
+            await AlertForm("error", "Thêm thất bại");
           }
         })
         .catch(async () => {
@@ -425,8 +430,8 @@ const HomeScreen = () => {
                 </div>
                 <div
                   className={` ${
-                    DarkMode ? "dark:bg-zinc-900  bg-zinc-900 " : ""
-                  } grid  gap-y-5   py-4 px-2.5 bg-gray-100 rounded-md  relative flex items-end   shadow-md`}
+                    DarkMode ? "dark:bg-zinc-900  bg-zinc-900 " : "dark:bg-gray-100 bg-gray-100"
+                  } grid  gap-y-5   py-4 px-2.5  rounded-md  relative flex items-end   shadow-md`}
                 >
                   <div>
                     <TextInput
@@ -481,8 +486,8 @@ const HomeScreen = () => {
 
               <div
                 className={` ${
-                  DarkMode ? "dark:bg-zinc-700 bg-zinc-700" : ""
-                } grid flex gap-5 mt-6 bg-gray-100  pt-4 px-2.5 shadow rounded-lg`}
+                  DarkMode ? "dark:bg-zinc-700 bg-zinc-700" : "bg-gray-100"
+                } grid flex gap-5 mt-6   pt-4 px-2.5 shadow rounded-lg`}
               >
                 <div className="flex items-center  ">
                   <div className="border h-1 shadow rounded-l-full border-teal-700  flex-grow"></div>
@@ -588,7 +593,7 @@ const HomeScreen = () => {
             <div className=" px-2 ">
               <div
                 className={`grid flex gap-5   ${
-                  DarkMode ? "dark:bg-zinc-900 bg-zinc-900" : "bg-yellow-100"
+                  DarkMode ? "dark:bg-zinc-900 bg-zinc-900" : "bg-gray-100"
                 } pt-5 px-2.5 shadow rounded-lg`}
               >
                 <div className="flex items-center   ">
