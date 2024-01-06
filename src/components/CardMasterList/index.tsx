@@ -24,7 +24,7 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
       <div
         key={`Equi` + index}
         className={` ${DarkMode ? `bg-whitse   ${item.Valid === "Valid" ? "bg-[#96FFC6]": "bg-[#FF969A]"}` : ` bg-ambser-50  ${item.Valid === "Valid" ? "bg-[#96FFC6]": "bg-[#FF969A]" }    `
-          } rounded-lg shadow  h-fit flex justify-center w-full p-2`}
+          } rounded-lg shadow   flex justify-center w-full p-2`}
       >
         <div className="container pt-1    gird grid-flow-row auto-rows-max">
           <div className="  flex flex-col md:flex-row ">

@@ -17,6 +17,7 @@ import axios from "axios";
 import moment from "moment";
 import ConfirmForm from "../../components/ConfirmForm";
 import AlertForm from "../../components/AlertForm";
+import SelectInput from "../../components/SelectInput";
 
 const HomeScreen = () => {
   const { t } = useTranslation();
@@ -432,7 +433,7 @@ const HomeScreen = () => {
                 </div>
                 <div
                   className={` ${
-                    DarkMode ? "dark:bg-zinc-900  bg-zinc-900 " : "dark:bg-gray-100 bg-gray-100"
+                    DarkMode ? "dark:bg-zinc-900  bg-zinc-900 " : "dark:bg-zinc-100 bg-zinc-100"
                   } grid  gap-y-5   py-4 px-2.5  rounded-md  relative flex items-end   shadow-md`}
                 >
                   <div>
@@ -488,7 +489,7 @@ const HomeScreen = () => {
 
               <div
                 className={` ${
-                  DarkMode ? "dark:bg-zinc-700 bg-zinc-700" : "bg-gray-100"
+                  DarkMode ? "dark:bg-zinc-700 bg-zinc-700" : "dark:bg-zinc-100 bg-zinc-100"
                 } grid flex gap-5 mt-6   pt-4 px-2.5 shadow rounded-lg`}
               >
                 <div className="flex items-center  ">
@@ -506,7 +507,7 @@ const HomeScreen = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-2 -mt-5">
                   <div>
-                    <CreateInput
+                    <SelectInput
                       label={t("lblCurrentFrequency")}
                       OnSelected={(value: any) => {
                         setCurrentFrequency(value);
@@ -516,7 +517,7 @@ const HomeScreen = () => {
                     />
                   </div>
                   <div>
-                    <CreateInput
+                    <SelectInput
                       label={t("lblFrequencyFollowAdidasRequirement")}
                       OnSelected={(value: any) => {
                         setFrequencyAdidas(value);
@@ -541,7 +542,7 @@ const HomeScreen = () => {
                 </div>
 
                 <div className="-mt-5">
-                  <CreateInput
+                  <SelectInput
                     label={t("lblFrequencyFollowAdidasRequirement")}
                     OnSelected={(value: any) => {
                       setFrequencyOutAdidas(value);
@@ -595,7 +596,7 @@ const HomeScreen = () => {
             <div className=" px-2 ">
               <div
                 className={`grid flex gap-5   ${
-                  DarkMode ? "dark:bg-zinc-900 bg-zinc-900" : "bg-gray-100"
+                  DarkMode ? "dark:bg-zinc-900 bg-zinc-900" : "dark:bg-zinc-100 bg-zinc-100"
                 } pt-5 px-2.5 shadow rounded-lg`}
               >
                 <div className="flex items-center   ">
@@ -729,8 +730,9 @@ const HomeScreen = () => {
               </div>
               <div className="text-center justify-center flex gap-3">
                 <button
-                  className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-gray-400 flex text-center justify-center items-center "
+                  className="cursor-not-allowed btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-gray-400 flex text-center justify-center items-center "
                   // onClick={handleButtonClick}
+                  disabled 
                 >
                   {t("btnEdit")}
                 </button>

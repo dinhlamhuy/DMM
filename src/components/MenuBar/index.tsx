@@ -208,8 +208,8 @@ const MenuBar: React.FC<Props> = ({ children, onDarkMode, isActive }) => {
         </div>
       </aside>
 
-      <div className={`p-4   select-none ${isOpenSlide ? "sm:ml-60" : "  "} ${DarkMode ? "dark:bg-slate-800 bg-slate-800" : "bg-gray-200"} `}>
-        <div className={`  select-none ${DarkMode ? "dark:bg-black bg-black" : "bg-white "}  p-4 border    border-gray-200   min-h-screen border-dashed rounded-lg  mt-14 pt-1 pb-12`}>
+      <div className={`p-4    ${isOpenSlide ? "sm:ml-60" : "  "} ${DarkMode ? "dark:bg-slate-800 bg-slate-800" : "bg-gray-200"} `}>
+        <div className={`   ${DarkMode ? "dark:bg-black bg-black" : "bg-white "}  p-4 border    border-gray-200   min-h-screen border-dashed rounded-lg  mt-14 pt-1 pb-12`}>
           {children}
         </div>
         <p className={` ${DarkMode ? "text-teal-200" : "text-teal-900"} mt-2`}> Copyright 2023 &copy; IT-SW LHG Huii & Shan</p>
