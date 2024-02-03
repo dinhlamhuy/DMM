@@ -150,35 +150,38 @@
 }
 
 
- /* .css-reqq1a-control:focus, */
-  .css-1h2b9hg-control{
-  outline:none;
+/* .css-reqq1a-control:focus, */
+.css-1h2b9hg-control {
+  outline: none;
   border: none;
 
   border-color: skyblue !important;
-  
+
 }
-.css-art2ul-ValueContainer2{
+
+.css-art2ul-ValueContainer2 {
   padding-top: 5px !important;
   padding-bottom: 5px !important;
   /* padding:3px !important; */
 }
+
 /* .css-1h2b9hg-control,.css-1h2b9hg-control:focus {
   outline:none;
   border-color: rgb(37 99 235) !important;
 } */
- .css-reqq1a-control {
-  outline:none !important;
+.css-reqq1a-control {
+  outline: none !important;
   border: none !important;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
 }
 
-.react-datepicker-wrapper{
+.react-datepicker-wrapper {
   width: 100%;
   text-align: center !important;
-  outline:none !important;
+  outline: none !important;
   border: none !important;
 }
+
 .react-datepicker.calender-custom-position {
   height: fit-content !important;
 }
@@ -187,19 +190,19 @@
   width: 100% !important;
   text-align: center !important;
   position: relative !important;
-  outline:none !important;
+  outline: none !important;
   border: none !important;
 }
 
 
-.react-datepicker__triangle{
-display: none !important;
+.react-datepicker__triangle {
+  display: none !important;
 
 
 }
 
-label{
-  color:darkcyan !important;
+label {
+  color: darkcyan !important;
   /* font-size: 17px !important; */
   font-weight: 600;
 }
@@ -211,41 +214,56 @@ label{
 }
 
 
-.css-iouwon-menu div{
+.css-iouwon-menu div {
   z-index: 990000000 !important;
 }
-input:focus{
+
+input:focus {
   outline: none !important;
   /* outline: none !important;
   border: none !important; */
 }
+
 .phantrang li {
   display: inline-block;
 }
 
 .phantrang li a {
   margin-top: 20px;
- /* border:2px solid red; */
- display: inline-block;
- justify-content: center;
- padding: 5px 15px;
- margin-left: 10px;
- margin-right: 10px;
- user-select: none;
- border-radius: 12px;
- font-size: 25px;
- font-weight: bold;
- background: #f2d9d9;
+  /* border:2px solid red; */
+  display: inline-block;
+  justify-content: center;
+  padding: 5px 15px;
+  margin-left: 10px;
+  margin-right: 10px;
+  user-select: none;
+  border-radius: 12px;
+  font-size: 25px;
+  font-weight: bold;
+  background: #f2d9d9;
 
 }
 
-.phantrang li a:active{
+.phantrang li a:active {
   background: #ad1717;
 }
 
-.phantrang li.activePhantrang a{
+.phantrang li.activePhantrang a {
   background: #037070;
-color:white;
+  color: white;
 
 }
 
+.css-1jqq78o-placeholder {
+  font-weight: 600;
+  font-size: 15px;
+  text-align: left;
+  color:gray;
+}
+
+.react-datepicker__input-container input::placeholder {
+  font-weight: 600;
+  font-size: 15px;
+  text-align: left;
+  color:gray;
+}

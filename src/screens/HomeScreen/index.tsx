@@ -11,16 +11,22 @@ import TextInput from "../../components/TextInput";
 import CreateInput from "../../components/CreateInput";
 import DatetimePicker from "../../components/DatetimePicker";
 import { useTranslation } from "react-i18next";
-import RadioCheck from "../../components/RadioCheck";
+// import RadioCheck from "../../components/RadioCheck";
 import { api, config } from "../../utils/linkApi";
 import axios from "axios";
 import moment from "moment";
 import ConfirmForm from "../../components/ConfirmForm";
 import AlertForm from "../../components/AlertForm";
-
+import SelectInput from "../../components/SelectInput";
+import { useLocation } from "react-router-dom";
 const HomeScreen = () => {
   const { t } = useTranslation();
+  const location = useLocation();
+  // const dataReceived =
 
+  const [dataReceived, setdataReceived] = useState(
+    location.state && location.state.data
+  );
   const [image, setImage] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [currentMenu, setCurrentMenu] = useState("chooseImg");
@@ -36,12 +42,12 @@ const HomeScreen = () => {
   const [Model, setModel] = useState("");
   const [selectedGroup, setselectedGroup] = useState("");
   const [IncommingDate, setIncommingDate] = useState<Date>();
-  const [CurrentFrequency, setCurrentFrequency] = useState();
   const [FrequencyAdidas, setFrequencyAdidas] = useState();
+  const [CurrentFrequency, setCurrentFrequency] = useState();
   const [FrequencyOutAdidas, setFrequencyOutAdidas] = useState();
   const [InstituteCompany, setInstituteCompany] = useState("");
-  const [DateCalibration, setDateCalibration] = useState<Date>();
-  const [DateNextCalibration, setDateNextCalibration] = useState<Date>();
+  // const [DateCalibration, setDateCalibration] = useState<Date>();
+  // const [DateNextCalibration, setDateNextCalibration] = useState<Date>();
   const [DeviceSerialNum, setDeviceSerialNum] = useState("");
   const [Brand, setBrand] = useState("");
   const [EquipmentName, setEquipmentName] = useState("");
@@ -52,111 +58,135 @@ const HomeScreen = () => {
   const [DepartmentLine, setDepartmentLine] = useState("");
   const [PersonInCharge, setPersonInCharge] = useState("");
   const [Remark, setRemark] = useState("");
-  const [sttResult, setsttResult] = useState("");
-  const [txtStatus, settxtStatus] = useState("");
+  // const [sttResult, setsttResult] = useState("");
+  // const [txtStatus, settxtStatus] = useState("");
   //#endregion
   //#region Các state Option của react-select
   const [optGroup, setoptGroup] = useState<{ value: string; label: string }[]>(
     []
   );
+  const [optFactory] = useState<{ value: string; label: string }[]>([
+    { value: "LHG", label: "LHG" },
+    { value: "LVL", label: "LVL" },
+    { value: "JSZ", label: "JSZ" },
+    { value: "JSZS", label: "JSZS" },
+  ]);
   const [optinternalCalibration, setoptinternalCalibration] = useState<
     { value: string; label: string }[]
   >([]);
+  // console.log(optinternalCalibration[1].value);
   const [optinternalCalibrationAdidas, setoptinternalCalibrationAdidas] =
     useState<{ value: string; label: string }[]>([]);
   const [optExternalCalibration, setoptExternalCalibration] = useState<
     { value: string; label: string }[]
   >([]);
 
-  const [optDepartment, setoptDepartment] = useState<
-    { value: string; label: string }[]
-  >([]);
-  const [optBuilding, setoptBuilding] = useState<
-    { value: string; label: string }[]
-  >([]);
+  // const [optDepartment, setoptDepartment] = useState<
+  //   { value: string; label: string }[]
+  // >([]);
+  // const [optBuilding, setoptBuilding] = useState<
+  //   { value: string; label: string }[]
+  // >([]);
 
-  const optionsRadio = [
-    {
-      value: "Pass",
-      label: t("lblPass"),
-      cusClass:
-        "text-green-500  peer-checked:bg-green-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-lime-200",
-    },
-    {
-      value: "Fail",
-      label: t("lblFail"),
-      cusClass:
-        "text-red-500 peer-checked:bg-red-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-red-200",
-    },
-  ];
-  const optionsVaild = [
-    {
-      value: "1",
-      label: t("lblValid"),
-      cusClass:
-        "text-green-500  peer-checked:bg-green-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-lime-200",
-    },
-    {
-      value: "0",
-      label: t("lblInValid"),
-      cusClass:
-        "text-red-500 peer-checked:bg-red-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-red-200",
-    },
-  ];
+  // const optionsRadio = [
+  //   {
+  //     value: "Pass",
+  //     label: t("lblPass"),
+  //     cusClass:
+  //       "text-green-500  peer-checked:bg-green-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-lime-200",
+  //   },
+  //   {
+  //     value: "Fail",
+  //     label: t("lblFail"),
+  //     cusClass:
+  //       "text-red-500 peer-checked:bg-red-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-red-200",
+  //   },
+  // ];
+  // const optionsVaild = [
+  //   {
+  //     value: "1",
+  //     label: t("lblValid"),
+  //     cusClass:
+  //       "text-green-500  peer-checked:bg-green-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-lime-200",
+  //   },
+  //   {
+  //     value: "0",
+  //     label: t("lblInValid"),
+  //     cusClass:
+  //       "text-red-500 peer-checked:bg-red-500   peer-checked:ring-offset-2 peer-checked:ring peer-checked:ring-red-200",
+  //   },
+  // ];
   //#endregion
   //#region Function Thêm thiết bị
   const AddDevice = async () => {
-    const isConfirmed = await ConfirmForm("question", "Bạn chắc chắn chưa?");
+    const isConfirmed = await ConfirmForm("question", t("confirmAdd"));
     if (isConfirmed) {
-      const url = api + "/api/Device/Insert_Device";
-      const data = {
-        unique_ID: UniCode,
-        factory_ID: FactoryCode,
-        device_Name: EquipmentName,
-        group_Serial_Key: selectedGroup,
-        Status: txtStatus,
-        delivery_Date: IncommingDate,
-        modify_Date: moment(new Date()),
-        Image_Device: imgAfterCrop,
-        model_Device: Model,
-        device_Serial_Number: DeviceSerialNum,
-        device_Brand: Brand,
-        supplier_Name: Supplier,
-        note: Remark,
-        person_Charge: PersonInCharge,
-        external_Calibration_Serial_Key: FrequencyOutAdidas,
-        result: sttResult,
-        internal_Calibration_Serial_Key: CurrentFrequency,
-        Frequency_Internal: FrequencyAdidas,
-        status: sttResult,
-        Note_Internal: "",
-        Factory: FactoryCode,
-        location_Serial_Key: DepartmentLine,
-        Building: Building,
-        Department: DepartmentLine,
-        user_Purpose_Machine_Indication: UsePurpose,
-        range: Range,
-        measurement_Serial_Key: UsePurpose,
-        certified_Calibration_Institute_Company: InstituteCompany,
-        date_Calibration: DateCalibration,
-        date_Next_Calibration: DateNextCalibration,
-        person_Calibration: "Nguyễn Sơn",
-      };
+      if (
+        UniCode !== "" &&
+        FactoryCode !== "" &&
+        EquipmentName !== "" &&
+        selectedGroup !== "" &&
+        Model !== "" &&
+        DeviceSerialNum !== "" &&
+        Brand !== "" &&
+        Supplier !== "" &&
+        Building !== "" &&
+        DepartmentLine !== "" &&
+        IncommingDate !== null &&
+        FrequencyAdidas !== "" &&
+        CurrentFrequency !== "" &&
+        FrequencyOutAdidas !== "" &&
+        UsePurpose !== "" &&
+        PersonInCharge !== "" &&
+        Range !== "" &&
+        InstituteCompany !== "" 
+       
+      ) {
+        const url = api + "/api/Device/Insert_Device";
+        const data = {
+          unique_ID: UniCode,
+          factory_ID: FactoryCode,
+          device_Name: EquipmentName,
+          group_Name: selectedGroup,
+          model_Device: Model,
+          device_Serial_Number: DeviceSerialNum,
+          device_Brand: Brand,
+          supplier_Name: Supplier,
+          building: Building,
+          line: DepartmentLine,
+          incoming_Date: IncommingDate,
+          modify_Date: moment(new Date()),
+          internal_Current_Adidas: FrequencyAdidas,
+          internal_Current: CurrentFrequency,
+          external_Adidas: FrequencyOutAdidas,
+          remark: Remark,
+          person_Charge: PersonInCharge,
+          Image_Device: imgAfterCrop,
+          date_Calibration: moment(new Date()),
+          date_Next_Calibration: moment(new Date()),
+          user_Purpose_Machine_Indication: UsePurpose,
+          range: Range,
+          certified_Calibration_Institute_Company: InstituteCompany,
+        };
+        let tb = t("alertAddFail");
+        await axios
+          .post(url, data, config)
+          .then(async (response: any) => {
+            if (response.data === true) {
+              tb = t("alertAddSuccess");
 
-      await axios
-        .post(url, data, config)
-        .then(async (response: any) => {
-          if (response.data === true) {
-            console.log("thành công");
-            await AlertForm("success", "Thêm thành công");
-          } else {
-            await AlertForm("error", "Thêm thất bại");
-          }
-        })
-        .catch(async () => {
-          await AlertForm("error", "Thêm thất bại");
-        })
-        .finally(() => {});
+              await AlertForm("success", tb);
+            } else {
+              await AlertForm("error", tb);
+            }
+          })
+          .catch(async () => {
+            await AlertForm("error", tb);
+          })
+          .finally(() => {});
+      }else{
+        await AlertForm("error", t('errValidate'));
+      }
     }
   };
   //#endregion
@@ -170,36 +200,36 @@ const HomeScreen = () => {
       .then((response: any) => {
         if (response.data !== null) {
           const groupOptions = response.data.group.map((group: any) => ({
-            value: group.group_Serial_Key,
-            label: group.name_Group,
+            value: group.frequency,
+            label: group.frequency,
           }));
           const icAdidasOptions = response.data.ic.map((ic: any) => ({
-            value: ic.internal_Calibration_Serial_Key,
-            label: ic.frequency_General,
+            value: ic.frequency,
+            label: ic.frequency,
           }));
 
           const ecAdidasOptions = response.data.ec.map((ec: any) => ({
-            value: ec.external_Calibration_Serial_Key,
-            label: ec.frequency_Adidas,
+            value: ec.frequency,
+            label: ec.frequency,
           }));
-          const buildingOptions = response.data.location.map(
-            (location: { building: string }) => ({
-              value: location.building,
-              label: location.building,
-            })
-          );
-          const DepartmentOptions = response.data.location.map(
-            (location: any) => ({
-              value: location.location_Serial_Key,
-              label: location.department,
-            })
-          );
+          // const buildingOptions = response.data.location.map(
+          //   (location: { building: string }) => ({
+          //     value: location.building,
+          //     label: location.building,
+          //   })
+          // );
+          // const DepartmentOptions = response.data.location.map(
+          //   (location: any) => ({
+          //     value: location.location_Serial_Key,
+          //     label: location.department,
+          //   })
+          // );
           setoptGroup(groupOptions);
           setoptinternalCalibrationAdidas(icAdidasOptions);
           setoptinternalCalibration(icAdidasOptions);
           setoptExternalCalibration(ecAdidasOptions);
-          setoptBuilding(buildingOptions);
-          setoptDepartment(DepartmentOptions);
+          // setoptBuilding(buildingOptions);
+          // setoptDepartment(DepartmentOptions);
         }
       })
       .finally(() => {});
@@ -261,22 +291,35 @@ const HomeScreen = () => {
   };
   //#endregion Funtion upload hình ảnh
   //#region Function tự động điền ngày hiệu chuẩn tiếp theo
-  useEffect(() => {
-    if (DateCalibration) {
-      let ngay: Date | undefined;
-      if (FrequencyOutAdidas === "EC0000000000001") {
-        ngay = new Date(DateCalibration);
-        ngay.setFullYear(ngay.getFullYear() + 1);
-      } else if (FrequencyOutAdidas === "EC0000000000002") {
-        ngay = new Date(DateCalibration);
-        ngay.setMonth(ngay.getMonth() + 6);
-      } else if (FrequencyOutAdidas === "EC0000000000005") {
-        ngay = new Date(DateCalibration);
-        ngay.setMonth(ngay.getMonth() + 3);
-      }
-      setDateNextCalibration(ngay);
-    }
-  }, [DateCalibration, FrequencyOutAdidas]);
+  // useEffect(() => {
+  //   if (DateCalibration) {
+  //     let ngay: Date | undefined;
+
+  //     if (FrequencyOutAdidas === "One per year") {
+  //       ngay = new Date(DateCalibration);
+  //       ngay.setFullYear(ngay.getFullYear() + 1);
+  //     } else if (FrequencyOutAdidas === "Twice a year") {
+  //       ngay = new Date(DateCalibration);
+  //       ngay.setMonth(ngay.getMonth() + 6);
+  //     } else if (FrequencyOutAdidas === "Four times a year") {
+  //       ngay = new Date(DateCalibration);
+  //       ngay.setMonth(ngay.getMonth() + 3);
+  //     } else if (FrequencyOutAdidas === "Special frequency") {
+  //       // nếu Special frequency thì dưới hoặc bằng 8 năm thì hiệu chuẩn 6 tháng sau
+  //       ngay = new Date(DateCalibration);
+  //       const currentDate = new Date();
+  //       const yearDiff = currentDate.getFullYear() - ngay.getFullYear();
+  //       if (yearDiff <= 8) {
+  //         ngay.setMonth(ngay.getMonth() + 6);
+  //       } else if (yearDiff > 8 && yearDiff <= 15) {
+  //         ngay.setMonth(ngay.getMonth() + 3);
+  //       } else if (yearDiff > 15) {
+  //         alert("Need to replace with a new one");
+  //       }
+  //     }
+  //     setDateNextCalibration(ngay);
+  //   }
+  // }, [DateCalibration, FrequencyOutAdidas]);
   //#endregion
   //#region Function làm mới các ô nhập liệu
   const resetValue = () => {
@@ -289,8 +332,8 @@ const HomeScreen = () => {
     setFrequencyAdidas(undefined);
     setFrequencyOutAdidas(undefined);
     setInstituteCompany("");
-    setDateCalibration(undefined);
-    setDateNextCalibration(undefined);
+    // setDateCalibration(undefined);
+    // setDateNextCalibration(undefined);
     setDeviceSerialNum("");
     setBrand("");
     setEquipmentName("");
@@ -301,14 +344,119 @@ const HomeScreen = () => {
     setDepartmentLine("");
     setPersonInCharge("");
     setRemark("");
-    setsttResult("");
-    settxtStatus("");
+    // setsttResult("");
+    // settxtStatus("");
     setImgAfterCrop("");
     setImage("");
     setCurrentMenu("chooseImg");
+    // dataReceived=0
+    setdataReceived("");
   };
   //#endregion
 
+  //#region cập nhật thiết bị
+  const getDataDeviceListByUnicode = (unicodeId: string) => {
+    const url = api + "/api/ShowDevice/Show_Data_Device_For_Update";
+    // setIsLoading(true);
+    const data = {
+      Uniquecode: unicodeId,
+    };
+    axios
+      .post(url, data, config)
+      .then((response: any) => {
+        // resetValues();
+        if (response.data !== null) {
+          console.log(response.data);
+          setUniCode(response.data.unique_ID);
+          setFactoryCode(response.data.factory_ID);
+          setModel(response.data.model_Device);
+          setselectedGroup(response.data.group_Name);
+          const date = new Date(response.data.imcoming_Date);
+          setIncommingDate(date);
+          // const selectedOptions = optinternalCalibration.find((option) => option.value === response.data.internal_Current);
+          console.log(response.data.internal_Current);
+          console.log(response.data.internal_Current_Adidas);
+          console.log(response.data.external_Adidas);
+
+          setCurrentFrequency(response.data.internal_Current);
+          setFrequencyAdidas(response.data.internal_Current_Adidas);
+          setFrequencyOutAdidas(response.data.external_Adidas);
+
+          setInstituteCompany(
+            response.data.certified_Calibration_Institute_Company
+          );
+
+          setDeviceSerialNum(response.data.device_Serial_Number);
+          setBrand(response.data.device_Brand);
+          setEquipmentName(response.data.device_Name);
+          setSupplier(response.data.supplier_Name);
+          setUsePurpose(response.data.user_Purpose_Machine_Indication);
+          setRange(response.data.range);
+          setBuilding(response.data.building);
+          setDepartmentLine(response.data.line);
+          setPersonInCharge(response.data.person_Charge);
+          setRemark(response.data.remark);
+          setCurrentMenu("");
+          setImgAfterCrop(response.data.image_Device);
+          setImage(response.data.image_Device);
+        }
+      })
+      .finally(() => {
+        // setIsLoading(false);
+      });
+  };
+  useEffect(() => {
+    if (dataReceived) {
+      getDataDeviceListByUnicode(dataReceived);
+    }
+  }, [dataReceived]);
+
+  const EditDevice = async () => {
+    const isConfirmed = await ConfirmForm("question", t("confirmUpdate"));
+    if (isConfirmed) {
+      const url = api + "/api/Device/Update_Data_Device";
+      const data = {
+        unique_ID: UniCode,
+        factory_ID: FactoryCode,
+        device_Name: EquipmentName,
+        group_Name: selectedGroup,
+        model_Device: Model,
+        device_Serial_Number: DeviceSerialNum,
+        device_Brand: Brand,
+        supplier_Name: Supplier,
+        building: Building,
+        line: DepartmentLine,
+        incoming_Date: IncommingDate,
+        // modify_Date: moment(new Date()),
+        internal_Current_Adidas: FrequencyAdidas,
+        internal_Current: CurrentFrequency,
+        external_Adidas: FrequencyOutAdidas,
+        remark: Remark,
+        person_Charge: PersonInCharge,
+        Image_Device: imgAfterCrop,
+        // date_Calibration: moment(new Date()),
+        // date_Next_Calibration: moment(new Date()),
+        user_Purpose_Machine_Indication: UsePurpose,
+        range: Range,
+        certified_Calibration_Institute_Company: InstituteCompany,
+      };
+      await axios
+        .post(url, data, config)
+        .then(async (response: any) => {
+          if (response.data === true) {
+            await AlertForm("success", t('alertUpdateSuccess'));
+          } else {
+            await AlertForm("error",  t('alertUpdateFail'));
+          }
+        })
+        .catch(async () => {
+          await AlertForm("error",  t('alertUpdateFail'));
+        })
+        .finally(() => {});
+    }
+  };
+
+  //#endregion
   return (
     <>
       <MenuBar
@@ -324,7 +472,9 @@ const HomeScreen = () => {
                 DarkMode ? "dark:text-white text-white" : ""
               } `}
             >
-              {t("lblUploadNewDevice")}
+              {dataReceived
+                ? t("lblUploadUpdateDevice") + ": " + dataReceived
+                : t("lblUploadNewDevice")}
             </p>
           </div>
 
@@ -403,6 +553,7 @@ const HomeScreen = () => {
                           onClick={() => {
                             setCurrentMenu("chooseImg");
                             setImage("");
+                            setImgAfterCrop("");
                             closeModal();
                           }}
                           className={` ${
@@ -432,12 +583,14 @@ const HomeScreen = () => {
                 </div>
                 <div
                   className={` ${
-                    DarkMode ? "dark:bg-zinc-900  bg-zinc-900 " : "dark:bg-gray-100 bg-gray-100"
+                    DarkMode
+                      ? "dark:bg-zinc-900  bg-zinc-900 "
+                      : "dark:bg-zinc-100 bg-zinc-100"
                   } grid  gap-y-5   py-4 px-2.5  rounded-md  relative flex items-end   shadow-md`}
                 >
                   <div>
                     <TextInput
-                      label={t("lblUniqueCode")}
+                      label={t("lblUniqueCode") + "(*)"}
                       TextChange={(value: any) => {
                         setUniCode(value);
                       }}
@@ -446,19 +599,28 @@ const HomeScreen = () => {
                     />
                   </div>
                   <div>
-                    <TextInput
+                    {/* <TextInput
                       // label="Mã số tài sản / Factory code"
-                      label={t("lblFactoryCode")}
+                      label={t("lblFactoryCode")+'(*)'}
                       TextChange={(value: any) => {
                         setFactoryCode(value);
                       }}
                       value={FactoryCode}
                       keys="lblFactoryCode"
+                    /> */}
+
+                    <CreateInput
+                      label={t("lblFactoryCode") + "(*)"}
+                      options={optFactory}
+                      value={FactoryCode}
+                      OnSelected={(value: any) => {
+                        setFactoryCode(value);
+                      }}
                     />
                   </div>
                   <div>
                     <TextInput
-                      label={t("lblModel")}
+                      label={t("lblModel") + "(*)"}
                       TextChange={(value: any) => {
                         setModel(value);
                       }}
@@ -468,7 +630,7 @@ const HomeScreen = () => {
                   </div>
                   <div className="relative -mt-4">
                     <CreateInput
-                      label={t("lblGroup")}
+                      label={t("lblGroup") + "(*)"}
                       options={optGroup}
                       value={selectedGroup}
                       OnSelected={(value: any) => {
@@ -488,7 +650,9 @@ const HomeScreen = () => {
 
               <div
                 className={` ${
-                  DarkMode ? "dark:bg-zinc-700 bg-zinc-700" : "bg-gray-100"
+                  DarkMode
+                    ? "dark:bg-zinc-700 bg-zinc-700"
+                    : "dark:bg-zinc-100 bg-zinc-100"
                 } grid flex gap-5 mt-6   pt-4 px-2.5 shadow rounded-lg`}
               >
                 <div className="flex items-center  ">
@@ -506,9 +670,10 @@ const HomeScreen = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-2 -mt-5">
                   <div>
-                    <CreateInput
-                      label={t("lblCurrentFrequency")}
+                    <SelectInput
+                      label={t("lblCurrentFrequency") + "(*)"}
                       OnSelected={(value: any) => {
+                        // console.log(value)
                         setCurrentFrequency(value);
                       }}
                       value={CurrentFrequency}
@@ -516,8 +681,8 @@ const HomeScreen = () => {
                     />
                   </div>
                   <div>
-                    <CreateInput
-                      label={t("lblFrequencyFollowAdidasRequirement")}
+                    <SelectInput
+                      label={t("lblFrequencyFollowAdidasRequirement") + "(*)"}
                       OnSelected={(value: any) => {
                         setFrequencyAdidas(value);
                       }}
@@ -541,8 +706,8 @@ const HomeScreen = () => {
                 </div>
 
                 <div className="-mt-5">
-                  <CreateInput
-                    label={t("lblFrequencyFollowAdidasRequirement")}
+                  <SelectInput
+                    label={t("lblFrequencyFollowAdidasRequirement") + "(*)"}
                     OnSelected={(value: any) => {
                       setFrequencyOutAdidas(value);
                     }}
@@ -550,10 +715,12 @@ const HomeScreen = () => {
                     options={optExternalCalibration}
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid mb-4">
                   <div>
                     <TextInput
-                      label={t("lblCertifiedCalibrationInstitute/Company")}
+                      label={
+                        t("lblCertifiedCalibrationInstitute/Company") + "(*)"
+                      }
                       TextChange={(value: any) => {
                         setInstituteCompany(value);
                       }}
@@ -562,17 +729,17 @@ const HomeScreen = () => {
                     />
                   </div>
                   <div>
-                    <RadioCheck
+                    {/* <RadioCheck
                       names={"Vaild"}
                       item={optionsRadio}
-                      OnChecked={(value: any) => {
-                        setsttResult(value);
+                      OnChecked={() => {
+                        // setsttResult(value);
                       }}
                       value={sttResult}
-                    />
+                    /> */}
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-x-2">
+                {/* <div className="grid grid-cols-2 gap-x-2">
                   <div>
                     <DatetimePicker
                       label={t("lblDateOfCalibration")}
@@ -587,7 +754,7 @@ const HomeScreen = () => {
                       DateSelected={DateNextCalibration}
                     />
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
 
@@ -595,7 +762,9 @@ const HomeScreen = () => {
             <div className=" px-2 ">
               <div
                 className={`grid flex gap-5   ${
-                  DarkMode ? "dark:bg-zinc-900 bg-zinc-900" : "bg-gray-100"
+                  DarkMode
+                    ? "dark:bg-zinc-900 bg-zinc-900"
+                    : "dark:bg-zinc-100 bg-zinc-100"
                 } pt-5 px-2.5 shadow rounded-lg`}
               >
                 <div className="flex items-center   ">
@@ -608,7 +777,7 @@ const HomeScreen = () => {
                 <div className="grid md:grid-cols-2 grid-cols-1 gap-5 md:gap-2">
                   <div>
                     <TextInput
-                      label={t("lblDeviceSerialNumber")}
+                      label={t("lblDeviceSerialNumber") + "(*)"}
                       TextChange={(value: any) => {
                         setDeviceSerialNum(value);
                       }}
@@ -618,7 +787,7 @@ const HomeScreen = () => {
                   </div>
                   <div>
                     <TextInput
-                      label={t("lblBrand")}
+                      label={t("lblBrand") + '(*)'}
                       TextChange={(value: any) => {
                         setBrand(value);
                       }}
@@ -629,7 +798,7 @@ const HomeScreen = () => {
                 </div>
                 <div>
                   <TextInput
-                    label={t("lblEquipmentName")}
+                    label={t("lblEquipmentName") + "(*)"}
                     TextChange={(value: any) => {
                       setEquipmentName(value);
                     }}
@@ -639,7 +808,7 @@ const HomeScreen = () => {
                 </div>
                 <div>
                   <TextInput
-                    label={t("lblSupplier")}
+                    label={t("lblSupplier") + "(*)"}
                     TextChange={(value: any) => {
                       setSupplier(value);
                     }}
@@ -650,7 +819,7 @@ const HomeScreen = () => {
 
                 <div>
                   <TextInput
-                    label={t("lblUsePurpose_MachineIndication")}
+                    label={t("lblUsePurpose_MachineIndication") + "(*)"}
                     TextChange={(value: any) => {
                       setUsePurpose(value);
                     }}
@@ -659,10 +828,10 @@ const HomeScreen = () => {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid ">
                   <div>
                     <TextInput
-                      label={t("lblRange")}
+                      label={t("lblRange") + "(*)"}
                       TextChange={(value: any) => {
                         setRange(value);
                       }}
@@ -670,43 +839,43 @@ const HomeScreen = () => {
                       keys="lblRange"
                     />
                   </div>
-                  <div>
+                  {/* <div>
                     <RadioCheck
                       names={"Status"}
                       item={optionsVaild}
-                      OnChecked={(value: any) => {
-                        settxtStatus(value);
+                      OnChecked={() => {
+                        // settxtStatus(value);
                         // console.log(value);
                       }}
                       value={txtStatus}
                     />
-                  </div>
+                  </div> */}
                 </div>
-                <div className="grid grid-cols-2 gap-x-2 -mt-3 ">
+                <div className="grid grid-cols-2 gap-x-2 ">
                   <div>
-                    <CreateInput
-                      label={t("lblBuilding")}
-                      OnSelected={(value: any) => {
+                    <TextInput
+                      label={t("lblBuilding") + "(*)"}
+                      TextChange={(value: any) => {
                         setBuilding(value);
                       }}
                       value={Building}
-                      options={optBuilding}
+                      keys="lblBuilding"
                     />
                   </div>
                   <div>
-                    <CreateInput
-                      label={t("lblDepartment_Line")}
-                      OnSelected={(value: any) => {
+                    <TextInput
+                      label={t("lblDepartment_Line") + "(*)"}
+                      TextChange={(value: any) => {
                         setDepartmentLine(value);
                       }}
                       value={DepartmentLine}
-                      options={optDepartment}
+                      keys="lblDepartment_Line"
                     />
                   </div>
                 </div>
                 <div className="">
                   <TextInput
-                    label={t("lblPersonInCharge")}
+                    label={t("lblPersonInCharge") + "(*)"}
                     TextChange={(value: any) => {
                       setPersonInCharge(value);
                     }}
@@ -728,18 +897,22 @@ const HomeScreen = () => {
                 <div></div>
               </div>
               <div className="text-center justify-center flex gap-3">
-                <button
-                  className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-gray-400 flex text-center justify-center items-center "
-                  // onClick={handleButtonClick}
-                >
-                  {t("btnEdit")}
-                </button>
-                <button
-                  onClick={AddDevice}
-                  className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center"
-                >
-                  {t("btnAdd")}
-                </button>
+                {dataReceived ? (
+                  <button
+                    onClick={EditDevice}
+                    className=" btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center "
+                  >
+                    {t("btnEdit")}
+                  </button>
+                ) : (
+                  <button
+                    onClick={AddDevice}
+                    className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center"
+                  >
+                    {t("btnAdd")}
+                  </button>
+                )}
+
                 <button
                   onClick={resetValue}
                   className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center"

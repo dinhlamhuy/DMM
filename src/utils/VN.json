@@ -36,6 +36,7 @@
     "lblListDevice": "Danh sách thiết bị",
     "lblLogout": "Thoát",
     "lblUploadNewDevice": "Upload thiết bị mới",
+    "lblUploadUpdateDevice": "Cập nhật thiết bị",
     "lblDeviceDetails": "Thông tin chi tiết thiết bị",
     "lblLogin": "Đăng nhập",
     "lblUserID": "User ID",
@@ -47,7 +48,18 @@
     "btnExcel":"Xuất Excel",
     "lblTotal": "Tổng",
     "btnPrev":"Lùi",
-    "btnNext":"Tiếp"
+    "btnNext":"Tiếp",
+    "alertAddSuccess":"Thêm thành công",
+    "alertAddFail":"Thêm thất bại",
+    "alertUpdateSuccess":"Cập nhật thành công",
+    "alertUpdateFail":"Cập nhật thất bại",
+    "confirmAdd":"Bạn muốn thêm mới?",
+    "confirmUpdate":"Bạn muốn cập nhật?",
+    "CalibrationDetail":"Chi tiết hiệu chuẩn",
+    "SeeDetails":"Xem chi tiết",
+    "lblTitle":"Bảng chi tiết hiệu chuẩn",
+    "errValidate":"Yêu cầu nhập đầy đủ thông tin"
+
 
 
 

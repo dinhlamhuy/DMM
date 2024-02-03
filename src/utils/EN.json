@@ -36,6 +36,8 @@
     "lblListDevice": "List Device",
     "lblLogout": "Log Out",
     "lblUploadNewDevice": "Upload new device",
+    "lblUploadUpdateDevice": "Update device details",
+
     "lblDeviceDetails": "Device details",
     "lblLogin": "Login",
     "lblUserID": "User ID",
@@ -47,7 +49,19 @@
     "btnExcel":"Export Excel",
     "lblTotal": "Total",
     "btnPrev":"Prev",
-    "btnNext":"Next"
+    "btnNext":"Next",
+    "alertAddSuccess":"Device added successfully",
+    "alertAddFail":"Add device failed",
+    "alertUpdateSuccess":"Update successful",
+    "alertUpdateFail":"Update failed",
+    "confirmAdd":"Do you want to add a new device?",
+    "confirmUpdate":"Want to update this device?",
+    "CalibrationDetail":"Calibration Detail",
+    "SeeDetails":"See",
+    "lblTitle":"Calibration detail table",
+    "errValidate":"Required to enter full information"
+
+
 
 
 

@@ -9,16 +9,14 @@ const ConfirmForm = async (iconType: any, alertTitle: any) => {
     color: "#716add",
     background:'#fff',
     backdrop: `
-    rgba(0,0,40,0.4)
-    url("../../../public/img/avatar.gif")
-    center top
-    no-repeat
+    rgba(0,0,20,0.4)
+   
   `,
     toast: false,
     allowOutsideClick: false,
     showCancelButton: true,
     confirmButtonText: "OK",
-    cancelButtonText: "Hủy",
+    cancelButtonText: "Cancel",
   });
   return result.isConfirmed;
 };

@@ -22,7 +22,7 @@ const RadioCheck: React.FC<RadioProps> = ({ item, OnChecked, value, names}) => {
       
   return (
     <>
-      <ul className="grid w-full gap-2 md:grid-cols-2" >
+      <ul className="grid w-full gap-2 md:grid-cols-2" key={names} >
       {item.map((radioItem) => (
           <li key={radioItem.value} >
             <input
