@@ -7,6 +7,9 @@ import { useTranslation } from "react-i18next";
 import { isValid } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import ModalDetail from "../ModalDetail";
+// import moment from "moment";
+import { api, config } from "../../utils/linkApi";
+import axios from "axios";
 
 interface TableMListProps {
   items: Equipment[] | null;
@@ -31,13 +34,15 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
   }, [DarkMode]);
   const openModal = (unique_ID: string) => {
     setSelectUniID(unique_ID);
-    setarrDetail([
-      // {
-      //   unique_ID: unique_ID,
-      //   CalDate: "2023-11-20",
-      //   Result: "OK",
-      // },
-    ]);
+    // setarrDetail([
+    //   // {
+    //   //   unique_ID: unique_ID,
+    //   //   CalDate: "2023-11-20",
+    //   //   Result: "OK",
+    //   // },
+    // ]);
+
+    getDataDetailCali(unique_ID);
     setModalIsOpen(true);
   };
 
@@ -47,6 +52,35 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
   const navigate = useNavigate();
   const handleClick = (unique_ID: string) => {
     navigate("/", { state: { data: unique_ID } });
+  };
+
+  const getDataDetailCali = (unique_ID: string) => {
+    const url = api + "/api/Device/See_More_Calibration_Info";
+    // setIsLoading(true);
+    const data = {
+      unique_ID: unique_ID,
+    };
+    axios
+      .post(url, data, config)
+      .then((response: any) => {
+        // resetValues();
+        if (response.data !== null) {
+          const arr = response.data.map((item: any, index: number) => ({
+            No: index + 1,
+            // unique_ID: item.unique_ID,
+            result: item.result,
+            evaluation: item.evaluation,
+            date_Calibration:item.date_Calibration,
+            file_Upload: item.file_Upload,
+          }));
+
+          setarrDetail(arr);
+          console.log(arr);
+        }
+      })
+      .finally(() => {
+        // setIsLoading(false);
+      });
   };
 
   return (
@@ -299,13 +333,13 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
                   <td className={`border ${borderColor}`}>
                     {(item.Photo_for_reference !== "" ||
                       item.Photo_for_reference !== null) && (
-                        <img
-                          loading="lazy"
-                          src={item.Photo_for_reference}
-                          className=" object-cover w-full aspect-square"
-                          alt=""
-                        />
-                      )}
+                      <img
+                        loading="lazy"
+                        src={item.Photo_for_reference}
+                        className=" object-cover w-full aspect-square"
+                        alt=""
+                      />
+                    )}
                   </td>
                   <td className={`border ${borderColor}`}>{item.Model}</td>
                   <td className={`border ${borderColor}`}>
@@ -374,13 +408,10 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
                   <td className={`border ${borderColor} `}>
                     {/* {item.Date_Of_Next} */}
                     <div className={`${the}`}>
-                      
-
-
-                    {isValid(new Date(item.Date_Of_Next))
-                      ? item.Date_Of_Next
-                      : ""}
-                      </div>
+                      {isValid(new Date(item.Date_Of_Next))
+                        ? item.Date_Of_Next
+                        : ""}
+                    </div>
                   </td>
                   <td className={`border   ${borderColor}`}>{item.Remarky}</td>
                   <td className={`border   ${borderColor}`}>
@@ -461,17 +492,41 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
                     }}
                     className="border bg-gray-400"
                   >
+                    {t('Content')}
+                  </th>
+                  <th
+                    style={{
+                      width: "45%",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                    className="border bg-gray-400"
+                  >
                     {t("lblResult")}
+                  </th>
+                  <th
+                    style={{
+                      width: "45%",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                    className="border bg-gray-400"
+                  >
+                    Calibration report
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {arrDetail ? (
-                  arrDetail.map((item: any, index: number) => (
+                  arrDetail.map((item: any) => (
                     <tr className=" text-center ">
-                      <td className="border">{index + 1}</td>
-                      <td className="border">{item.CalDate}</td>
-                      <td className="border">{item.Result}</td>
+                      <td className="border">{item.No}</td>
+                      <td className="border">{item.date_Calibration}</td>
+                      <td className="border">{item.result}</td>
+                      <td className="border">{item.evaluation}</td>
+                      <td className="border">{item.file_Upload}</td>
                     </tr>
                   ))
                 ) : (

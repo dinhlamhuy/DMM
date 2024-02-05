@@ -58,6 +58,7 @@
     "confirmUpdate":"Want to update this device?",
     "CalibrationDetail":"Calibration Detail",
     "SeeDetails":"See",
+    "Content":"Content",
     "lblTitle":"Calibration detail table",
     "errValidate":"Required to enter full information"
 

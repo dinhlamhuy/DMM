@@ -11,6 +11,9 @@ import { FiEdit3 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import ModalDetail from "../ModalDetail";
 import { useState } from "react";
+// import moment from "moment";
+import axios from "axios";
+import { api, config } from "../../utils/linkApi";
 interface CardMListProps {
   items: Equipment[];
   DarkMode: boolean;
@@ -23,13 +26,7 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const openModal = (unique_ID: string) => {
     setSelectUniID(unique_ID);
-    setarrDetail([
-      // {
-      //   unique_ID: unique_ID,
-      //   CalDate: "2023-11-20",
-      //   Result: "OK",
-      // },
-    ]);
+    getDataDetailCali(unique_ID);
     setModalIsOpen(true);
   };
 
@@ -40,6 +37,36 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
   const handleClick = (unique_ID: string) => {
     navigate("/", { state: { data: unique_ID } });
   };
+
+  const getDataDetailCali = (unique_ID: string) => {
+    const url = api + "/api/Device/See_More_Calibration_Info";
+    // setIsLoading(true);
+    const data = {
+      unique_ID: unique_ID,
+    };
+    axios
+      .post(url, data, config)
+      .then((response: any) => {
+        // resetValues();
+        if (response.data !== null) {
+          const arr = response.data.map((item: any, index: number) => ({
+            No: index + 1,
+            // unique_ID: item.unique_ID,
+            result: item.result,
+            evaluation: item.evaluation,
+            date_Calibration: item.date_Calibration,
+            file_Upload: item.file_Upload,
+          }));
+
+          setarrDetail(arr);
+          console.log(arr);
+        }
+      })
+      .finally(() => {
+        // setIsLoading(false);
+      });
+  };
+
   return items.map((item: Equipment, index: number) => {
     const ngayHC = new Date(item.Date_Of_Next);
     const ngayHT = new Date();
@@ -340,79 +367,103 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
           </div>
         </div>
         <ModalDetail
-          isOpen={modalIsOpen}
-          onClose={closeModal}
-          DarkMode={DarkMode}
-        >
-          <>
-            <button
-              onClick={closeModal}
-              className="btn  -mt-4  text-4xl font-bold right-0 absolute  rounded-full"
+        isOpen={modalIsOpen}
+        onClose={closeModal}
+        DarkMode={DarkMode}
+      >
+        <>
+          <button
+            onClick={closeModal}
+            className="btn  -mt-4  text-4xl font-bold right-0 absolute  rounded-full"
+          >
+            &times;
+          </button>
+          <h1 className="mt-5 p-3 uppercase text-xl font-bold">
+            {t("lblTitle")}:{selectUniID}
+          </h1>
+          <div>
+            <table
+              className=" w-full border   table-fixed "
+              style={{ borderCollapse: "separate", borderSpacing: 0 }}
             >
-              &times;
-            </button>
-            <h1 className="mt-5 p-3 uppercase text-xl font-bold">
-              {t("lblTitle")}:{selectUniID}
-            </h1>
-            <div>
-              <table
-                className=" w-full border   table-fixed "
-                style={{ borderCollapse: "separate", borderSpacing: 0 }}
-              >
-                <thead>
-                  <tr>
-                    <th
-                      style={{
-                        width: "10%",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                      className="border bg-gray-400"
-                    >
-                      {t("lblNo")}
-                    </th>
-                    <th
-                      style={{
-                        width: "35%",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                      className="border bg-gray-400"
-                    >
-                      {t("lblDateOfCalibration")}
-                    </th>
-                    <th
-                      style={{
-                        width: "45%",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                      className="border bg-gray-400"
-                    >
-                      {t("lblResult")}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {arrDetail ? (
-                    arrDetail.map((item: any, index: number) => (
-                      <tr className=" text-center ">
-                        <td className="border">{index + 1}</td>
-                        <td className="border">{item.CalDate}</td>
-                        <td className="border">{item.Result}</td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr></tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </>
-        </ModalDetail>
+              <thead>
+                <tr>
+                  <th
+                    style={{
+                      width: "10%",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                    className="border bg-gray-400"
+                  >
+                    {t("lblNo")}
+                  </th>
+                  <th
+                    style={{
+                      width: "35%",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                    className="border bg-gray-400"
+                  >
+                    {t("lblDateOfCalibration")}
+                  </th>
+                  <th
+                    style={{
+                      width: "45%",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                    className="border bg-gray-400"
+                  >
+                    {t('Content')}
+                  </th>
+                  <th
+                    style={{
+                      width: "45%",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                    className="border bg-gray-400"
+                  >
+                    {t("lblResult")}
+                  </th>
+                  <th
+                    style={{
+                      width: "45%",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                    className="border bg-gray-400"
+                  >
+                    Calibration report
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {arrDetail ? (
+                  arrDetail.map((item: any) => (
+                    <tr className=" text-center ">
+                      <td className="border">{item.No}</td>
+                      <td className="border">{item.date_Calibration}</td>
+                      <td className="border">{item.result}</td>
+                      <td className="border">{item.evaluation}</td>
+                      <td className="border">{item.file_Upload}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </>
+      </ModalDetail>
       </div>
       // </div>
     );
