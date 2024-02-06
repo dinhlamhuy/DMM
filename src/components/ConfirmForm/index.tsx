@@ -16,7 +16,7 @@ const ConfirmForm = async (iconType: any, alertTitle: any) => {
     allowOutsideClick: false,
     showCancelButton: true,
     confirmButtonText: "OK",
-    cancelButtonText: "Hủy",
+    cancelButtonText: "Cancel",
   });
   return result.isConfirmed;
 };

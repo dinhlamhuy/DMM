@@ -1,4 +1,4 @@
-import { useState } from "react";
+// import { useState } from "react";
 import Select from "react-select";
 
 interface SelectProps {
@@ -17,10 +17,10 @@ const SelectInput: React.FC<SelectProps> = ({
   value,
   OnSelected,
 }) => {
-  const [vl, setvl] = useState("");
+  // const [vl, setvl] = useState("");
   const handleChange = (selectedOption: Option | "" | null) => {
     OnSelected(selectedOption ? selectedOption.value : null);
-    setvl(selectedOption ? selectedOption.label : "");
+    // setvl(selectedOption ? selectedOption.label : "");
   };
   return (
     <div className="relative w-full">
@@ -38,7 +38,7 @@ const SelectInput: React.FC<SelectProps> = ({
       autofill:pb-2"
         isClearable
         onChange={handleChange}
-        value={value ? { label: vl, value } : null}
+        value={value ? { label: value, value } : null}
         options={options}
         placeholder={label}
         theme={(theme) => ({

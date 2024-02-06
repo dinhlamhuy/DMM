@@ -1,4 +1,5 @@
 export interface Equipment {
+    device_Serial_Key:string,
     No:string,
     Serial_Key:string;
     Equipment_Name: string;
