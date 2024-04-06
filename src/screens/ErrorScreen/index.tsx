@@ -1,7 +1,7 @@
 const ErrorScreen = () => {
     return (
         <div>
-            sadjsadjsm
+            Không tìm thấy
         </div>
     );
 };

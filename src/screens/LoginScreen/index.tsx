@@ -19,6 +19,8 @@ const LoginScreen = () => {
   const [Open, setOpen] = useState("hopclose");
   const PlaceholderUser = t("lblUserID");
   const PlaceholderPass = t("lblPassword");
+  const factory = localStorage.getItem("Factory");
+
   // useEffect(() => {
   //   localStorage.removeItem("User");
   // }, []); 
@@ -35,6 +37,7 @@ const LoginScreen = () => {
     const data = {
       user_Id: UserID,
       user_Password: password,
+      Factory:factory
     };
     axios
       .post(url, data, config)

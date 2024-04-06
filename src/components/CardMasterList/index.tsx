@@ -24,6 +24,8 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
   const [selectUniID, setSelectUniID] = useState("");
   const [arrDetail, setarrDetail] = useState<any[]>([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const Factory = localStorage.getItem("Factory");
+
   const openModal = (unique_ID: string) => {
     setSelectUniID(unique_ID);
     getDataDetailCali(unique_ID);
@@ -39,10 +41,11 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
   };
 
   const getDataDetailCali = (unique_ID: string) => {
-    const url = api + "/api/Device/See_More_Calibration_Info";
+    const url = api + "/api/See_More_Calibration_Info";
     // setIsLoading(true);
     const data = {
       unique_ID: unique_ID,
+      Factory:Factory
     };
     axios
       .post(url, data, config)
@@ -52,10 +55,10 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
           const arr = response.data.map((item: any, index: number) => ({
             No: index + 1,
             // unique_ID: item.unique_ID,
-            result: item.result,
-            evaluation: item.evaluation,
-            date_Calibration: item.date_Calibration,
-            file_Upload: item.file_Upload,
+            result: item.Result,
+            evaluation: item.Evaluation,
+            date_Calibration: item.Date_Calibration,
+            file_Upload: item.File_Upload,
           }));
 
           setarrDetail(arr);
@@ -74,11 +77,18 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
     if (ngayHC < ngayHT) {
       the = " text-white font-bold  bg-red-900 px-2";
     }
-
+    let result;
+    if (item.Result_Company === null || item.Result_Company === '') {
+      result = '';
+    } else if (item.Result_Company === "OK") {
+      result= "PASS";
+    } else {
+      result= "FAIL";
+    }
     return (
       <div
         key={`Equi` + index}
-        className={` ${
+        className={`text-[14px] ${
           DarkMode
             ? `bg-whitse   ${
                 item.Valid === "OK" ? "bg-[#96FFC6]" : "bg-[#FF969A]"
@@ -103,7 +113,7 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
             </div>
             <div className="   flex ml-2">
               <div className=" grid grid-cols-2 md:gap-x-5 text-left">
-                <div className=" font-bold text-2xl col-span-2 text-center ">
+                <div className=" font-bold text-[21px] col-span-2 text-center ">
                   <p className="flex">
                     {item.Equipment_Name} &ensp;
                     <button
@@ -177,6 +187,7 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
                   &ensp;
                   <span className="text-xs font-bold">
                     {/* {item.Incomming_date} */}
+            
                     {isValid(new Date(item.Incomming_date))
                       ? item.Incomming_date
                       : ""}
@@ -352,13 +363,14 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
                 <span className="text-xs text-gray-800">{t("lblResult")}:</span>
                 &ensp;
                 <button onClick={() => openModal(item.Unique_code)}>
-                  {item.Result_Company === "OK" ? (
+
+                  {item.Result_Company === "OK"  ? (
                     <span className="text-md font-bold text-blue-700 ">
                       Pass
                     </span>
                   ) : (
                     <span className="text-md font-bold text-red-700 ">
-                      Fail
+                      {result}
                     </span>
                   )}
                 </button>
@@ -453,7 +465,10 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
                       <td className="border">{item.date_Calibration}</td>
                       <td className="border">{item.result}</td>
                       <td className="border">{item.evaluation}</td>
-                      <td className="border">{item.file_Upload}</td>
+                      <td className="border">    
+                      <a href={`http://192.168.60.15/modules/ME/pph/QC-Report/LVL/data/Calibration2/FileUpload/`+item.file_Upload } target="_blank" rel="noopener noreferrer" >
+                        {item.file_Upload}</a>
+                        </td>
                     </tr>
                   ))
                 ) : (

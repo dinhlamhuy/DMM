@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import FileInput from "../../components/FileInput";
@@ -11,8 +12,7 @@ import TextInput from "../../components/TextInput";
 import CreateInput from "../../components/CreateInput";
 import DatetimePicker from "../../components/DatetimePicker";
 import { useTranslation } from "react-i18next";
-// import RadioCheck from "../../components/RadioCheck";
-import { api, config } from "../../utils/linkApi";
+import { api, config,  urlLVL, urlLHG, urlLYV } from "../../utils/linkApi";
 import axios from "axios";
 import moment from "moment";
 import ConfirmForm from "../../components/ConfirmForm";
@@ -22,7 +22,6 @@ import { useLocation } from "react-router-dom";
 const HomeScreen = () => {
   const { t } = useTranslation();
   const location = useLocation();
-  // const dataReceived =
 
   const [dataReceived, setdataReceived] = useState(
     location.state && location.state.data
@@ -31,10 +30,23 @@ const HomeScreen = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [currentMenu, setCurrentMenu] = useState("chooseImg");
   const DefautMode = localStorage.getItem("isDark");
+  const UserNhap = localStorage.getItem("User");
+  const Factory = localStorage.getItem("Factory");
   const [DarkMode, setDarkMode] = useState<boolean>(
     DefautMode ? DefautMode === "true" : false
   );
+  const [user, setUser] = useState(UserNhap ? UserNhap : '');
+  const [factory, setFactory] = useState(Factory ? Factory : '');
+  let urlImg='';
+  if(factory === "LVL"){
+    urlImg=urlLVL;
+  }else if(factory === "LHG") {
+    urlImg=urlLHG;
+  
+  }else{
+    urlImg=urlLYV;
 
+  }
   //#region Các state cho ô nhập thiết bị
   const [imgAfterCrop, setImgAfterCrop] = useState("");
   const [UniCode, setUniCode] = useState("");
@@ -46,8 +58,6 @@ const HomeScreen = () => {
   const [CurrentFrequency, setCurrentFrequency] = useState();
   const [FrequencyOutAdidas, setFrequencyOutAdidas] = useState();
   const [InstituteCompany, setInstituteCompany] = useState("");
-  // const [DateCalibration, setDateCalibration] = useState<Date>();
-  // const [DateNextCalibration, setDateNextCalibration] = useState<Date>();
   const [DeviceSerialNum, setDeviceSerialNum] = useState("");
   const [Brand, setBrand] = useState("");
   const [EquipmentName, setEquipmentName] = useState("");
@@ -58,9 +68,8 @@ const HomeScreen = () => {
   const [DepartmentLine, setDepartmentLine] = useState("");
   const [PersonInCharge, setPersonInCharge] = useState("");
   const [Remark, setRemark] = useState("");
-  // const [sttResult, setsttResult] = useState("");
-  // const [txtStatus, settxtStatus] = useState("");
   //#endregion
+
   //#region Các state Option của react-select
   const [optGroup, setoptGroup] = useState<{ value: string; label: string }[]>(
     []
@@ -68,8 +77,8 @@ const HomeScreen = () => {
   const [optFactory] = useState<{ value: string; label: string }[]>([
     { value: "LHG", label: "LHG" },
     { value: "LVL", label: "LVL" },
-    { value: "JSZ", label: "JSZ" },
-    { value: "JSZS", label: "JSZS" },
+    { value: "LYV", label: "LYV" },
+    { value: "LYM", label: "LYM" },
   ]);
   const [optinternalCalibration, setoptinternalCalibration] = useState<
     { value: string; label: string }[]
@@ -123,26 +132,25 @@ const HomeScreen = () => {
     if (isConfirmed) {
       if (
         UniCode !== "" &&
-        FactoryCode !== "" &&
+        // FactoryCode !== "" &&
         EquipmentName !== "" &&
-        selectedGroup !== "" &&
-        Model !== "" &&
+        // selectedGroup !== "" &&
+        // Model !== "" &&
         DeviceSerialNum !== "" &&
         Brand !== "" &&
-        Supplier !== "" &&
-        Building !== "" &&
-        DepartmentLine !== "" &&
-        IncommingDate !== null &&
-        FrequencyAdidas !== "" &&
-        CurrentFrequency !== "" &&
-        FrequencyOutAdidas !== "" &&
-        UsePurpose !== "" &&
-        PersonInCharge !== "" &&
-        Range !== "" &&
-        InstituteCompany !== "" 
-       
+        Supplier !== "" 
+        // Building !== "" &&
+        // DepartmentLine !== "" &&
+        // && IncommingDate !== null
+        // &&       FrequencyAdidas !== "" &&
+        // CurrentFrequency !== "" &&
+        // FrequencyOutAdidas !== null
+        // &&  UsePurpose !== "" &&
+        // PersonInCharge !== "" &&
+        // Range !== "" &&
+        // InstituteCompany !== ""
       ) {
-        const url = api + "/api/Device/Insert_Device";
+        const url = api + "/api/Insert_Device";
         const data = {
           unique_ID: UniCode,
           factory_ID: FactoryCode,
@@ -154,8 +162,8 @@ const HomeScreen = () => {
           supplier_Name: Supplier,
           building: Building,
           line: DepartmentLine,
-          incoming_Date: IncommingDate,
-          modify_Date: moment(new Date()),
+          incoming_Date: IncommingDate ? moment(IncommingDate, "YYYY-MM-DD").format("YYYY/MM/DD") :  moment('1900-01-01', "YYYY-MM-DD").format("YYYY/MM/DD"),
+          modify_Date: moment(new Date(), "YYYY-MM-DD").format("YYYY/MM/DD"),
           internal_Current_Adidas: FrequencyAdidas,
           internal_Current: CurrentFrequency,
           external_Adidas: FrequencyOutAdidas,
@@ -167,14 +175,16 @@ const HomeScreen = () => {
           user_Purpose_Machine_Indication: UsePurpose,
           range: Range,
           certified_Calibration_Institute_Company: InstituteCompany,
+          Implementer_Id: user,
+          Factory:factory
         };
         let tb = t("alertAddFail");
         await axios
           .post(url, data, config)
           .then(async (response: any) => {
-            if (response.data === true) {
+            if (response.data.result === true) {
               tb = t("alertAddSuccess");
-
+              resetValue();
               await AlertForm("success", tb);
             } else {
               await AlertForm("error", tb);
@@ -184,33 +194,35 @@ const HomeScreen = () => {
             await AlertForm("error", tb);
           })
           .finally(() => {});
-      }else{
-        await AlertForm("error", t('errValidate'));
+      } else {
+        await AlertForm("error", t("errValidate"));
       }
     }
   };
   //#endregion
   //#region Function Cập nhật option cho select
   const OptionSelect = () => {
-    const url = api + "/api/Get_Data_Filter/Get_Data_Filter";
+    const url = api + "/api/Get_Data_Filter";
 
-    const data = {};
+    const data = {
+      Factory:factory
+    };
     axios
       .post(url, data, config)
       .then((response: any) => {
         if (response.data !== null) {
-          const groupOptions = response.data.group.map((group: any) => ({
-            value: group.frequency,
-            label: group.frequency,
+          const groupOptions = response.data.Group.map((group: any) => ({
+            value: group.Frequency,
+            label: group.Frequency,
           }));
-          const icAdidasOptions = response.data.ic.map((ic: any) => ({
-            value: ic.frequency,
-            label: ic.frequency,
+          const icAdidasOptions = response.data.IC.map((ic: any) => ({
+            value: ic.Frequency,
+            label: ic.Frequency,
           }));
 
-          const ecAdidasOptions = response.data.ec.map((ec: any) => ({
-            value: ec.frequency,
-            label: ec.frequency,
+          const ecAdidasOptions = response.data.EC.map((ec: any) => ({
+            value: ec.Frequency,
+            label: ec.Frequency,
           }));
           // const buildingOptions = response.data.location.map(
           //   (location: { building: string }) => ({
@@ -235,6 +247,18 @@ const HomeScreen = () => {
       .finally(() => {});
   };
   useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const authValue = searchParams.get("loginUser");
+    const facValue = searchParams.get("Factory");
+
+    if (authValue && authValue!=='') {
+      localStorage.setItem("User", authValue.toString());
+      setUser(authValue.toString());
+    }
+    if (facValue && facValue!=='') {
+      localStorage.setItem("Factory", facValue.toString());
+      setFactory(facValue.toString());
+    }
     OptionSelect();
   }, []);
   //#endregion
@@ -250,9 +274,13 @@ const HomeScreen = () => {
     setImgAfterCrop(selectedImg);
     setCurrentMenu("cropImg");
   };
-  const onCancelCam = (selectedImg: any) => {
-    setImage(selectedImg);
-    setImgAfterCrop(selectedImg);
+
+
+  const onCancelCam = () => {
+    // console.log(selectedImg);
+
+    // setImage(selectedImg);
+    // setImgAfterCrop(selectedImg);
     setCurrentMenu("chooseImg");
   };
   const onCropDone = (imgCroppedArea: any) => {
@@ -281,7 +309,7 @@ const HomeScreen = () => {
         );
         const dataURL = canvasEle.toDataURL("image/jpeg");
         setImgAfterCrop(dataURL);
-        console.log(dataURL);
+        // console.log(dataURL);
         setCurrentMenu("imgCropped");
       };
     }
@@ -356,49 +384,62 @@ const HomeScreen = () => {
 
   //#region cập nhật thiết bị
   const getDataDeviceListByUnicode = (unicodeId: string) => {
-    const url = api + "/api/ShowDevice/Show_Data_Device_For_Update";
+    const url = api + "/api/Show_Data_Device_For_Update";
     // setIsLoading(true);
     const data = {
       Uniquecode: unicodeId,
+      Implementer_Id: user,
+      Is_Active:'1',
+      Factory:factory
     };
     axios
       .post(url, data, config)
       .then((response: any) => {
         // resetValues();
         if (response.data !== null) {
-          console.log(response.data);
-          setUniCode(response.data.unique_ID);
-          setFactoryCode(response.data.factory_ID);
-          setModel(response.data.model_Device);
-          setselectedGroup(response.data.group_Name);
-          const date = new Date(response.data.imcoming_Date);
-          setIncommingDate(date);
-          // const selectedOptions = optinternalCalibration.find((option) => option.value === response.data.internal_Current);
-          console.log(response.data.internal_Current);
-          console.log(response.data.internal_Current_Adidas);
-          console.log(response.data.external_Adidas);
+          // console.log(response.data);
+          setUniCode(response.data.Unique_ID);
+          setFactoryCode(response.data.Factory_ID);
+          setModel(response.data.Model_Device);
+          setselectedGroup(response.data.Group_Name);
+          if(response.data.Incoming_Date !== '1/1/1900 12:00:00 AM'){
+            const date = new Date(response.data.Incoming_Date);
+            setIncommingDate(date);
 
-          setCurrentFrequency(response.data.internal_Current);
-          setFrequencyAdidas(response.data.internal_Current_Adidas);
-          setFrequencyOutAdidas(response.data.external_Adidas);
+          }
+          // const selectedOptions = optinternalCalibration.find((option) => option.value === response.data.internal_Current);
+          // console.log(response.data.Internal_Current);
+          // console.log(response.data.Internal_Current_Adidas);
+          // console.log(response.data.External_Adidas);
+
+          setCurrentFrequency(response.data.Internal_Current);
+          setFrequencyAdidas(response.data.Internal_Current_Adidas);
+          setFrequencyOutAdidas(response.data.External_Adidas);
 
           setInstituteCompany(
-            response.data.certified_Calibration_Institute_Company
+            response.data.Certified_Calibration_Institute_Company
           );
 
-          setDeviceSerialNum(response.data.device_Serial_Number);
-          setBrand(response.data.device_Brand);
-          setEquipmentName(response.data.device_Name);
-          setSupplier(response.data.supplier_Name);
-          setUsePurpose(response.data.user_Purpose_Machine_Indication);
-          setRange(response.data.range);
-          setBuilding(response.data.building);
-          setDepartmentLine(response.data.line);
-          setPersonInCharge(response.data.person_Charge);
-          setRemark(response.data.remark);
-          setCurrentMenu("");
-          setImgAfterCrop(response.data.image_Device);
-          setImage(response.data.image_Device);
+          setDeviceSerialNum(response.data.Device_Serial_Number);
+          setBrand(response.data.Device_Brand);
+          setEquipmentName(response.data.Device_Name);
+          setSupplier(response.data.Supplier_Name);
+          setUsePurpose(response.data.User_Purpose_Machine_Indication);
+          setRange(response.data.Range);
+          setBuilding(response.data.Building);
+          setDepartmentLine(response.data.Line);
+          setPersonInCharge(response.data.Person_Charge);
+          setRemark(response.data.Remark);
+          if (
+            response.data.Image_Device !== "" &&
+            response.data.Image_Device !== null
+          ) {
+            setCurrentMenu("");
+            setImgAfterCrop(
+              urlImg + response.data.Image_Device
+            );
+            setImage(urlImg + response.data.Image_Device);
+          }
         }
       })
       .finally(() => {
@@ -414,45 +455,69 @@ const HomeScreen = () => {
   const EditDevice = async () => {
     const isConfirmed = await ConfirmForm("question", t("confirmUpdate"));
     if (isConfirmed) {
-      const url = api + "/api/Device/Update_Data_Device";
-      const data = {
-        unique_ID: UniCode,
-        factory_ID: FactoryCode,
-        device_Name: EquipmentName,
-        group_Name: selectedGroup,
-        model_Device: Model,
-        device_Serial_Number: DeviceSerialNum,
-        device_Brand: Brand,
-        supplier_Name: Supplier,
-        building: Building,
-        line: DepartmentLine,
-        incoming_Date: IncommingDate,
-        // modify_Date: moment(new Date()),
-        internal_Current_Adidas: FrequencyAdidas,
-        internal_Current: CurrentFrequency,
-        external_Adidas: FrequencyOutAdidas,
-        remark: Remark,
-        person_Charge: PersonInCharge,
-        Image_Device: imgAfterCrop,
-        // date_Calibration: moment(new Date()),
-        // date_Next_Calibration: moment(new Date()),
-        user_Purpose_Machine_Indication: UsePurpose,
-        range: Range,
-        certified_Calibration_Institute_Company: InstituteCompany,
-      };
-      await axios
-        .post(url, data, config)
-        .then(async (response: any) => {
-          if (response.data === true) {
-            await AlertForm("success", t('alertUpdateSuccess'));
-          } else {
-            await AlertForm("error",  t('alertUpdateFail'));
-          }
-        })
-        .catch(async () => {
-          await AlertForm("error",  t('alertUpdateFail'));
-        })
-        .finally(() => {});
+      if (
+        UniCode !== "" &&
+        // FactoryCode !== "" &&
+        EquipmentName !== "" &&
+        // selectedGroup !== "" &&
+        // Model !== "" &&
+        DeviceSerialNum !== "" &&
+        Brand !== "" &&
+        Supplier !== ""
+        // Building !== "" &&
+        // DepartmentLine !== "" &&
+        // &&  IncommingDate !== null
+        // &&       FrequencyAdidas !== "" &&
+        // CurrentFrequency !== "" &&
+        // FrequencyOutAdidas !== null
+        // &&  UsePurpose !== "" &&
+        // PersonInCharge !== "" &&
+        // Range !== "" &&
+        // InstituteCompany !== ""
+      ) {
+        const url = api + "/api/Update_Data_Device";
+       imgAfterCrop.includes(urlImg)
+        const data = {
+          unique_ID: UniCode,
+          factory_ID: FactoryCode,
+          device_Name: EquipmentName,
+          group_Name: selectedGroup,
+          model_Device: Model,
+          device_Serial_Number: DeviceSerialNum,
+          device_Brand: Brand,
+          supplier_Name: Supplier,
+          building: Building,
+          line: DepartmentLine,
+          incoming_Date: IncommingDate ? moment(IncommingDate, "YYYY-MM-DD").format("YYYY/MM/DD") : moment('1900-01-01', "YYYY-MM-DD").format("YYYY/MM/DD"),
+          internal_Current_Adidas: FrequencyAdidas,
+          internal_Current: CurrentFrequency,
+          external_Adidas: FrequencyOutAdidas,
+          remark: Remark,
+          person_Charge: PersonInCharge,
+          Image_Device: imgAfterCrop.includes(urlImg) ? '' :  imgAfterCrop,
+          user_Purpose_Machine_Indication: UsePurpose,
+          range: Range,
+          certified_Calibration_Institute_Company: InstituteCompany,
+          Implementer_Id: user,
+          Factory:factory
+        };
+        await axios
+          .post(url, data, config)
+          .then(async (response: any) => {
+            if (response.data.result === true) {
+              resetValue();
+              await AlertForm("success", t("alertUpdateSuccess"));
+            } else {
+              await AlertForm("error", t("alertUpdateFail"));
+            }
+          })
+          .catch(async () => {
+            await AlertForm("error", t("alertUpdateFail"));
+          })
+          .finally(() => {});
+      } else {
+        await AlertForm("error", t("errValidate"));
+      }
     }
   };
 
@@ -610,7 +675,7 @@ const HomeScreen = () => {
                     /> */}
 
                     <CreateInput
-                      label={t("lblFactoryCode") + "(*)"}
+                      label={t("lblFactoryCode")}
                       options={optFactory}
                       value={FactoryCode}
                       OnSelected={(value: any) => {
@@ -620,7 +685,7 @@ const HomeScreen = () => {
                   </div>
                   <div>
                     <TextInput
-                      label={t("lblModel") + "(*)"}
+                      label={t("lblModel")}
                       TextChange={(value: any) => {
                         setModel(value);
                       }}
@@ -630,7 +695,7 @@ const HomeScreen = () => {
                   </div>
                   <div className="relative -mt-4">
                     <CreateInput
-                      label={t("lblGroup") + "(*)"}
+                      label={t("lblGroup")}
                       options={optGroup}
                       value={selectedGroup}
                       OnSelected={(value: any) => {
@@ -641,7 +706,9 @@ const HomeScreen = () => {
                   <div className="relative  -mt-3">
                     <DatetimePicker
                       label={t("lblIncommingDate")}
-                      onChangeDate={(date: any) => setIncommingDate(date)}
+                      onChangeDate={(date: any) => {
+                        date ? setIncommingDate(new Date(date)) : setIncommingDate(undefined)
+                      }}
                       DateSelected={IncommingDate}
                     />
                   </div>
@@ -671,7 +738,7 @@ const HomeScreen = () => {
                 <div className="grid grid-cols-2 gap-2 -mt-5">
                   <div>
                     <SelectInput
-                      label={t("lblCurrentFrequency") + "(*)"}
+                      label={t("lblCurrentFrequency")}
                       OnSelected={(value: any) => {
                         // console.log(value)
                         setCurrentFrequency(value);
@@ -682,7 +749,7 @@ const HomeScreen = () => {
                   </div>
                   <div>
                     <SelectInput
-                      label={t("lblFrequencyFollowAdidasRequirement") + "(*)"}
+                      label={t("lblFrequencyFollowAdidasRequirement")}
                       OnSelected={(value: any) => {
                         setFrequencyAdidas(value);
                       }}
@@ -707,7 +774,7 @@ const HomeScreen = () => {
 
                 <div className="-mt-5">
                   <SelectInput
-                    label={t("lblFrequencyFollowAdidasRequirement") + "(*)"}
+                    label={t("lblFrequencyFollowAdidasRequirement") }
                     OnSelected={(value: any) => {
                       setFrequencyOutAdidas(value);
                     }}
@@ -718,9 +785,7 @@ const HomeScreen = () => {
                 <div className="grid mb-4">
                   <div>
                     <TextInput
-                      label={
-                        t("lblCertifiedCalibrationInstitute/Company") + "(*)"
-                      }
+                      label={t("lblCertifiedCalibrationInstitute/Company")}
                       TextChange={(value: any) => {
                         setInstituteCompany(value);
                       }}
@@ -787,7 +852,7 @@ const HomeScreen = () => {
                   </div>
                   <div>
                     <TextInput
-                      label={t("lblBrand") + '(*)'}
+                      label={t("lblBrand") + "(*)"}
                       TextChange={(value: any) => {
                         setBrand(value);
                       }}
@@ -819,7 +884,7 @@ const HomeScreen = () => {
 
                 <div>
                   <TextInput
-                    label={t("lblUsePurpose_MachineIndication") + "(*)"}
+                    label={t("lblUsePurpose_MachineIndication")}
                     TextChange={(value: any) => {
                       setUsePurpose(value);
                     }}
@@ -831,7 +896,7 @@ const HomeScreen = () => {
                 <div className="grid ">
                   <div>
                     <TextInput
-                      label={t("lblRange") + "(*)"}
+                      label={t("lblRange")}
                       TextChange={(value: any) => {
                         setRange(value);
                       }}
@@ -854,7 +919,7 @@ const HomeScreen = () => {
                 <div className="grid grid-cols-2 gap-x-2 ">
                   <div>
                     <TextInput
-                      label={t("lblBuilding") + "(*)"}
+                      label={t("lblBuilding")}
                       TextChange={(value: any) => {
                         setBuilding(value);
                       }}
@@ -864,7 +929,7 @@ const HomeScreen = () => {
                   </div>
                   <div>
                     <TextInput
-                      label={t("lblDepartment_Line") + "(*)"}
+                      label={t("lblDepartment_Line")}
                       TextChange={(value: any) => {
                         setDepartmentLine(value);
                       }}
@@ -875,7 +940,7 @@ const HomeScreen = () => {
                 </div>
                 <div className="">
                   <TextInput
-                    label={t("lblPersonInCharge") + "(*)"}
+                    label={t("lblPersonInCharge")}
                     TextChange={(value: any) => {
                       setPersonInCharge(value);
                     }}
@@ -899,15 +964,15 @@ const HomeScreen = () => {
               <div className="text-center justify-center flex gap-3">
                 {dataReceived ? (
                   <button
-                    onClick={EditDevice}
-                    className=" btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center "
+                    onClick={EditDevice}   disabled={!user || user === ''}
+                    className={` ${!user && user ==='' ? 'cursor-not-allowed select-none bg-gray-300' : 'bg-blue-500'} btn mt-3 py-3 font-bold text-white px-4 rounded-lg  flex text-center justify-center items-center `}
                   >
                     {t("btnEdit")}
                   </button>
                 ) : (
                   <button
-                    onClick={AddDevice}
-                    className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center"
+                    onClick={AddDevice}   disabled={!user || user === ''}
+                    className={`${!user && user ==='' ? 'cursor-not-allowed select-none bg-gray-300' : 'bg-blue-500 '}  btn mt-3 py-3 font-bold text-white px-4 rounded-lg flex text-center justify-center items-center`}
                   >
                     {t("btnAdd")}
                   </button>
@@ -915,7 +980,7 @@ const HomeScreen = () => {
 
                 <button
                   onClick={resetValue}
-                  className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-blue-500 flex text-center justify-center items-center"
+                  className="btn mt-3 py-3 font-bold text-white px-4 rounded-lg bg-gray-500 flex text-center justify-center items-center"
                 >
                   {t("btnReset")}
                 </button>

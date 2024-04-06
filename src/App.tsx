@@ -13,7 +13,6 @@ import LoginScreen from "./screens/LoginScreen";
 import "./utils/i18n";
 import MasterListScreen from "./screens/MasterListScreen";
 
-
 function App() {
   const ProtectedRoutes = ({ authenticate }: { authenticate: boolean }) => {
     if (!authenticate) {
@@ -29,7 +28,7 @@ function App() {
     if (dataUser) {
       setAuthenticate(true);
       navigate("/");
-    } 
+    }
   }, [dataUser]);
 
   return (
@@ -39,10 +38,10 @@ function App() {
           {/* <Route path={"/"} element={<HomeScreen />} />
           <Route path={"/list"} element={<MasterListScreen />} /> */}
         </Route>
-          <Route path={"/*"} element={<ErrorScreen />} />
-          <Route path={"/login"} element={<LoginScreen />} />
           <Route path={"/"} element={<HomeScreen />} />
           <Route path={"/list"} element={<MasterListScreen />} />
+        <Route path={"/*"} element={<ErrorScreen />} />
+        <Route path={"/login"} element={<LoginScreen />} />
       </Routes>
     </section>
   );

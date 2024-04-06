@@ -6,7 +6,7 @@ import { Portal } from "react-overlays";
 import "react-datepicker/dist/react-datepicker.css";
 interface DatePickerProps {
   label: string;
-  onChangeDate: (value: Date | null) => void;
+  onChangeDate: (value: Date | null  ) => void;
   DateSelected: Date | null | undefined;
 }
 
@@ -39,13 +39,20 @@ const DatetimePicker: React.FC<DatePickerProps> = ({
   ];
 
   // const [startDate, setStartDate] = useState(new Date());
-  const handleChangeTime = (Date: Date | null) => {
-    onChangeDate(Date);
+  const handleChangeTime = (Date: Date | null  )  => {
+  // console.log(Date)
+if(Date === null){
+  onChangeDate(null)
+}else{
+
+  onChangeDate(Date);
+}
   };
 
   return (
     <div className="relative">
       <DatePicker
+      
         renderCustomHeader={({
           date,
           changeYear,

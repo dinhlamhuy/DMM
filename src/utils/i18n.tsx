@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
@@ -18,7 +19,7 @@ const resources = {
 const defaultNS= 'all';
 
  const DefautLng = localStorage.getItem('Lng');
-const lngDefault = DefautLng ===null ? 'VN' :'EN';
+const lngDefault = DefautLng ===null ? 'EN' :'EN';
 
 i18n
   .use(initReactI18next)

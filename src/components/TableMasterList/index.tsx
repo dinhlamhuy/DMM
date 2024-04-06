@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { FaCheck } from "react-icons/fa";
+import { MdEditSquare } from "react-icons/md";
+import { FaRegTrashCan } from "react-icons/fa6";
 import { Equipment } from "../../utils/MasterList";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -10,19 +12,25 @@ import ModalDetail from "../ModalDetail";
 // import moment from "moment";
 import { api, config } from "../../utils/linkApi";
 import axios from "axios";
+import ConfirmForm from "../ConfirmForm";
+import AlertForm from "../AlertForm";
 
 interface TableMListProps {
   items: Equipment[] | null;
   DarkMode: boolean;
+  updateItems: () => void; 
 }
 
-const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
+const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items, updateItems }) => {
   const { t } = useTranslation();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [borderColor, setBorderColor] = useState("border-white text-white");
   const [borderColorTH, setBorderColorTH] = useState("border-white ");
   const [selectUniID, setSelectUniID] = useState("");
+  const UserNhap = localStorage.getItem("User");
+  const Factory = localStorage.getItem("Factory");
   const [arrDetail, setarrDetail] = useState<any[]>([]);
+  // const [listItems, setListItems] = useState<any[]>(items ? items : []);
   useEffect(() => {
     if (DarkMode) {
       setBorderColor("border-white  text-white");
@@ -32,6 +40,9 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
       setBorderColorTH("border-black ");
     }
   }, [DarkMode]);
+  // useEffect(() => {
+  //   setListItems(items || []);
+  // }, [items]);
   const openModal = (unique_ID: string) => {
     setSelectUniID(unique_ID);
     // setarrDetail([
@@ -53,12 +64,47 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
   const handleClick = (unique_ID: string) => {
     navigate("/", { state: { data: unique_ID } });
   };
+  const handleDelete = async (unique_ID: string) => {
+    // UserNhap
+    let tb='';
+    const isConfirmed = await ConfirmForm("question", t("confirmDelete"));
+    if (isConfirmed) {
+
+      const url = api + "/api/Hide_Device";
+      const data = {
+        Unique_Id: unique_ID,
+        Implementer_Id: UserNhap,
+        Factory:Factory
+      }
+      await axios
+      .post(url, data, config)
+      .then(async (response: any) => {
+        if (response.data.result === true) {
+          tb = t("alertDeleteSuccess");
+          // const filteredItems = listItems?.filter(
+          //   (item) => item.Unique_code !== unique_ID
+          // );
+          updateItems();
+          await AlertForm("success", tb);
+        } else {
+          tb=t("alertDeleteFail")
+          await AlertForm("error", tb);
+        }
+      })
+      .catch(async () => {
+        await AlertForm("error", tb);
+      })
+      .finally(() => {});
+     
+    }
+  };
 
   const getDataDetailCali = (unique_ID: string) => {
-    const url = api + "/api/Device/See_More_Calibration_Info";
+    const url = api + "/api/See_More_Calibration_Info";
     // setIsLoading(true);
     const data = {
       unique_ID: unique_ID,
+      Factory:Factory
     };
     axios
       .post(url, data, config)
@@ -68,10 +114,10 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
           const arr = response.data.map((item: any, index: number) => ({
             No: index + 1,
             // unique_ID: item.unique_ID,
-            result: item.result,
-            evaluation: item.evaluation,
-            date_Calibration:item.date_Calibration,
-            file_Upload: item.file_Upload,
+            result: item.Result,
+            evaluation: item.Evaluation,
+            date_Calibration: item.Date_Calibration,
+            file_Upload: item.File_Upload,
           }));
 
           setarrDetail(arr);
@@ -85,7 +131,7 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
 
   return (
     <div
-      className={`relative  border shadow px-1  h-[45rem]  ${
+      className={`relative  border shadow px-1  h-[35rem]  ${
         DarkMode ? " text-white" : " text-black "
       } w-full overflow-auto `}
     >
@@ -94,66 +140,66 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
         style={{ borderCollapse: "separate", borderSpacing: 0 }}
       >
         <thead
-          className={` font-bold sticky top-0  ${
+          className={` font-bold sticky top-0 sticky top-0  ${
             DarkMode ? "bg-yellow-900" : "bg-yellow-200"
           } `}
         >
           <tr
-            className={`border-2  ${
+            className={`border-2  text-[14px]   ${
               DarkMode ? "bg-yellow-900" : "bg-yellow-200"
             } `}
           >
             <td
-              className={` w-12  border-l-2 border-r border-t-2 border-b ${borderColorTH}`}
+              className={`  w-10  border-l-2 border-r  border-t-2 border-b ${borderColorTH}`}
               rowSpan={2}
             >
               {/* <b>No</b> <br /> STT */}
               {t("lblNo")}
             </td>
             <td
-              className={` px-0 w-32 border-l border-r border-t-2 border-b ${borderColorTH}`}
+              className={` px-0 w-24 border-l border-r border-t-2 border-b ${borderColorTH}`}
               rowSpan={2}
             >
               {/* <b>Unique code</b> <br /> Mã số quản lý */}
               {t("lblUniqueCode")}
             </td>
             <td
-              className={` w-32 border-l border-r border-t-2 border-b ${borderColorTH}`}
+              className={` w-24 border-l border-r border-t-2 border-b ${borderColorTH}`}
               rowSpan={2}
             >
               {/* <b>Factory code</b> <br /> Mã số tài sản */}
               {t("lblFactoryCode")}
             </td>
             <td
-              className={`w-72 px-1 border-l border-r border-t-2 border-b ${borderColorTH}`}
+              className={`w-48 px-1 border-l border-r border-t-2 border-b ${borderColorTH}`}
               rowSpan={2}
             >
               {/* <b>Equipment Name</b> <br /> Tên Thiết Bị */}
               {t("lblEquipmentName")}
             </td>
             <td
-              className={` w-20 border-l border-r border-t-2 border-b ${borderColorTH}`}
+              className={` w-14 border-l border-r border-t-2 border-b ${borderColorTH}`}
               rowSpan={2}
             >
               {/* <b>Group</b> <br /> Nhóm */}
               {t("lblGroup")}
             </td>
             <td
-              className={` w-32 border-l border-r border-t-2 border-b ${borderColorTH}`}
+              className={` w-28 border-l border-r border-t-2 border-b ${borderColorTH}`}
               rowSpan={2}
             >
               {/* <b>Photo for reference</b> <br /> Hình ảnh tham khảo */}
               {t("lblPhotoForReference")}
             </td>
             <td
-              className={`w-32 border-l border-r border-t-2 border-b ${borderColorTH}`}
+              className={`w-24 border-l border-r border-t-2 border-b ${borderColorTH}`}
               rowSpan={2}
             >
               {/* <b>Model</b> <br /> Dòng Thiết Bị */}
               {t("lblModel")}
             </td>
             <td
-              className={`w-32 border-l border-r border-t-2 border-b ${borderColorTH}`}
+              className={`w-28 border-l border-r border-t-2 border-b ${borderColorTH}`}
               rowSpan={2}
             >
               {/* <b>Device Serial Number</b> <br /> Số Serial Thiết Bị */}
@@ -209,7 +255,7 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
               {t("lblInternalCalibration")}
             </td>
             <td
-              className={`w-48  border-l border-r border-t-2 border-b ${borderColorTH}`}
+              className={`w-32  border-l border-r border-t-2 border-b ${borderColorTH}`}
               colSpan={2}
             >
               {/* <b>Status</b> <br /> Tình trạng */}
@@ -223,27 +269,33 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
               {t("lblExternalCalibration")}
             </td>
             <td
-              className={`w-32  border-l border-r-2 border-t-2 border-b ${borderColorTH}`}
+              className={`w-32  border-l border-r border-t-2 border-b ${borderColorTH}`}
               rowSpan={2}
             >
               {/* <b>Remark</b> <br /> Ghi chú */}
               {t("lblRemark")}
             </td>
             <td
-              className={`w-32  border-l border-r-2 border-t-2 border-b ${borderColorTH}`}
+              className={`w-32  border-l border-r border-t-2 border-b ${borderColorTH}`}
               rowSpan={2}
             >
               {t("CalibrationDetail")}
             </td>
             <td
-              className={`w-32  border-l border-r-2 border-t-2 border-b ${borderColorTH}`}
+              className={`w-20  border-l border-r border-t-2 border-b ${borderColorTH}`}
               rowSpan={2}
             >
               {t("btnEdit")}
             </td>
+            <td
+              className={`w-20  border-l border-r-2 border-t-2 border-b ${borderColorTH}`}
+              rowSpan={2}
+            >
+              {t("btnDelete")}
+            </td>
           </tr>
           <tr
-            className={`border  ${
+            className={`border text-[14px]  ${
               DarkMode ? "bg-yellow-900" : "bg-yellow-200"
             } `}
           >
@@ -306,20 +358,29 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
             items.map((item: Equipment, index: number) => {
               const ngayHC = new Date(item.Date_Of_Next);
               const ngayHT = new Date();
+              let result;
               let the;
               if (ngayHC < ngayHT) {
                 the = "text-gray-800 font-bold bg-red-400 ";
               }
+              if (item.Result_Company === null || item.Result_Company === "") {
+                result = "";
+              } else if (item.Result_Company === "OK") {
+                result = "PASS";
+              } else {
+                result = "FAIL";
+              }
+              // console.log(item.Photo_for_reference);
               return (
                 <tr
                   key={"đâs" + index}
-                  className={`border-2 ${borderColor}  ${
+                  className={`text-[14px] border-2 ${borderColor}  ${
                     index % 2 != 0
                       ? `  ${DarkMode ? " bg-gray-800" : "bg-gray-300"}`
                       : ""
                   } `}
                 >
-                  <td className={`border  ${borderColor}`}>{index + 1}</td>
+                  <td className={`border  border-l-2 ${borderColor}`}>{item.No}</td>
                   <td className={`border ${borderColor}`}>
                     {item.Unique_code}
                   </td>
@@ -331,8 +392,7 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
                   </td>
                   <td className={`border ${borderColor}`}>{item.Group}</td>
                   <td className={`border ${borderColor}`}>
-                    {(item.Photo_for_reference !== "" ||
-                      item.Photo_for_reference !== null) && (
+                    {item.Photo_for_reference !== "" && (
                       <img
                         loading="lazy"
                         src={item.Photo_for_reference}
@@ -370,7 +430,7 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
                   <td className={`border ${borderColor}`}>
                     {item.Current_Frequency}
                   </td>
-                  {item.Valid == "OK" ? (
+                  {/* {item.Valid == "OK" ? (
                     <>
                       <td className={`bg-green-400 border ${borderColor} `}>
                         <div className=" text-center px-auto flex justify-center items-center ">
@@ -388,6 +448,31 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
                         </div>
                       </td>
                     </>
+                  )} */}
+
+                  {item.Valid === "OK" ? (
+                    <>
+                      <td className={`bg-green-400 border ${borderColor}`}>
+                        <div className="text-center px-auto flex justify-center items-center">
+                          <FaCheck className="w-fit text-2xl font-bold" />
+                        </div>
+                      </td>
+                      <td className={`border ${borderColor}`}></td>
+                    </>
+                  ) : item.Valid === "" ? (
+                    <>
+                      <td className={`border ${borderColor}`}></td>
+                      <td className={`border ${borderColor}`}></td>
+                    </>
+                  ) : (
+                    <>
+                      <td className={`border ${borderColor}`}></td>
+                      <td className={`border ${borderColor} bg-red-400`}>
+                        <div className="text-center px-auto flex justify-center items-center">
+                          <FaCheck className="w-fit text-2xl font-bold" />
+                        </div>
+                      </td>
+                    </>
                   )}
 
                   <td className={` border ${borderColor}`}>
@@ -402,9 +487,7 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
                       ? item.Date_Of_Calibration
                       : ""}
                   </td>
-                  <td className={` border ${borderColor}`}>
-                    {item.Result_Company === "OK" ? "PASS" : "FAIL"}
-                  </td>
+                  <td className={` border ${borderColor}`}>{result}</td>
                   <td className={`border ${borderColor} `}>
                     {/* {item.Date_Of_Next} */}
                     <div className={`${the}`}>
@@ -425,9 +508,29 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
                   <td className={`border   ${borderColor}`}>
                     <button
                       onClick={() => handleClick(item.Unique_code)}
-                      className="p-1   text-blue-600 font-bold rounded"
+                      disabled={!UserNhap || UserNhap === ""}
+                      className={` ${
+                        !UserNhap && UserNhap === ""
+                          ? "cursor-not-allowed select-none text-gray-300"
+                          : "text-green-900"
+                      } p-1    font-bold rounded`}
                     >
-                      {t("btnEdit")}
+                      {/* {t("btnEdit")} */}
+                      <MdEditSquare className="text-2xl" />
+                    </button>
+                  </td>
+                  <td className={`border   border-r-2 ${borderColor}`}>
+                    <button
+                      onClick={() => handleDelete(item.Unique_code)}
+                      disabled={!UserNhap || UserNhap === ""}
+                      className={` ${
+                        !UserNhap && UserNhap === ""
+                          ? "cursor-not-allowed select-none text-gray-300"
+                          : "text-red-600"
+                      } p-1    font-bold rounded`}
+                    >
+                      {/* {t("btnDelete")} */}
+                      <FaRegTrashCan className="text-2xl " />
                     </button>
                   </td>
                 </tr>
@@ -492,7 +595,7 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
                     }}
                     className="border bg-gray-400"
                   >
-                    {t('Content')}
+                    {t("Content")}
                   </th>
                   <th
                     style={{
@@ -526,7 +629,18 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items }) => {
                       <td className="border">{item.date_Calibration}</td>
                       <td className="border">{item.result}</td>
                       <td className="border">{item.evaluation}</td>
-                      <td className="border">{item.file_Upload}</td>
+                      <td className="border">
+                        <a
+                          href={
+                            `http://192.168.60.15/modules/ME/pph/QC-Report/LVL/data/Calibration2/FileUpload/` +
+                            item.file_Upload
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {item.file_Upload}
+                        </a>
+                      </td>
                     </tr>
                   ))
                 ) : (
