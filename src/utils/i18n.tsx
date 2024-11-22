@@ -4,6 +4,7 @@ import { initReactI18next } from 'react-i18next';
 
 import translation_VN from './VN.json';
 import translation_EN from './EN.json';
+import translation_MN from './MN.json';
 
 
 
@@ -13,13 +14,18 @@ const resources = {
   },
   VN: {
     all: translation_VN
+  },
+  MN: {
+    all: translation_MN
   }
 
 }
 const defaultNS= 'all';
 
  const DefautLng = localStorage.getItem('Lng');
-const lngDefault = DefautLng ===null ? 'EN' :'EN';
+ const factory = localStorage.getItem('Factory');
+
+const lngDefault = DefautLng === null ? factory ==='LYM'?'MN': 'EN' :DefautLng;
 
 i18n
   .use(initReactI18next)

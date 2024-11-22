@@ -17,7 +17,14 @@ import moment from "moment";
 import CreateInput from "../../components/CreateInput";
 import DateRangePicker from "../../components/DateRangePicker";
 import RadioCheck from "../../components/RadioCheck";
-import { api, config, urlLVL, urlLHG, urlLYV } from "../../utils/linkApi";
+import {
+  api, apiLYM,
+  config,
+  urlLVL,
+  urlLHG,
+  urlLYV,
+  urlLYM,
+} from "../../utils/linkApi";
 import axios from "axios";
 import LoadingPage from "../../components/LoadingPage";
 import CreateInputPagination from "../../components/CreateInputPagination";
@@ -25,6 +32,7 @@ import CreateInputPagination from "../../components/CreateInputPagination";
 const MasterListScreen = () => {
   const { t } = useTranslation();
   const DefautMode = localStorage.getItem("isDark");
+  // const getDepartmentLine = localStorage.getItem("Department");
   const [DarkMode, setDarkMode] = useState<boolean>(
     DefautMode ? DefautMode === "true" : false
   );
@@ -36,12 +44,23 @@ const MasterListScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [RowTable, setRowTable] = useState<any[]>([]);
   let urlImg = "";
+  let linkAPI= "";
   if (factory === "LVL") {
     urlImg = urlLVL;
+    linkAPI=api;
   } else if (factory === "LHG") {
     urlImg = urlLHG;
+    linkAPI=api;
+
+  } else if (factory === "LYM") {
+    console.log(factory)
+    urlImg = urlLYM;
+    linkAPI=apiLYM;
+
   } else {
     urlImg = urlLYV;
+    linkAPI=api;
+
   }
   const [newRowTable, setnewRowTable] = useState<any[]>([]);
   //#region Các state tìm kiếm gồm createSelect, Radio, DatePicker
@@ -316,7 +335,7 @@ const MasterListScreen = () => {
       label: "10",
     },
     {
-      value: "20",
+      value: 20,
       label: "20",
     },
     {
@@ -326,7 +345,7 @@ const MasterListScreen = () => {
   ]);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageCount, setpageCount] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState("1000");
+  const [itemsPerPage, setItemsPerPage] = useState('20');
   const [currentData, setCurrentData] = useState<any[]>([]);
   // const itemsPerPage = 4;
   // const currentData = newRowTable.slice(
@@ -334,7 +353,6 @@ const MasterListScreen = () => {
   //   (currentPage + 1) * Number(itemsPerPage)
   // );
   useEffect(() => {
-   
     // console.log('setCurrentPage',0)
     const new_currentData = newRowTable.slice(
       0 * Number(itemsPerPage),
@@ -364,6 +382,7 @@ const MasterListScreen = () => {
     settxtGroup("");
     settxtBuilding("");
     settxtDepartmentLine("");
+
     setchxResult("");
     setchxStatus("");
     setdtpFromIncommingDate(null);
@@ -374,10 +393,14 @@ const MasterListScreen = () => {
     setdtpToDateOfNextCalibration(null);
     setnewRowTable(RowTable);
   };
+  const btnResetValues = () => {
+    resetValues();
+    // localStorage.setItem("Department", '');
+  };
   //#endregion
   //#region Function tìm tất cả danh sách thiết bị
   const getDataDeviceList = () => {
-    const url = api + "/api/Show_List";
+    const url = linkAPI + "/api/Show_List";
     setIsLoading(true);
     const data = {
       Factory: factory,
@@ -403,7 +426,10 @@ const MasterListScreen = () => {
             Device_Serial_Number: item.Device_Serial_Number,
             Brand: item.Device_Brand,
             Supplier: item.Supplier_Name,
-            Incomming_date: item.Incoming_Date !== '1/1/1900 12:00:00 AM' ? moment(item.Incoming_Date).format("YYYY/MM/DD") : '',
+            Incomming_date:
+              item.Incoming_Date !== "1/1/1900 12:00:00 AM"
+                ? moment(item.Incoming_Date).format("YYYY/MM/DD")
+                : "",
             Use_Purpose_Machine_indication:
               item.User_Purpose_Machine_Indication,
             Range: item.Range,
@@ -424,6 +450,7 @@ const MasterListScreen = () => {
               "YYYY/MM/DD"
             ),
             Remarky: item.Remark,
+            Implementer_Id: item.Implementer_Id,
           }));
 
           setRowTable(arr);
@@ -445,6 +472,10 @@ const MasterListScreen = () => {
     // setnewRowTable(filteredItems);
   };
   useEffect(() => {
+    // const DepartmentLine = localStorage.getItem("Department");
+
+    // console.log('DepartmentLine', DepartmentLine)
+    // settxtDepartmentLine(DepartmentLine !=null? DepartmentLine : '')
     setnewRowTable(RowTable);
   }, [RowTable]);
   //#endregion
@@ -840,6 +871,7 @@ const MasterListScreen = () => {
               options={optDepartmentLine}
               value={txtDepartmentLine}
               OnSelected={(value: any) => {
+                // localStorage.setItem("Department", value!==null ? value : '');
                 settxtDepartmentLine(value);
               }}
             />
@@ -924,7 +956,7 @@ const MasterListScreen = () => {
             {t("btnExcel")}
           </button>
           <button
-            onClick={resetValues}
+            onClick={btnResetValues}
             className="p-2 bg-white px-3 py-2 rounded-full font-bold text-lg"
           >
             {t("btnReset")}
@@ -944,8 +976,7 @@ const MasterListScreen = () => {
           />
         </div>
         <div className="flex items-center mr-2 text-gray-400 text-xs font-bold">
-          {t("lblTotal")}: 
-          {newRowTable.length}
+          {t("lblTotal")}:{newRowTable.length}
         </div>
         <div
           onClick={() => {
@@ -955,7 +986,7 @@ const MasterListScreen = () => {
             isFilter
               ? "bg-gray-300  rounded-xl text-gray-600 font-bold"
               : "text-gray-900"
-          }  flex  items-center mr-2  px-2  text-xs font-bold cursor-pointer `}
+          }  ${DarkMode ? "text-white" : "text-black"}   flex  items-center mr-2  px-2  text-xs font-bold cursor-pointer `}
         >
           <FiFilter className="text-2xl " />
         </div>
@@ -1013,12 +1044,12 @@ const MasterListScreen = () => {
               className="phantrang"
               breakLabel={"..."}
               pageCount={pageCount}
-              forcePage = {currentPage}
+              forcePage={currentPage}
               marginPagesDisplayed={2}
               pageRangeDisplayed={5}
               onPageChange={handlePageClick}
               containerClassName={"pagination"}
-               activeClassName={`activePhantrang`}
+              activeClassName={`activePhantrang`}
             />
           </div>
         </>

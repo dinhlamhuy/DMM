@@ -13,18 +13,19 @@ import ModalDetail from "../ModalDetail";
 import { useState } from "react";
 // import moment from "moment";
 import axios from "axios";
-import { api, config } from "../../utils/linkApi";
+import { api, apiLYM, config } from "../../utils/linkApi";
 interface CardMListProps {
   items: Equipment[];
   DarkMode: boolean;
 }
 const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
   const { t } = useTranslation();
-
   const [selectUniID, setSelectUniID] = useState("");
   const [arrDetail, setarrDetail] = useState<any[]>([]);
+  const UserNhap = localStorage.getItem("User");
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const Factory = localStorage.getItem("Factory");
+  const Linkapi = Factory === "LYM" ? apiLYM : api;
 
   const openModal = (unique_ID: string) => {
     setSelectUniID(unique_ID);
@@ -41,11 +42,11 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
   };
 
   const getDataDetailCali = (unique_ID: string) => {
-    const url = api + "/api/See_More_Calibration_Info";
+    const url = Linkapi + "/api/See_More_Calibration_Info";
     // setIsLoading(true);
     const data = {
       unique_ID: unique_ID,
-      Factory:Factory
+      Factory: Factory,
     };
     axios
       .post(url, data, config)
@@ -78,12 +79,12 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
       the = " text-white font-bold  bg-red-900 px-2";
     }
     let result;
-    if (item.Result_Company === null || item.Result_Company === '') {
-      result = '';
+    if (item.Result_Company === null || item.Result_Company === "") {
+      result = "";
     } else if (item.Result_Company === "OK") {
-      result= "PASS";
+      result = "PASS";
     } else {
-      result= "FAIL";
+      result = "FAIL";
     }
     return (
       <div
@@ -101,13 +102,14 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
         <div className="container pt-1    gird grid-flow-row auto-rows-max">
           <div className="  flex flex-col md:flex-row ">
             <div className="w-48 h-48 flex-none justify-center items-center my-auto mr-2">
-              {(item.Photo_for_reference !== "" ||
-                      item.Photo_for_reference !== null) && (
+              {item.Photo_for_reference && (
                 <img
-                  src={item.Photo_for_reference}
+                  src={`${
+                    item.Photo_for_reference
+                  }?timestamp=${new Date().getTime()}`}
                   loading="lazy"
                   alt=""
-                  className="w-48 h-48  rounded-lg  object-cover"
+                  className="w-48 h-48  rounded-lg  bg-gray-300 object-covers  object-contain"
                 />
               )}
             </div>
@@ -116,12 +118,16 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
                 <div className=" font-bold text-[21px] col-span-2 text-center ">
                   <p className="flex">
                     {item.Equipment_Name} &ensp;
-                    <button
-                      onClick={() => handleClick(item.Unique_code)}
-                      className="group/edit invisible  group-hover/item:visible  border px-2 py-1 bg-slate-500 text-white rounded-lg"
-                    >
-                      <FiEdit3 />
-                    </button>
+                    {UserNhap === item.Implementer_Id ? (
+                      <button
+                        onClick={() => handleClick(item.Unique_code)}
+                        className="group/edit invisible  group-hover/item:visible  border px-2 py-1 bg-slate-500 text-white rounded-lg"
+                      >
+                        <FiEdit3 />
+                      </button>
+                    ) : (
+                      <></>
+                    )}
                   </p>
                 </div>
                 <div>
@@ -187,7 +193,7 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
                   &ensp;
                   <span className="text-xs font-bold">
                     {/* {item.Incomming_date} */}
-            
+
                     {isValid(new Date(item.Incomming_date))
                       ? item.Incomming_date
                       : ""}
@@ -354,23 +360,36 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-x-2"></div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-2">
-              <div className="text-xs text-gray-800 cols-span-2">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-x-2">
+              <div className="text-xs text-gray-800 col-span-3 ">
                 {t("lblRemark")}:&ensp;{item.Remarky}
               </div>
-              <div className=""></div>
-              <div className="">
-                <span className="text-xs text-gray-800">{t("lblResult")}:</span>
+              {/* <div className=""></div> */}
+              <div className="text-xs text-gray-800 cols-span-2">
+                UserID: <b>{item.Implementer_Id}</b>
+              </div>
+
+              <div className=" text-right">
                 &ensp;
                 <button onClick={() => openModal(item.Unique_code)}>
-
-                  {item.Result_Company === "OK"  ? (
-                    <span className="text-md font-bold text-blue-700 ">
-                      Pass
+                  {item.Result_Company === "OK" ? (
+                    <span>
+                      <span className="text-xs text-gray-800">
+                        {t("lblResult")}:{" "}
+                      </span>
+                      <span className="text-md font-bold text-blue-700 ">
+                        Pass
+                      </span>
                     </span>
                   ) : (
-                    <span className="text-md font-bold text-red-700 ">
-                      {result}
+                    <span>
+                      {/* <span className="text-xs text-gray-800">
+                        {t("lblResult")}:{" "}
+                      </span> */}
+
+                      <span className="text-md font-bold text-red-700 ">
+                        {result}
+                      </span>
                     </span>
                   )}
                 </button>
@@ -379,106 +398,114 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
           </div>
         </div>
         <ModalDetail
-        isOpen={modalIsOpen}
-        onClose={closeModal}
-        DarkMode={DarkMode}
-      >
-        <>
-          <button
-            onClick={closeModal}
-            className="btn  -mt-4  text-4xl font-bold right-0 absolute  rounded-full"
-          >
-            &times;
-          </button>
-          <h1 className="mt-5 p-3 uppercase text-xl font-bold">
-            {t("lblTitle")}:{selectUniID}
-          </h1>
-          <div>
-            <table
-              className=" w-full border   table-fixed "
-              style={{ borderCollapse: "separate", borderSpacing: 0 }}
+          isOpen={modalIsOpen}
+          onClose={closeModal}
+          DarkMode={DarkMode}
+        >
+          <>
+            <button
+              onClick={closeModal}
+              className="btn  -mt-4  text-4xl font-bold right-0 absolute  rounded-full"
             >
-              <thead>
-                <tr>
-                  <th
-                    style={{
-                      width: "10%",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                    className="border bg-gray-400"
-                  >
-                    {t("lblNo")}
-                  </th>
-                  <th
-                    style={{
-                      width: "35%",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                    className="border bg-gray-400"
-                  >
-                    {t("lblDateOfCalibration")}
-                  </th>
-                  <th
-                    style={{
-                      width: "45%",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                    className="border bg-gray-400"
-                  >
-                    {t('Content')}
-                  </th>
-                  <th
-                    style={{
-                      width: "45%",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                    className="border bg-gray-400"
-                  >
-                    {t("lblResult")}
-                  </th>
-                  <th
-                    style={{
-                      width: "45%",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                    className="border bg-gray-400"
-                  >
-                    Calibration report
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {arrDetail ? (
-                  arrDetail.map((item: any) => (
-                    <tr className=" text-center ">
-                      <td className="border">{item.No}</td>
-                      <td className="border">{item.date_Calibration}</td>
-                      <td className="border">{item.result}</td>
-                      <td className="border">{item.evaluation}</td>
-                      <td className="border">    
-                      <a href={`http://192.168.60.15/modules/ME/pph/QC-Report/LVL/data/Calibration2/FileUpload/`+item.file_Upload } target="_blank" rel="noopener noreferrer" >
-                        {item.file_Upload}</a>
+              &times;
+            </button>
+            <h1 className="mt-5 p-3 uppercase text-xl font-bold">
+              {t("lblTitle")}:{selectUniID}
+            </h1>
+            <div>
+              <table
+                className=" w-full border   table-fixed "
+                style={{ borderCollapse: "separate", borderSpacing: 0 }}
+              >
+                <thead>
+                  <tr>
+                    <th
+                      style={{
+                        width: "10%",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                      className="border bg-gray-400"
+                    >
+                      {t("lblNo")}
+                    </th>
+                    <th
+                      style={{
+                        width: "35%",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                      className="border bg-gray-400"
+                    >
+                      {t("lblDateOfCalibration")}
+                    </th>
+                    <th
+                      style={{
+                        width: "45%",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                      className="border bg-gray-400"
+                    >
+                      {t("Content")}
+                    </th>
+                    <th
+                      style={{
+                        width: "45%",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                      className="border bg-gray-400"
+                    >
+                      {t("lblResult")}
+                    </th>
+                    <th
+                      style={{
+                        width: "45%",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                      className="border bg-gray-400"
+                    >
+                      Calibration report
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {arrDetail ? (
+                    arrDetail.map((item: any) => (
+                      <tr className=" text-center ">
+                        <td className="border">{item.No}</td>
+                        <td className="border">{item.date_Calibration}</td>
+                        <td className="border">{item.result}</td>
+                        <td className="border">{item.evaluation}</td>
+                        <td className="border">
+                          <a
+                            href={
+                              `http://192.168.60.15/modules/ME/pph/QC-Report/LVL/data/CalibrationVN/FileUpload/` +
+                              item.file_Upload
+                            }
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {item.file_Upload}
+                          </a>
                         </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr></tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </>
-      </ModalDetail>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </>
+        </ModalDetail>
       </div>
       // </div>
     );

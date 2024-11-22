@@ -18,7 +18,7 @@ const CreateInputPagination: React.FC<SelectProps> = ({
   value,
   OnSelected,
 }) => {
-  const [vl, setvl] = useState("ALL");
+  const [vl, setvl] = useState("20");
   const handleChange = (selectedOption: Option | "" | null) => {
     OnSelected(selectedOption ? selectedOption.value : null);
     setvl(selectedOption ? selectedOption.label : "");

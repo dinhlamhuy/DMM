@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 
 import LanguageIcon from "../../components/LanguageIcon";
 import axios from "axios";
-import { api, config } from "../../utils/linkApi";
+import { api,apiLYM , config } from "../../utils/linkApi";
 import { useNavigate } from "react-router-dom";
 
 const LoginScreen = () => {
@@ -32,7 +32,8 @@ const LoginScreen = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    const url = api + "/api/User/Sign_In";
+    const LinkAPI= factory==='LYM'? apiLYM: api;
+    const url = LinkAPI + "/api/User/Sign_In";
 
     const data = {
       user_Id: UserID,

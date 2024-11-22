@@ -26,4 +26,5 @@ export interface Equipment {
     Result_Company: string;
     Date_Of_Next: string;
     Remarky: string;
+    Implementer_Id:string;
 }

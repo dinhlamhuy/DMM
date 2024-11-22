@@ -10,7 +10,7 @@ import { isValid } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import ModalDetail from "../ModalDetail";
 // import moment from "moment";
-import { api, config } from "../../utils/linkApi";
+import { api,apiLYM, config } from "../../utils/linkApi";
 import axios from "axios";
 import ConfirmForm from "../ConfirmForm";
 import AlertForm from "../AlertForm";
@@ -61,16 +61,16 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items, updateIte
     setModalIsOpen(false);
   };
   const navigate = useNavigate();
-  const handleClick = (unique_ID: string) => {
-    navigate("/", { state: { data: unique_ID } });
+  const handleClick = (unique_ID: string, Serial_Key:string) => {
+    navigate("/", { state: { data: unique_ID, dataSerial_Key: Serial_Key} });
   };
   const handleDelete = async (unique_ID: string) => {
     // UserNhap
     let tb='';
     const isConfirmed = await ConfirmForm("question", t("confirmDelete"));
     if (isConfirmed) {
-
-      const url = api + "/api/Hide_Device";
+      const Linkapi=  Factory ==='LYM' ? apiLYM: api;
+      const url = Linkapi + "/api/Hide_Device";
       const data = {
         Unique_Id: unique_ID,
         Implementer_Id: UserNhap,
@@ -100,7 +100,9 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items, updateIte
   };
 
   const getDataDetailCali = (unique_ID: string) => {
-    const url = api + "/api/See_More_Calibration_Info";
+    const Linkapi=  Factory ==='LYM' ? apiLYM: api;
+    
+    const url = Linkapi + "/api/See_More_Calibration_Info";
     // setIsLoading(true);
     const data = {
       unique_ID: unique_ID,
@@ -145,9 +147,7 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items, updateIte
           } `}
         >
           <tr
-            className={`border-2  text-[14px]   ${
-              DarkMode ? "bg-yellow-900" : "bg-yellow-200"
-            } `}
+            className={`border-2  text-[14px]   ${DarkMode ? "bg-yellow-900" : "bg-yellow-200"} `}
           >
             <td
               className={`  w-10  border-l-2 border-r  border-t-2 border-b ${borderColorTH}`}
@@ -157,21 +157,21 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items, updateIte
               {t("lblNo")}
             </td>
             <td
-              className={` px-0 w-24 border-l border-r border-t-2 border-b ${borderColorTH}`}
+              className={` px-0 th-fixed1 z-10 ${DarkMode ? "bg-yellow-900" : "bg-yellow-200"} w-24 border-l border-r border-t-2 border-b ${borderColorTH}`}
               rowSpan={2}
             >
               {/* <b>Unique code</b> <br /> Mã số quản lý */}
               {t("lblUniqueCode")}
             </td>
             <td
-              className={` w-24 border-l border-r border-t-2 border-b ${borderColorTH}`}
+              className={` w-24  z-10 ${DarkMode ? "bg-yellow-900" : "bg-yellow-200"} border-l border-r border-t-2 border-b ${borderColorTH}`}
               rowSpan={2}
             >
               {/* <b>Factory code</b> <br /> Mã số tài sản */}
               {t("lblFactoryCode")}
             </td>
             <td
-              className={`w-48 px-1 border-l border-r border-t-2 border-b ${borderColorTH}`}
+              className={`w-48 th-fixed2 z-10 ${DarkMode ? "bg-yellow-900" : "bg-yellow-200"} px-1 border-l border-r border-t-2 border-b ${borderColorTH}`}
               rowSpan={2}
             >
               {/* <b>Equipment Name</b> <br /> Tên Thiết Bị */}
@@ -279,6 +279,12 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items, updateIte
               className={`w-32  border-l border-r border-t-2 border-b ${borderColorTH}`}
               rowSpan={2}
             >
+              UserID
+            </td>
+            <td
+              className={`w-32  border-l border-r border-t-2 border-b ${borderColorTH}`}
+              rowSpan={2}
+            >
               {t("CalibrationDetail")}
             </td>
             <td
@@ -374,29 +380,26 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items, updateIte
               return (
                 <tr
                   key={"đâs" + index}
-                  className={`text-[14px] border-2 ${borderColor}  ${
-                    index % 2 != 0
-                      ? `  ${DarkMode ? " bg-gray-800" : "bg-gray-300"}`
-                      : ""
-                  } `}
+                  className={`text-[14px] border-2 ${borderColor}  ${ index % 2 != 0 ? `  ${DarkMode ? " bg-gray-800" : "bg-gray-300"}`  : "" } `}
                 >
-                  <td className={`border  border-l-2 ${borderColor}`}>{item.No}</td>
-                  <td className={`border ${borderColor}`}>
+                  <td className={`border   border-l-2 ${borderColor}`}>{item.No}</td>
+                  <td className={`border  break-words
+                  ${DarkMode ? "td-fixed1black " : "td-fixed1 "}  ${ index % 2 != 0 ? `  ${DarkMode ? " bg-gray-800" : "bg-gray-300"}`  : "" } ${borderColor}`}>
                     {item.Unique_code}
                   </td>
-                  <td className={`border ${borderColor}`}>
+                  <td className={`border  ${ index % 2 != 0 ? `  ${DarkMode ? " bg-gray-800" : "bg-gray-300"}`  : "" } ${borderColor}`}>
                     {item.Factory_code}
                   </td>
-                  <td className={`border ${borderColor}`}>
+                  <td className={`border  ${DarkMode ? "td-fixed2black " : "td-fixed2 "} ${ index % 2 != 0 ? `  ${DarkMode ? "  bg-gray-800" : "  bg-gray-300"}`  : "" } ${borderColor}`}>
                     {item.Equipment_Name}
                   </td>
                   <td className={`border ${borderColor}`}>{item.Group}</td>
-                  <td className={`border ${borderColor}`}>
-                    {item.Photo_for_reference !== "" && (
+                  <td className={`border ${borderColor} text-center h-full  flex justify-center items-center`}>
+                    {item.Photo_for_reference && (
                       <img
                         loading="lazy"
-                        src={item.Photo_for_reference}
-                        className=" object-cover w-full aspect-square"
+                        src={`${item.Photo_for_reference}?timestamp=${new Date().getTime()}`}
+                        className=" object-covesr w-full bg-gray-300 aspect-square object-contain "
                         alt=""
                       />
                     )}
@@ -497,6 +500,7 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items, updateIte
                     </div>
                   </td>
                   <td className={`border   ${borderColor}`}>{item.Remarky}</td>
+                  <td className={`border   ${borderColor}`}>{item.Implementer_Id}</td>
                   <td className={`border   ${borderColor}`}>
                     <button
                       onClick={() => openModal(item.Unique_code)}
@@ -506,8 +510,9 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items, updateIte
                     </button>
                   </td>
                   <td className={`border   ${borderColor}`}>
+                  {UserNhap === item.Implementer_Id  ? (
                     <button
-                      onClick={() => handleClick(item.Unique_code)}
+                      onClick={() => handleClick(item.Unique_code,item.Serial_Key)}
                       disabled={!UserNhap || UserNhap === ""}
                       className={` ${
                         !UserNhap && UserNhap === ""
@@ -518,20 +523,24 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items, updateIte
                       {/* {t("btnEdit")} */}
                       <MdEditSquare className="text-2xl" />
                     </button>
+                     ):(<></>)}
                   </td>
                   <td className={`border   border-r-2 ${borderColor}`}>
-                    <button
-                      onClick={() => handleDelete(item.Unique_code)}
-                      disabled={!UserNhap || UserNhap === ""}
-                      className={` ${
-                        !UserNhap && UserNhap === ""
-                          ? "cursor-not-allowed select-none text-gray-300"
-                          : "text-red-600"
-                      } p-1    font-bold rounded`}
-                    >
-                      {/* {t("btnDelete")} */}
-                      <FaRegTrashCan className="text-2xl " />
-                    </button>
+                    {UserNhap === item.Implementer_Id  ? (
+                         <button
+                         onClick={() => handleDelete(item.Unique_code)}
+                         disabled={!UserNhap || UserNhap === ""}
+                         className={` ${
+                           !UserNhap && UserNhap === ""
+                             ? "cursor-not-allowed select-none text-gray-300"
+                             : "text-red-600"
+                         } p-1    font-bold rounded`}
+                       >
+                         {/* {t("btnDelete")} */}
+                         <FaRegTrashCan className="text-2xl " />
+                       </button>
+                    ):(<></>)}
+                 
                   </td>
                 </tr>
               );
@@ -632,7 +641,7 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items, updateIte
                       <td className="border">
                         <a
                           href={
-                            `http://192.168.60.15/modules/ME/pph/QC-Report/LVL/data/Calibration2/FileUpload/` +
+                            `http://192.168.60.15/modules/ME/pph/QC-Report/LVL/data/CalibrationVN/FileUpload/` +
                             item.file_Upload
                           }
                           target="_blank"

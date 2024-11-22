@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Cropper from "react-easy-crop";
 import { FaCheck } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
@@ -13,8 +13,28 @@ const ImageCropper = ({ image, onCropDone, onCropCancel }: any) => {
     _croppedAreaPercentage: any,
     croppedAreaPixels: any
   ) => {
+    // console.log(croppedAreaPixels)
+    // console.log(_croppedAreaPercentage)
     setCroppedArea(croppedAreaPixels);
   };
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = image;
+    img.onload = () => {
+      const imgAspectRatio = img.width / img.height;
+      
+      if (imgAspectRatio > aspectRatio) {
+        // Image is wider than 1:1, so fit to width
+        setZoom(1);
+      } else {
+        // Image is taller than 1:1, so fit to height
+        const zoomLevel = aspectRatio / imgAspectRatio;
+        setZoom(zoomLevel);
+      }
+    };
+  }, [image, aspectRatio]);
+  
 
   // const onAspectRatioChange = (event: any) => {
   //     setAspectRadio(event.target.value);
@@ -28,14 +48,21 @@ const ImageCropper = ({ image, onCropDone, onCropCancel }: any) => {
           aspect={aspectRatio}
           crop={crop}
           zoom={zoom}
+          minZoom={0.5}
           onCropChange={setCrop}
           onZoomChange={setZoom}
+          // onZoomChange={handleZoomChange}
           onCropComplete={onCropComplete}
           style={{
             containerStyle: {
               width: "100%",
               height: "100%",
+              // backgroundColor: "#fff",
               backgroundColor: "#004",
+            },
+            mediaStyle: {
+              objectFit: "contain",
+              objectPosition:"center" // Ensures the image fits within the container
             },
           }}
         />

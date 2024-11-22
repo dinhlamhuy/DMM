@@ -4,6 +4,7 @@ import { ReactNode, useState } from "react";
 import logoLHG from "../../../public/img/logoLHG.png";
 import logoLVL from "../../../public/img/logoLVL.png";
 import logoLYV from "../../../public/img/logoLYV.png";
+import logoLYM from "../../../public/img/logoLYM.png";
 import { MdLanguage } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import { IoSunny } from "react-icons/io5";
@@ -38,7 +39,14 @@ const MenuBar: React.FC<Props> = ({ children, onDarkMode, isActive }) => {
     localStorage.setItem("isDark", darkmde.toString());
   };
   const ChangeLanguage = () => {
-    const newLanguage = lng === "VN" ? "EN" : "VN";
+    let newLanguage =''
+    if(Factory==='LYM'){
+
+      newLanguage = lng === "MN" ? "EN" : "MN";
+    }else{
+
+       newLanguage = lng === "VN" ? "EN" : "VN";
+    }
     i18n.changeLanguage(newLanguage);
     setLng(newLanguage);
     localStorage.setItem("Lng", newLanguage);
@@ -64,6 +72,9 @@ const MenuBar: React.FC<Props> = ({ children, onDarkMode, isActive }) => {
     logo=logoLVL;
   }else if(Factory === "LHG") {
     logo=logoLHG;
+  
+  }else if(Factory === "LYM") {
+    logo=logoLYM;
   
   }else{
     logo=logoLYV;

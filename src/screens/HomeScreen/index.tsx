@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
@@ -12,7 +13,7 @@ import TextInput from "../../components/TextInput";
 import CreateInput from "../../components/CreateInput";
 import DatetimePicker from "../../components/DatetimePicker";
 import { useTranslation } from "react-i18next";
-import { api, config,  urlLVL, urlLHG, urlLYV } from "../../utils/linkApi";
+import { api, apiLYM, config,  urlLVL, urlLHG, urlLYV,urlLYM } from "../../utils/linkApi";
 import axios from "axios";
 import moment from "moment";
 import ConfirmForm from "../../components/ConfirmForm";
@@ -38,19 +39,25 @@ const HomeScreen = () => {
   const [user, setUser] = useState(UserNhap ? UserNhap : '');
   const [factory, setFactory] = useState(Factory ? Factory : '');
   let urlImg='';
+  let linkAPI=api;
   if(factory === "LVL"){
     urlImg=urlLVL;
+     linkAPI=api;
   }else if(factory === "LHG") {
     urlImg=urlLHG;
-  
+    linkAPI=api;
+  }else if(factory === "LYM") {
+    urlImg=urlLYM;
+    linkAPI=apiLYM;
   }else{
     urlImg=urlLYV;
-
+    linkAPI=api;
   }
   //#region Các state cho ô nhập thiết bị
   const [imgAfterCrop, setImgAfterCrop] = useState("");
+  const [deviceSerialKey, setDeviceSerialKey] = useState("");
   const [UniCode, setUniCode] = useState("");
-  const [FactoryCode, setFactoryCode] = useState("");
+  const [FactoryCode, setFactoryCode] = useState(factory || null);
   const [Model, setModel] = useState("");
   const [selectedGroup, setselectedGroup] = useState("");
   const [IncommingDate, setIncommingDate] = useState<Date>();
@@ -150,7 +157,7 @@ const HomeScreen = () => {
         // Range !== "" &&
         // InstituteCompany !== ""
       ) {
-        const url = api + "/api/Insert_Device";
+        const url = linkAPI + "/api/Insert_Device";
         const data = {
           unique_ID: UniCode,
           factory_ID: FactoryCode,
@@ -202,7 +209,7 @@ const HomeScreen = () => {
   //#endregion
   //#region Function Cập nhật option cho select
   const OptionSelect = () => {
-    const url = api + "/api/Get_Data_Filter";
+    const url = linkAPI + "/api/Get_Data_Filter";
 
     const data = {
       Factory:factory
@@ -284,8 +291,14 @@ const HomeScreen = () => {
     setCurrentMenu("chooseImg");
   };
   const onCropDone = (imgCroppedArea: any) => {
+    console.log(imgCroppedArea)
     closeModal();
-
+    if (imgCroppedArea.x === 0 && imgCroppedArea.y === 0) {
+      // Directly set the original image as the cropped image
+      setImgAfterCrop(image);
+      setCurrentMenu("imgCropped");
+      return;
+    }
     const canvasEle = document.createElement("canvas");
     canvasEle.width = imgCroppedArea.width;
     canvasEle.height = imgCroppedArea.height;
@@ -294,6 +307,7 @@ const HomeScreen = () => {
 
     if (context) {
       const imageObj1 = new Image();
+      imageObj1.crossOrigin = "anonymous"; 
       imageObj1.src = image;
       imageObj1.onload = function () {
         context.drawImage(
@@ -375,6 +389,7 @@ const HomeScreen = () => {
     // setsttResult("");
     // settxtStatus("");
     setImgAfterCrop("");
+    setDeviceSerialKey("");
     setImage("");
     setCurrentMenu("chooseImg");
     // dataReceived=0
@@ -384,7 +399,7 @@ const HomeScreen = () => {
 
   //#region cập nhật thiết bị
   const getDataDeviceListByUnicode = (unicodeId: string) => {
-    const url = api + "/api/Show_Data_Device_For_Update";
+    const url = linkAPI + "/api/Show_Data_Device_For_Update";
     // setIsLoading(true);
     const data = {
       Uniquecode: unicodeId,
@@ -398,6 +413,7 @@ const HomeScreen = () => {
         // resetValues();
         if (response.data !== null) {
           // console.log(response.data);
+          setDeviceSerialKey(response.data.Device_Serial_Key);
           setUniCode(response.data.Unique_ID);
           setFactoryCode(response.data.Factory_ID);
           setModel(response.data.Model_Device);
@@ -448,6 +464,7 @@ const HomeScreen = () => {
   };
   useEffect(() => {
     if (dataReceived) {
+      // console.log(dataReceived)
       getDataDeviceListByUnicode(dataReceived);
     }
   }, [dataReceived]);
@@ -475,13 +492,13 @@ const HomeScreen = () => {
         // Range !== "" &&
         // InstituteCompany !== ""
       ) {
-        const url = api + "/api/Update_Data_Device";
+        const url = linkAPI + "/api/Update_Data_Device";
        imgAfterCrop.includes(urlImg)
         const data = {
           unique_ID: UniCode,
           factory_ID: FactoryCode,
           device_Name: EquipmentName,
-          group_Name: selectedGroup,
+          group_Name: selectedGroup ? selectedGroup: '',
           model_Device: Model,
           device_Serial_Number: DeviceSerialNum,
           device_Brand: Brand,
@@ -499,7 +516,8 @@ const HomeScreen = () => {
           range: Range,
           certified_Calibration_Institute_Company: InstituteCompany,
           Implementer_Id: user,
-          Factory:factory
+          Factory:factory,
+          Device_Serial_Key: deviceSerialKey
         };
         await axios
           .post(url, data, config)
