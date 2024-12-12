@@ -209,11 +209,11 @@ const MasterListScreen = () => {
       }
 
       if (condition === "Valid") {
-        const value = fieldValue === "Valid" ? "OK" : "";
+        const value = fieldValue === "Valid" ? "PASS" : "";
         // console.log(item[condition], value);
         return item[condition] === value;
       } else if (condition === "Result_Company") {
-        const value = fieldValue === "PASS" ? "OK" : "";
+        const value = (fieldValue === "PASS" || fieldValue === "OK") ? "PASS" : "";
         // console.log(item[condition], value);
 
         return item[condition] === value;
@@ -563,7 +563,7 @@ const MasterListScreen = () => {
         let result;
         if (row.Result_Company === null || row.Result_Company === "") {
           result = "";
-        } else if (row.Result_Company === "OK") {
+        } else if (row.Result_Company === "PASS" || row.Result_Company === "OK") {
           result = "PASS";
         } else {
           result = "FAIL";
@@ -594,8 +594,8 @@ const MasterListScreen = () => {
           row.Person_in_charge,
           row.Frequency_follow_adidas_requirement,
           row.Current_Frequency,
-          row.Valid === "OK" ? "V" : row.Valid === "" ? "" : "",
-          row.Valid === "OK" ? "" : row.Valid === "" ? "" : "V",
+          row.Valid === "PASS" || row.Valid === "OK" ? "V" : row.Valid === "" ? "" : "",
+          row.Valid === "PASS" || row.Valid === "OK" ? "" : row.Valid === "" ? "" : "V",
           row.Frequency_follow_adidas_requirement2,
           row.Certified_Calibration_Institute_Company,
           row.Date_Of_Calibration !== null &&

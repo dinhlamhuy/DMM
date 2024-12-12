@@ -81,7 +81,7 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
     let result;
     if (item.Result_Company === null || item.Result_Company === "") {
       result = "";
-    } else if (item.Result_Company === "OK") {
+    } else if (item.Result_Company === "PASS") {
       result = "PASS";
     } else {
       result = "FAIL";
@@ -92,10 +92,10 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
         className={`text-[14px] ${
           DarkMode
             ? `bg-whitse   ${
-                item.Valid === "OK" ? "bg-[#96FFC6]" : "bg-[#FF969A]"
+              item.Valid === "PASS" || item.Valid ===  "OK" ? "bg-[#96FFC6]" : "bg-[#FF969A]"
               }`
             : ` bg-ambser-50  ${
-                item.Valid === "OK" ? "bg-[#96FFC6]" : "bg-[#FF969A]"
+                item.Valid === "PASS" || item.Valid ===  "OK" ? "bg-[#96FFC6]" : "bg-[#FF969A]"
               }    `
         } rounded-lg shadow   flex justify-center w-full p-2  group/item  `}
       >
@@ -253,7 +253,7 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
                   {t("lblStatus")}:
                 </span>
                 <span className="text-xs font-bold">
-                  {item.Valid === "OK" ? (
+                  {item.Valid === "PASS" || item.Valid ===  "OK" ? (
                     <FaCheck className="  text-2xl font-bold text-green-500 " />
                   ) : (
                     <IoClose className="  text-3xl font-bold text-red-500 " />
@@ -372,7 +372,7 @@ const CardMasterList: React.FC<CardMListProps> = ({ DarkMode, items }) => {
               <div className=" text-right">
                 &ensp;
                 <button onClick={() => openModal(item.Unique_code)}>
-                  {item.Result_Company === "OK" ? (
+                  {item.Result_Company === "PASS"  || item.Result_Company === "OK" ? (
                     <span>
                       <span className="text-xs text-gray-800">
                         {t("lblResult")}:{" "}

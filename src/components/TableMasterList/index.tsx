@@ -371,7 +371,7 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items, updateIte
               }
               if (item.Result_Company === null || item.Result_Company === "") {
                 result = "";
-              } else if (item.Result_Company === "OK") {
+              } else if (item.Result_Company === "PASS" || item.Result_Company === "OK") {
                 result = "PASS";
               } else {
                 result = "FAIL";
@@ -453,7 +453,7 @@ const TableMasterList: React.FC<TableMListProps> = ({ DarkMode, items, updateIte
                     </>
                   )} */}
 
-                  {item.Valid === "OK" ? (
+                  {item.Valid === "PASS" || item.Valid === "OK" ? (
                     <>
                       <td className={`bg-green-400 border ${borderColor}`}>
                         <div className="text-center px-auto flex justify-center items-center">
